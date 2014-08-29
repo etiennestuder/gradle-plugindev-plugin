@@ -114,7 +114,7 @@ bintray {
 
     publications = ['mavenJava']
 
-    dryRun = false
+    dryRun = true
     publish = true
 
     pkg {
