@@ -1,0 +1,153 @@
+import java.text.SimpleDateFormat
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        // of bintray plugin
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayPluginVersion"
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile gradleApi()
+    compile "org.codehaus.groovy:groovy-all:$groovyVersion"
+}
+
+group = 'nu.studer'
+version = '0.0.1'
+
+compileGroovy {
+    sourceCompatibility = compatibilityJreVersion
+    targetCompatibility = compatibilityJreVersion
+}
+
+project.tasks.withType(Jar).all {
+    from file('LICENSE')
+    manifest {
+        attributes 'Implementation-Title': 'Gradle plugin development plugin',
+                'Implementation-Version': version,
+                'Implementation-Vendor': 'Etienne Studer',
+                'Build-Date': new SimpleDateFormat("yyyy-MM-dd").format(new Date()),
+                'Build-JDK': System.getProperty('java.version'),
+                'Build-Gradle': gradle.gradleVersion,
+                'Project-Url': 'https://github.com/etiennestuder/gradle-plugindev-plugin'
+    }
+}
+
+task sourcesJar(type: Jar) {
+    description = 'Assembles a jar archive containing the main sources.'
+    from sourceSets.main.allSource
+}
+
+task docsJar(type: Jar) {
+    description = 'Assembles a jar archive containing the source documentation.'
+    into('javadoc') {
+        from javadoc
+    }
+    into('groovydoc') {
+        from groovydoc
+    }
+}
+
+def pomConfig = {
+    name 'Gradle plugin development plugin'
+    description 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal.'
+    url 'https://github.com/etiennestuder/gradle-plugindev-plugin'
+    inceptionYear '2014'
+    developers {
+        developer {
+            id 'etiennestuder'
+            name 'Etienne Studer'
+            email 'etienne@studer.nu'
+        }
+    }
+    licenses {
+        license {
+            name 'Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.html'
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact sourcesJar {
+                classifier "sources"
+            }
+
+            artifact docsJar {
+                classifier "javadoc"
+            }
+
+            pom.withXml {
+                asNode().children().last() + pomConfig
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name 'localFolder'
+            url '../repo'
+        }
+    }
+}
+
+bintray {
+    def versionInfo = project.version
+
+    user = "$BINTRAY_USER"
+    key = "$BINTRAY_API_KEY"
+
+    publications = ['mavenJava']
+
+    dryRun = true
+    publish = true
+
+    pkg {
+        repo = 'gradle-plugins'
+        name = 'nu.studer.plugindev'
+        desc = 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal'
+
+        websiteUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
+        issueTrackerUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin/issues'
+        vcsUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin.git'
+
+        licenses = ['Apache-2.0']
+        labels = ['gradle', 'plugin']
+        publicDownloadNumbers = true
+
+        attributes = ['gradle-plugin': 'nu.studer.plugindev:nu.studer:gradle-plugindev-plugin']
+
+        version {
+            vcsTag = versionInfo
+            attributes = ['gradle-plugin': 'nu.studer.plugindev:nu.studer:gradle-plugindev-plugin']
+        }
+    }
+}
+
+project.afterEvaluate {
+    bintray.publications.each { pub ->
+        bintrayUpload.inputs.files { ->
+            project.publishing.publications.getByName(pub).publishableFiles
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.12'
+    description = 'Generates the Gradle wrapper files.'
+}
