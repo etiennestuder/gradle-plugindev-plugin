@@ -114,17 +114,17 @@ bintray {
 
     publications = ['mavenJava']
 
-    dryRun = true
+    dryRun = false
     publish = true
 
     pkg {
         repo = 'gradle-plugins'
         name = 'nu.studer.plugindev'
-        desc = 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal'
+        desc = 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal.'
 
         websiteUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
         issueTrackerUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin/issues'
-        vcsUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin.git'
+        vcsUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
 
         licenses = ['Apache-2.0']
         labels = ['gradle', 'plugin']
