@@ -18,10 +18,7 @@ package nu.studer.gradle.plugindev
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
-import org.gradle.api.plugins.BasePlugin
-import org.gradle.api.plugins.JavaBasePlugin
-import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.plugins.*
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.bundling.Jar
 import org.slf4j.Logger
@@ -48,11 +45,11 @@ class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Added dependency 'Gradle API'")
 
         // add a new 'plugindev' extension
-        project.extensions.create(PluginDevConstants.PLUGINDEV_EXTENSION_NAME, PluginDevExtension.class, project)
+        project.extensions.create(PluginDevConstants.PLUGINDEV_EXTENSION_NAME, PluginDevExtension, project)
         LOGGER.debug("Registered extension '$PluginDevConstants.PLUGINDEV_EXTENSION_NAME'")
 
         // get all the sources from the 'main' source set
-        JavaPluginConvention javaPluginConvention = project.convention.findPlugin(JavaPluginConvention.class)
+        JavaPluginConvention javaPluginConvention = project.convention.findPlugin(JavaPluginConvention)
         def mainSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
         SourceDirectorySet allMainSources = mainSourceSet.allSource
 
@@ -70,6 +67,9 @@ class PluginDevPlugin implements Plugin<Project> {
         docsJarTask.description = "Assembles a jar archive containing the source documentation."
         docsJarTask.group = JavaBasePlugin.DOCUMENTATION_GROUP
         docsJarTask.into('javadoc') { from project.tasks.findByName(JavaPlugin.JAVADOC_TASK_NAME) }
+        project.plugins.withType(GroovyPlugin) {
+            docsJarTask.into('groovydoc') { from project.tasks.findByName(GroovyPlugin.GROOVYDOC_TASK_NAME) }
+        }
         LOGGER.debug("Registered task '$docsJarTask.name'")
     }
 
