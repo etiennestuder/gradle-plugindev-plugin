@@ -115,8 +115,9 @@ class PluginDevPlugin implements Plugin<Project> {
 
         // set the source/target compatibility of Java compile and optionally of Groovy compile to 1.6
         JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
-        javaConvention.setSourceCompatibility(MINIMUM_GRADLE_JAVA_VERSION)
-        javaConvention.setTargetCompatibility(MINIMUM_GRADLE_JAVA_VERSION)
+        javaConvention.sourceCompatibility = MINIMUM_GRADLE_JAVA_VERSION
+        javaConvention.targetCompatibility = MINIMUM_GRADLE_JAVA_VERSION
+        LOGGER.debug("Set source and target compatibility for Java and Groovy to $MINIMUM_GRADLE_JAVA_VERSION")
     }
 
 }
