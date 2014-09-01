@@ -24,6 +24,10 @@ class PluginDevExtension {
 
     final Project project
 
+    String pluginTitle
+    String authorName
+    String projectUrl
+
     PluginDevExtension(Project project) {
         this.project = project
     }

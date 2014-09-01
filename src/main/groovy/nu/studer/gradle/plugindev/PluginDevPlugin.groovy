@@ -24,12 +24,16 @@ import org.gradle.api.tasks.bundling.Jar
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import java.text.SimpleDateFormat
+
 /**
  * Plugin that extends the Java plugin, adds a task to create a sources jar, and adds a task to create a documentation jar.
  */
 class PluginDevPlugin implements Plugin<Project> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class);
+
+    private static final String MINIMUM_GRADLE_JAVA_VERSION = "1.6"
 
     public void apply(Project project) {
         // apply the Java plugin
@@ -45,7 +49,7 @@ class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Added dependency 'Gradle API'")
 
         // add a new 'plugindev' extension
-        project.extensions.create(PluginDevConstants.PLUGINDEV_EXTENSION_NAME, PluginDevExtension, project)
+        def pluginDevExtension = project.extensions.create(PluginDevConstants.PLUGINDEV_EXTENSION_NAME, PluginDevExtension, project)
         LOGGER.debug("Registered extension '$PluginDevConstants.PLUGINDEV_EXTENSION_NAME'")
 
         // get all the sources from the 'main' source set
@@ -61,7 +65,7 @@ class PluginDevPlugin implements Plugin<Project> {
         sourcesJarTask.from(allMainSources)
         LOGGER.debug("Registered task '$sourcesJarTask.name'")
 
-        // add a task instance that generates a jar with the main javadoc
+        // add a task instance that generates a jar with the javadoc and optionally with the groovydoc
         String docsJarTaskName = "docsJar"
         Jar docsJarTask = project.tasks.create(docsJarTaskName, Jar.class)
         docsJarTask.description = "Assembles a jar archive containing the source documentation."
@@ -71,6 +75,48 @@ class PluginDevPlugin implements Plugin<Project> {
             docsJarTask.into('groovydoc') { from project.tasks.findByName(GroovyPlugin.GROOVYDOC_TASK_NAME) }
         }
         LOGGER.debug("Registered task '$docsJarTask.name'")
+
+        // add a MANIFEST file and optionally a LICENSE file to each jar file
+        project.tasks.withType(Jar) { Jar jar ->
+            jar.manifest.attributes(
+                    'Implementation-Title': new Object() {
+                        @Override
+                        String toString() {
+                            pluginDevExtension.pluginTitle
+                        }
+                    },
+                    'Implementation-Version': new Object() {
+                        @Override
+                        String toString() {
+                            project.version
+                        }
+                    },
+                    'Implementation-Vendor': new Object() {
+                        @Override
+                        String toString() {
+                            pluginDevExtension.authorName
+                        }
+                    },
+                    'Build-Date': new SimpleDateFormat("yyyy-MM-dd").format(new Date()),
+                    'Build-JDK': System.getProperty('java.version'),
+                    'Build-Gradle': project.gradle.gradleVersion,
+                    'Project-Url': new Object() {
+                        @Override
+                        String toString() {
+                            pluginDevExtension.projectUrl
+                        }
+                    })
+            File license = project.file('LICENSE')
+            if (license.exists()) {
+                jar.from(project.file('LICENSE'))
+            }
+            LOGGER.debug("Enhance .jar file of Jar task '$jar.name'")
+        }
+
+        // set the source/target compatibility of Java compile and optionally of Groovy compile to 1.6
+        JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
+        javaConvention.setSourceCompatibility(MINIMUM_GRADLE_JAVA_VERSION)
+        javaConvention.setTargetCompatibility(MINIMUM_GRADLE_JAVA_VERSION)
     }
 
 }
