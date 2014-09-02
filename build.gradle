@@ -97,13 +97,6 @@ publishing {
             }
         }
     }
-
-    repositories {
-        maven {
-            name 'localFolder'
-            url '../repo'
-        }
-    }
 }
 
 bintray {
