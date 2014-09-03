@@ -1,73 +1,35 @@
-import java.text.SimpleDateFormat
-
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
-        // of bintray plugin
+        // of bintray plugin and plugin dev plugin
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayPluginVersion"
+        classpath "nu.studer:gradle-plugindev-plugin:$plugindevPluginVersion"
     }
 }
 
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
-
-repositories {
-    jcenter()
-}
+apply plugin: 'nu.studer.plugindev'
 
 dependencies {
-    compile gradleApi()
     compile "org.codehaus.groovy:groovy-all:$groovyVersion"
 }
 
 group = 'nu.studer'
-version = '0.0.2'
-
-compileGroovy {
-    sourceCompatibility = compatibilityJreVersion
-    targetCompatibility = compatibilityJreVersion
-}
-
-project.tasks.withType(Jar).all {
-    from file('LICENSE')
-    manifest {
-        attributes 'Implementation-Title': 'Gradle plugin development plugin',
-                'Implementation-Version': version,
-                'Implementation-Vendor': 'Etienne Studer',
-                'Build-Date': new SimpleDateFormat("yyyy-MM-dd").format(new Date()),
-                'Build-JDK': System.getProperty('java.version'),
-                'Build-Gradle': gradle.gradleVersion,
-                'Project-Url': 'https://github.com/etiennestuder/gradle-plugindev-plugin'
-    }
-}
-
-task sourcesJar(type: Jar) {
-    description = 'Assembles a jar archive containing the main sources.'
-    from sourceSets.main.allSource
-}
-
-task docsJar(type: Jar) {
-    description = 'Assembles a jar archive containing the source documentation.'
-    into('javadoc') {
-        from javadoc
-    }
-    into('groovydoc') {
-        from groovydoc
-    }
-}
+version = '0.0.3.DEV'
 
 def pomConfig = {
-    name 'Gradle plugin development plugin'
+    name project.plugindev.pluginTitle
     description 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal.'
-    url 'https://github.com/etiennestuder/gradle-plugindev-plugin'
+    url project.plugindev.projectUrl
     inceptionYear '2014'
     developers {
         developer {
             id 'etiennestuder'
-            name 'Etienne Studer'
+            name project.plugindev.authorName
             email 'etienne@studer.nu'
         }
     }
@@ -77,6 +39,12 @@ def pomConfig = {
             url 'http://www.apache.org/licenses/LICENSE-2.0.html'
         }
     }
+}
+
+plugindev {
+    pluginTitle = 'Gradle plugin development plugin'
+    authorName = 'Etienne Studer'
+    projectUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
 }
 
 publishing {
