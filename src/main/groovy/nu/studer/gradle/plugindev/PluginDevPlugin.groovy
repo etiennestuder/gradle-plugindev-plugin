@@ -19,13 +19,13 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.plugins.*
+import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.bundling.Jar
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import java.text.SimpleDateFormat
-
 /**
  * Plugin that extends the Java plugin, adds a task to create a sources jar, and adds a task to create a documentation jar.
  */
@@ -37,8 +37,12 @@ class PluginDevPlugin implements Plugin<Project> {
 
     public void apply(Project project) {
         // apply the Java plugin
-        project.plugins.apply(JavaPlugin.class)
+        project.plugins.apply(JavaPlugin)
         LOGGER.debug("Applied plugin 'JavaPlugin'")
+
+        // apply the MavenPublishPlugin plugin
+        project.plugins.apply(MavenPublishPlugin)
+        LOGGER.debug("Applied plugin 'MavenPublishPlugin'")
 
         // add the JCenter repository
         project.repositories.add(project.repositories.jcenter())
@@ -108,7 +112,7 @@ class PluginDevPlugin implements Plugin<Project> {
                     })
             File license = project.file('LICENSE')
             if (license.exists()) {
-                jar.from(project.file('LICENSE'))
+                jar.from(license)
             }
             LOGGER.debug("Enhance .jar file of Jar task '$jar.name'")
         }
@@ -118,6 +122,38 @@ class PluginDevPlugin implements Plugin<Project> {
         javaConvention.sourceCompatibility = MINIMUM_GRADLE_JAVA_VERSION
         javaConvention.targetCompatibility = MINIMUM_GRADLE_JAVA_VERSION
         LOGGER.debug("Set source and target compatibility for Java and Groovy to $MINIMUM_GRADLE_JAVA_VERSION")
+
+        // register a publication that includes the generated artifact, the sources, and the docs
+//        project.afterEvaluate {
+//            PublishingExtension publishing = project.extensions.findByType(PublishingExtension)
+//            publishing.publications.create('mavenJava', MavenPublication, new Action<MavenPublication>() {
+//                @Override
+//                void execute(MavenPublication mavenPublication) {
+//                    mavenPublication.from(project.components.findByName('java'))
+//                    mavenPublication.artifact(sourcesJarTask, new Action<MavenArtifact>() {
+//                        @Override
+//                        void execute(MavenArtifact artifact) {
+//                            artifact.classifier = "sources"
+//                        }
+//                    })
+//                    mavenPublication.artifact(docsJarTask, new Action<MavenArtifact>() {
+//                        @Override
+//                        void execute(MavenArtifact artifact) {
+//                            artifact.classifier = "javadoc"
+//                        }
+//                    })
+//                    mavenPublication.pom.withXml(new Action<XmlProvider>() {
+//                        @Override
+//                        void execute(XmlProvider xmlProvider) {
+//                            xmlProvider.asNode().children().last() + {
+//                                name 'Gradle plugin development plugin'
+//                                description 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal.'
+//                            }
+//                        }
+//                    })
+//                }
+//            })
+//        }
     }
 
 }
