@@ -15,10 +15,17 @@
  */
 package nu.studer.gradle.plugindev
 
+import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
-import org.gradle.api.plugins.*
+import org.gradle.api.plugins.BasePlugin
+import org.gradle.api.plugins.GroovyPlugin
+import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.MavenArtifact
+import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.bundling.Jar
@@ -26,6 +33,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import java.text.SimpleDateFormat
+
 /**
  * Plugin that extends the Java plugin, adds a task to create a sources jar, and adds a task to create a documentation jar.
  */
@@ -35,7 +43,16 @@ class PluginDevPlugin implements Plugin<Project> {
 
     private static final String MINIMUM_GRADLE_JAVA_VERSION = "1.6"
 
+    private Project project
+
     public void apply(Project project) {
+        // keep the project reference
+        this.project = project
+
+        // add a new 'plugindev' extension
+        def pluginDevExtension = project.extensions.create(PluginDevConstants.PLUGINDEV_EXTENSION_NAME, PluginDevExtension, this)
+        LOGGER.debug("Registered extension '$PluginDevConstants.PLUGINDEV_EXTENSION_NAME'")
+
         // apply the Java plugin
         project.plugins.apply(JavaPlugin)
         LOGGER.debug("Applied plugin 'JavaPlugin'")
@@ -48,39 +65,17 @@ class PluginDevPlugin implements Plugin<Project> {
         project.repositories.add(project.repositories.jcenter())
         LOGGER.debug("Added repository 'JCenter'")
 
-        // add the Gradle API dependency
+        // add the Gradle API dependency to the 'compile' configuration
         project.dependencies.add(JavaPlugin.COMPILE_CONFIGURATION_NAME, project.dependencies.gradleApi())
         LOGGER.debug("Added dependency 'Gradle API'")
 
-        // add a new 'plugindev' extension
-        def pluginDevExtension = project.extensions.create(PluginDevConstants.PLUGINDEV_EXTENSION_NAME, PluginDevExtension, project)
-        LOGGER.debug("Registered extension '$PluginDevConstants.PLUGINDEV_EXTENSION_NAME'")
+        // set the source/target compatibility of Java compile and optionally of Groovy compile to 1.6
+        JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
+        javaConvention.sourceCompatibility = MINIMUM_GRADLE_JAVA_VERSION
+        javaConvention.targetCompatibility = MINIMUM_GRADLE_JAVA_VERSION
+        LOGGER.debug("Set source and target compatibility for Java and Groovy to $MINIMUM_GRADLE_JAVA_VERSION")
 
-        // get all the sources from the 'main' source set
-        JavaPluginConvention javaPluginConvention = project.convention.findPlugin(JavaPluginConvention)
-        def mainSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
-        SourceDirectorySet allMainSources = mainSourceSet.allSource
-
-        // add a task instance that generates a jar with the main sources
-        String sourcesJarTaskName = "sourcesJar"
-        Jar sourcesJarTask = project.tasks.create(sourcesJarTaskName, Jar.class)
-        sourcesJarTask.description = "Assembles a jar archive containing the main sources."
-        sourcesJarTask.group = BasePlugin.BUILD_GROUP
-        sourcesJarTask.from(allMainSources)
-        LOGGER.debug("Registered task '$sourcesJarTask.name'")
-
-        // add a task instance that generates a jar with the javadoc and optionally with the groovydoc
-        String docsJarTaskName = "docsJar"
-        Jar docsJarTask = project.tasks.create(docsJarTaskName, Jar.class)
-        docsJarTask.description = "Assembles a jar archive containing the source documentation."
-        docsJarTask.group = JavaBasePlugin.DOCUMENTATION_GROUP
-        docsJarTask.into('javadoc') { from project.tasks.findByName(JavaPlugin.JAVADOC_TASK_NAME) }
-        project.plugins.withType(GroovyPlugin) {
-            docsJarTask.into('groovydoc') { from project.tasks.findByName(GroovyPlugin.GROOVYDOC_TASK_NAME) }
-        }
-        LOGGER.debug("Registered task '$docsJarTask.name'")
-
-        // add a MANIFEST file and optionally a LICENSE file to each jar file
+        // add a MANIFEST file and optionally a LICENSE file to each jar file (lazily)
         project.tasks.withType(Jar) { Jar jar ->
             jar.manifest.attributes(
                     'Implementation-Title': new Object() {
@@ -116,44 +111,65 @@ class PluginDevPlugin implements Plugin<Project> {
             }
             LOGGER.debug("Enhance .jar file of Jar task '$jar.name'")
         }
+    }
 
-        // set the source/target compatibility of Java compile and optionally of Groovy compile to 1.6
-        JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
-        javaConvention.sourceCompatibility = MINIMUM_GRADLE_JAVA_VERSION
-        javaConvention.targetCompatibility = MINIMUM_GRADLE_JAVA_VERSION
-        LOGGER.debug("Set source and target compatibility for Java and Groovy to $MINIMUM_GRADLE_JAVA_VERSION")
+    def afterExtensionConfiguration(PluginDevExtension extension) {
+        // get all the sources from the 'main' source set
+        JavaPluginConvention javaPluginConvention = project.convention.findPlugin(JavaPluginConvention)
+        def mainSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
+        SourceDirectorySet allMainSources = mainSourceSet.allSource
+
+        // add a task instance that generates a jar with the main sources
+        String sourcesJarTaskName = "sourcesJar"
+        Jar sourcesJarTask = project.tasks.create(sourcesJarTaskName, Jar.class)
+        sourcesJarTask.description = "Assembles a jar archive containing the main source code."
+        sourcesJarTask.group = BasePlugin.BUILD_GROUP
+        sourcesJarTask.classifier = "sources"
+        sourcesJarTask.from(allMainSources)
+        LOGGER.debug("Registered task '$sourcesJarTask.name'")
+
+        // add a task instance that generates a jar with the javadoc and optionally with the groovydoc
+        String docsJarTaskName = "docsJar"
+        Jar docsJarTask = project.tasks.create(docsJarTaskName, Jar.class)
+        docsJarTask.description = "Assembles a jar archive containing the documentation for the main source code."
+        docsJarTask.group = BasePlugin.BUILD_GROUP
+        docsJarTask.classifier = "javadoc"
+        docsJarTask.into('javadoc') { from project.tasks.findByName(JavaPlugin.JAVADOC_TASK_NAME) }
+        project.plugins.withType(GroovyPlugin) {
+            docsJarTask.into('groovydoc') { from project.tasks.findByName(GroovyPlugin.GROOVYDOC_TASK_NAME) }
+        }
+        LOGGER.debug("Registered task '$docsJarTask.name'")
 
         // register a publication that includes the generated artifact, the sources, and the docs
-//        project.afterEvaluate {
-//            PublishingExtension publishing = project.extensions.findByType(PublishingExtension)
-//            publishing.publications.create('mavenJava', MavenPublication, new Action<MavenPublication>() {
-//                @Override
-//                void execute(MavenPublication mavenPublication) {
-//                    mavenPublication.from(project.components.findByName('java'))
-//                    mavenPublication.artifact(sourcesJarTask, new Action<MavenArtifact>() {
-//                        @Override
-//                        void execute(MavenArtifact artifact) {
-//                            artifact.classifier = "sources"
+        PublishingExtension publishing = this.project.extensions.findByType(PublishingExtension)
+        publishing.publications.create('mavenJava', MavenPublication, new Action<MavenPublication>() {
+            @Override
+            void execute(MavenPublication mavenPublication) {
+                mavenPublication.from(PluginDevPlugin.this.project.components.findByName('java'))
+                mavenPublication.artifact(sourcesJarTask, new Action<MavenArtifact>() {
+                    @Override
+                    void execute(MavenArtifact artifact) {
+                        artifact.classifier = "sources"
+                    }
+                })
+                mavenPublication.artifact(docsJarTask, new Action<MavenArtifact>() {
+                    @Override
+                    void execute(MavenArtifact artifact) {
+                        artifact.classifier = "javadoc"
+                    }
+                })
+//                mavenPublication.pom.withXml(new Action<XmlProvider>() {
+//                    @Override
+//                    void execute(XmlProvider xmlProvider) {
+//                        xmlProvider.asNode().children().last() + {
+//                            name 'Gradle plugin development plugin'
+//                            description 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal.'
 //                        }
-//                    })
-//                    mavenPublication.artifact(docsJarTask, new Action<MavenArtifact>() {
-//                        @Override
-//                        void execute(MavenArtifact artifact) {
-//                            artifact.classifier = "javadoc"
-//                        }
-//                    })
-//                    mavenPublication.pom.withXml(new Action<XmlProvider>() {
-//                        @Override
-//                        void execute(XmlProvider xmlProvider) {
-//                            xmlProvider.asNode().children().last() + {
-//                                name 'Gradle plugin development plugin'
-//                                description 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal.'
-//                            }
-//                        }
-//                    })
-//                }
-//            })
-//        }
+//                    }
+//                })
+            }
+        })
+
     }
 
 }

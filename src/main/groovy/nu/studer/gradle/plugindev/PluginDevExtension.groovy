@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 package nu.studer.gradle.plugindev
-
-import org.gradle.api.Project
-
 /**
  * Extension point to configure the plugin development plugin.
  */
 class PluginDevExtension {
 
-    final Project project
+    private final PluginDevPlugin plugin
 
     String pluginTitle
     String authorName
     String projectUrl
 
-    PluginDevExtension(Project project) {
-        this.project = project
+    PluginDevExtension(PluginDevPlugin plugin) {
+        this.plugin = plugin
+    }
+
+    boolean done() {
+        this.plugin.afterExtensionConfiguration(this)
     }
 
 }
