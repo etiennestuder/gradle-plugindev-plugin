@@ -21,6 +21,7 @@ class PluginDevExtension {
 
     private final PluginDevPlugin plugin
 
+    String pluginId
     String pluginTitle
     String pluginDescription
     String authorId
