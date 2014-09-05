@@ -15,6 +15,7 @@
  */
 package nu.studer.gradle.plugindev
 
+import com.jfrog.bintray.gradle.BintrayPlugin
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -60,6 +61,10 @@ class PluginDevPlugin implements Plugin<Project> {
         // apply the MavenPublishPlugin plugin
         project.plugins.apply(MavenPublishPlugin)
         LOGGER.debug("Applied plugin 'MavenPublishPlugin'")
+
+        // apply the BintrayPlugin plugin
+        project.plugins.apply(BintrayPlugin)
+        LOGGER.debug("Applied plugin 'BintrayPlugin'")
 
         // add the JCenter repository
         project.repositories.add(project.repositories.jcenter())
@@ -114,6 +119,8 @@ class PluginDevPlugin implements Plugin<Project> {
     }
 
     def afterExtensionConfiguration(PluginDevExtension extension) {
+        // todo move tasks up to 'apply' method
+
         // get all the sources from the 'main' source set
         JavaPluginConvention javaPluginConvention = project.convention.findPlugin(JavaPluginConvention)
         def mainSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)

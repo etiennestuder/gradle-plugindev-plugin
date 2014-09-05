@@ -15,7 +15,7 @@ apply plugin: 'com.jfrog.bintray'
 apply plugin: 'nu.studer.plugindev'
 
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:$groovyVersion"
+    compile "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayPluginVersion"
 }
 
 group = 'nu.studer'
@@ -108,7 +108,4 @@ project.afterEvaluate {
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.12'
-    description = 'Generates the Gradle wrapper files.'
-}
+wrapper.gradleVersion = '1.12'
