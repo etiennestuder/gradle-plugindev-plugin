@@ -22,14 +22,20 @@ class PluginDevExtension {
     private final PluginDevPlugin plugin
 
     String pluginTitle
+    String pluginDescription
+    String authorId
     String authorName
+    String authorEmail
     String projectUrl
+    String projectInceptionYear
+    Closure pomConfiguration
 
     PluginDevExtension(PluginDevPlugin plugin) {
         this.plugin = plugin
     }
 
     boolean done() {
+        // todo check for non-null values
         this.plugin.afterExtensionConfiguration(this)
     }
 

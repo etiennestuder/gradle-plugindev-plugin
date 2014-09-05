@@ -19,6 +19,7 @@ import com.jfrog.bintray.gradle.BintrayPlugin
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.XmlProvider
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.GroovyPlugin
@@ -147,6 +148,27 @@ class PluginDevPlugin implements Plugin<Project> {
         }
         LOGGER.debug("Registered task '$docsJarTask.name'")
 
+        // configure the POM configuration closure
+        def pomConfig = extension.pomConfiguration ?: {
+            name extension.pluginTitle
+            description extension.pluginDescription
+            url extension.projectUrl
+            inceptionYear extension.projectInceptionYear
+            developers {
+                developer {
+                    id extension.authorId
+                    name extension.authorName
+                    email extension.authorEmail
+                }
+            }
+            licenses {
+                license {
+                    name 'Apache License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.html'
+                }
+            }
+        }
+
         // register a publication that includes the generated artifact, the sources, and the docs
         PublishingExtension publishing = this.project.extensions.findByType(PublishingExtension)
         publishing.publications.create('mavenJava', MavenPublication, new Action<MavenPublication>() {
@@ -165,15 +187,12 @@ class PluginDevPlugin implements Plugin<Project> {
                         artifact.classifier = "javadoc"
                     }
                 })
-//                mavenPublication.pom.withXml(new Action<XmlProvider>() {
-//                    @Override
-//                    void execute(XmlProvider xmlProvider) {
-//                        xmlProvider.asNode().children().last() + {
-//                            name 'Gradle plugin development plugin'
-//                            description 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal.'
-//                        }
-//                    }
-//                })
+                mavenPublication.pom.withXml(new Action<XmlProvider>() {
+                    @Override
+                    void execute(XmlProvider xmlProvider) {
+                        xmlProvider.asNode().children().last() + pomConfig
+                    }
+                })
             }
         })
 
