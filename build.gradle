@@ -3,15 +3,11 @@ buildscript {
         jcenter()
     }
     dependencies {
-        // of bintray plugin and plugin dev plugin
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayPluginVersion"
         classpath "nu.studer:gradle-plugindev-plugin:$plugindevPluginVersion"
     }
 }
 
 apply plugin: 'groovy'
-apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'nu.studer.plugindev'
 
 dependencies {
@@ -21,50 +17,16 @@ dependencies {
 group = 'nu.studer'
 version = '0.0.4.DEV'
 
-def pomConfig = {
-    name project.plugindev.pluginTitle
-    description 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal.'
-    url project.plugindev.projectUrl
-    inceptionYear '2014'
-    developers {
-        developer {
-            id 'etiennestuder'
-            name project.plugindev.authorName
-            email 'etienne@studer.nu'
-        }
-    }
-    licenses {
-        license {
-            name 'Apache License, Version 2.0'
-            url 'http://www.apache.org/licenses/LICENSE-2.0.html'
-        }
-    }
-}
-
 plugindev {
     pluginTitle = 'Gradle plugin development plugin'
+    pluginDescription = 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal, JCenter, and MavenCentral.'
+    authorId = 'etiennestuder'
     authorName = 'Etienne Studer'
+    authorEmail = 'etienne@studer.nu'
     projectUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-
-            artifact sourcesJar {
-                classifier "sources"
-            }
-
-            artifact docsJar {
-                classifier "javadoc"
-            }
-
-            pom.withXml {
-                asNode().children().last() + pomConfig
-            }
-        }
-    }
+    projectInceptionYear = '2014'
+    // pomConfiguration = pomConfig
+    done()
 }
 
 bintray {
@@ -100,6 +62,7 @@ bintray {
     }
 }
 
+// todo remove
 project.afterEvaluate {
     bintray.publications.each { pub ->
         bintrayUpload.inputs.files { ->
