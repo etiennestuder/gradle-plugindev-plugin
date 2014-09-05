@@ -24,6 +24,7 @@ class PluginDevExtension {
     String pluginId
     String pluginTitle
     String pluginDescription
+    String pluginImplementationClass
     String authorId
     String authorName
     String authorEmail
