@@ -15,6 +15,7 @@
  */
 package nu.studer.gradle.plugindev
 
+import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayPlugin
 import org.gradle.api.Action
 import org.gradle.api.Plugin
@@ -43,7 +44,8 @@ class PluginDevPlugin implements Plugin<Project> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class);
 
-    private static final String MINIMUM_GRADLE_JAVA_VERSION = "1.6"
+    private static final String MINIMUM_GRADLE_JAVA_VERSION = '1.6'
+    private static final String PUBLICATION_NAME = 'mavenJava'
 
     private Project project
 
@@ -102,15 +104,16 @@ class PluginDevPlugin implements Plugin<Project> {
                             pluginDevExtension.authorName
                         }
                     },
-                    'Build-Date': new SimpleDateFormat("yyyy-MM-dd").format(new Date()),
-                    'Build-JDK': System.getProperty('java.version'),
-                    'Build-Gradle': project.gradle.gradleVersion,
-                    'Project-Url': new Object() {
+                    'Implementation-Website': new Object() {
                         @Override
                         String toString() {
                             pluginDevExtension.projectUrl
                         }
-                    })
+                    },
+                    'Build-Date': new SimpleDateFormat("yyyy-MM-dd").format(new Date()),
+                    'Build-JDK': System.getProperty('java.version'),
+                    'Build-Gradle': project.gradle.gradleVersion
+            )
             File license = project.file('LICENSE')
             if (license.exists()) {
                 jar.from(license)
@@ -171,7 +174,7 @@ class PluginDevPlugin implements Plugin<Project> {
 
         // register a publication that includes the generated artifact, the sources, and the docs
         PublishingExtension publishing = this.project.extensions.findByType(PublishingExtension)
-        publishing.publications.create('mavenJava', MavenPublication, new Action<MavenPublication>() {
+        def publication = publishing.publications.create(PUBLICATION_NAME, MavenPublication, new Action<MavenPublication>() {
             @Override
             void execute(MavenPublication mavenPublication) {
                 mavenPublication.from(PluginDevPlugin.this.project.components.findByName('java'))
@@ -196,6 +199,16 @@ class PluginDevPlugin implements Plugin<Project> {
             }
         })
 
+        // configure bintray extension
+        def bintray = project.extensions.findByType(BintrayExtension)
+        bintray.publications = [publication.getName()]
+        bintray.pkg {
+            desc = extension.pluginDescription
+            version {
+                vcsTag = publication.version
+                attributes = ['gradle-plugin': extension.pluginId + ":" + publication.groupId + ":" + publication.artifactId]
+            }
+        }
     }
 
 }
