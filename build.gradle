@@ -15,35 +15,28 @@ dependencies {
 }
 
 group = 'nu.studer'
-version = '0.0.4.DEV'
+version = '0.0.4'
 
 plugindev {
+    pluginId = 'nu.studer.plugindev'
     pluginTitle = 'Gradle plugin development plugin'
     pluginDescription = 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal, JCenter, and MavenCentral.'
+    pluginImplementationClass = 'nu.studer.gradle.plugindev.PluginDevPlugin'
     authorId = 'etiennestuder'
     authorName = 'Etienne Studer'
     authorEmail = 'etienne@studer.nu'
     projectUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
     projectInceptionYear = '2014'
-    // pomConfiguration = pomConfig
     done()
 }
 
 bintray {
-    def versionInfo = project.version
-
     user = "$BINTRAY_USER"
     key = "$BINTRAY_API_KEY"
-
-    publications = ['mavenJava']
-
-    dryRun = true
-    publish = true
 
     pkg {
         repo = 'gradle-plugins'
         name = 'nu.studer.plugindev'
-        desc = 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal.'
 
         websiteUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
         issueTrackerUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin/issues'
@@ -52,23 +45,10 @@ bintray {
         licenses = ['Apache-2.0']
         labels = ['gradle', 'plugin']
         publicDownloadNumbers = true
-
-        attributes = ['gradle-plugin': 'nu.studer.plugindev:nu.studer:gradle-plugindev-plugin']
-
-        version {
-            vcsTag = versionInfo
-            attributes = ['gradle-plugin': 'nu.studer.plugindev:nu.studer:gradle-plugindev-plugin']
-        }
     }
-}
 
-// todo remove
-project.afterEvaluate {
-    bintray.publications.each { pub ->
-        bintrayUpload.inputs.files { ->
-            project.publishing.publications.getByName(pub).publishableFiles
-        }
-    }
+    dryRun = true
+    publish = true
 }
 
 wrapper.gradleVersion = '1.12'
