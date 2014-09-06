@@ -152,16 +152,16 @@ class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Registered task '$docsJarTask.name'")
 
         // add a task instance that generates the plugin descriptor file
-        String generatePluginDescriptorTaskName = "generatePluginDescriptor"
-        GeneratePluginDescriptorTask generatePluginDescriptorTask = project.tasks.create(generatePluginDescriptorTaskName, GeneratePluginDescriptorTask.class)
-        generatePluginDescriptorTask.description = "Generates the plugin descriptor file."
-        generatePluginDescriptorTask.group = BasePlugin.BUILD_GROUP
-        generatePluginDescriptorTask.pluginId = { extension.pluginId }
-        generatePluginDescriptorTask.pluginImplementationClass = { extension.pluginImplementationClass }
-        LOGGER.debug("Registered task '$generatePluginDescriptorTask.name'")
+        String generatePluginDescriptorFileTaskName = "generatePluginDescriptorFile"
+        GeneratePluginDescriptorTask generatePluginDescriptorFile = project.tasks.create(generatePluginDescriptorFileTaskName, GeneratePluginDescriptorTask.class)
+        generatePluginDescriptorFile.description = "Generates the plugin descriptor file."
+        generatePluginDescriptorFile.group = BasePlugin.BUILD_GROUP
+        generatePluginDescriptorFile.pluginId = { extension.pluginId }
+        generatePluginDescriptorFile.pluginImplementationClass = { extension.pluginImplementationClass }
+        LOGGER.debug("Registered task '$generatePluginDescriptorFile.name'")
 
         // include the plugin descriptor in the production jar file
-        project.tasks[JavaPlugin.JAR_TASK_NAME].into('META-INF/gradle-plugins') { from generatePluginDescriptorTask }
+        project.tasks[JavaPlugin.JAR_TASK_NAME].into('META-INF/gradle-plugins') { from generatePluginDescriptorFile }
 
         // configure the POM configuration closure
         def pomConfig = extension.pomConfiguration ?: {
