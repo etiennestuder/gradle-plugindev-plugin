@@ -45,6 +45,9 @@ class PluginDevPlugin implements Plugin<Project> {
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class);
 
     private static final String MINIMUM_GRADLE_JAVA_VERSION = '1.6'
+    private static final String SOURCES_JAR_TASK_NAME = 'sourcesJar'
+    private static final String DOCS_JAR_TASK_NAME = 'docsJar'
+    private static final String GENERATE_PLUGIN_DESCRIPTOR_FILE_TASK_NAME = 'generatePluginDescriptorFile'
     private static final String PUBLICATION_NAME = 'mavenJava'
 
     private Project project
@@ -82,6 +85,31 @@ class PluginDevPlugin implements Plugin<Project> {
         javaConvention.sourceCompatibility = MINIMUM_GRADLE_JAVA_VERSION
         javaConvention.targetCompatibility = MINIMUM_GRADLE_JAVA_VERSION
         LOGGER.debug("Set source and target compatibility for Java and Groovy to $MINIMUM_GRADLE_JAVA_VERSION")
+
+        // get all the sources from the 'main' source set
+        JavaPluginConvention javaPluginConvention = project.convention.findPlugin(JavaPluginConvention)
+        def mainSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
+        SourceDirectorySet allMainSources = mainSourceSet.allSource
+
+        // add a task instance that generates a jar with the main sources
+        Jar sourcesJarTask = project.tasks.create(SOURCES_JAR_TASK_NAME, Jar.class)
+        sourcesJarTask.description = "Assembles a jar archive containing the main source code."
+        sourcesJarTask.group = BasePlugin.BUILD_GROUP
+        sourcesJarTask.classifier = "sources"
+        sourcesJarTask.from(allMainSources)
+        LOGGER.debug("Registered task '$sourcesJarTask.name'")
+
+        // add a task instance that generates a jar with the javadoc and optionally with the groovydoc
+        String docsJarTaskName = DOCS_JAR_TASK_NAME
+        Jar docsJarTask = project.tasks.create(docsJarTaskName, Jar.class)
+        docsJarTask.description = "Assembles a jar archive containing the documentation for the main source code."
+        docsJarTask.group = BasePlugin.BUILD_GROUP
+        docsJarTask.classifier = "javadoc"
+        docsJarTask.into('javadoc') { from project.tasks.findByName(JavaPlugin.JAVADOC_TASK_NAME) }
+        project.plugins.withType(GroovyPlugin) {
+            docsJarTask.into('groovydoc') { from project.tasks.findByName(GroovyPlugin.GROOVYDOC_TASK_NAME) }
+        }
+        LOGGER.debug("Registered task '$docsJarTask.name'")
 
         // add a MANIFEST file and optionally a LICENSE file to each jar file (lazily)
         project.tasks.withType(Jar) { Jar jar ->
@@ -123,36 +151,8 @@ class PluginDevPlugin implements Plugin<Project> {
     }
 
     def afterExtensionConfiguration(PluginDevExtension extension) {
-        // todo move tasks up to 'apply' method
-
-        // get all the sources from the 'main' source set
-        JavaPluginConvention javaPluginConvention = project.convention.findPlugin(JavaPluginConvention)
-        def mainSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
-        SourceDirectorySet allMainSources = mainSourceSet.allSource
-
-        // add a task instance that generates a jar with the main sources
-        String sourcesJarTaskName = "sourcesJar"
-        Jar sourcesJarTask = project.tasks.create(sourcesJarTaskName, Jar.class)
-        sourcesJarTask.description = "Assembles a jar archive containing the main source code."
-        sourcesJarTask.group = BasePlugin.BUILD_GROUP
-        sourcesJarTask.classifier = "sources"
-        sourcesJarTask.from(allMainSources)
-        LOGGER.debug("Registered task '$sourcesJarTask.name'")
-
-        // add a task instance that generates a jar with the javadoc and optionally with the groovydoc
-        String docsJarTaskName = "docsJar"
-        Jar docsJarTask = project.tasks.create(docsJarTaskName, Jar.class)
-        docsJarTask.description = "Assembles a jar archive containing the documentation for the main source code."
-        docsJarTask.group = BasePlugin.BUILD_GROUP
-        docsJarTask.classifier = "javadoc"
-        docsJarTask.into('javadoc') { from project.tasks.findByName(JavaPlugin.JAVADOC_TASK_NAME) }
-        project.plugins.withType(GroovyPlugin) {
-            docsJarTask.into('groovydoc') { from project.tasks.findByName(GroovyPlugin.GROOVYDOC_TASK_NAME) }
-        }
-        LOGGER.debug("Registered task '$docsJarTask.name'")
-
         // add a task instance that generates the plugin descriptor file
-        String generatePluginDescriptorFileTaskName = "generatePluginDescriptorFile"
+        String generatePluginDescriptorFileTaskName = GENERATE_PLUGIN_DESCRIPTOR_FILE_TASK_NAME
         GeneratePluginDescriptorTask generatePluginDescriptorFile = project.tasks.create(generatePluginDescriptorFileTaskName, GeneratePluginDescriptorTask.class)
         generatePluginDescriptorFile.description = "Generates the plugin descriptor file."
         generatePluginDescriptorFile.group = BasePlugin.BUILD_GROUP
@@ -190,13 +190,13 @@ class PluginDevPlugin implements Plugin<Project> {
             @Override
             void execute(MavenPublication mavenPublication) {
                 mavenPublication.from(PluginDevPlugin.this.project.components.findByName('java'))
-                mavenPublication.artifact(sourcesJarTask, new Action<MavenArtifact>() {
+                mavenPublication.artifact(project.tasks[SOURCES_JAR_TASK_NAME], new Action<MavenArtifact>() {
                     @Override
                     void execute(MavenArtifact artifact) {
                         artifact.classifier = "sources"
                     }
                 })
-                mavenPublication.artifact(docsJarTask, new Action<MavenArtifact>() {
+                mavenPublication.artifact(project.tasks[DOCS_JAR_TASK_NAME], new Action<MavenArtifact>() {
                     @Override
                     void execute(MavenArtifact artifact) {
                         artifact.classifier = "javadoc"
