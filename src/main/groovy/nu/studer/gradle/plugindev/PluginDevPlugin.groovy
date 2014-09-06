@@ -49,6 +49,7 @@ class PluginDevPlugin implements Plugin<Project> {
     private static final String DOCS_JAR_TASK_NAME = 'docsJar'
     private static final String GENERATE_PLUGIN_DESCRIPTOR_FILE_TASK_NAME = 'generatePluginDescriptorFile'
     private static final String PUBLICATION_NAME = 'mavenJava'
+    private static final String JAVA_COMPONENT_NAME = 'java'
 
     private Project project
 
@@ -189,7 +190,7 @@ class PluginDevPlugin implements Plugin<Project> {
         def publication = publishing.publications.create(PUBLICATION_NAME, MavenPublication, new Action<MavenPublication>() {
             @Override
             void execute(MavenPublication mavenPublication) {
-                mavenPublication.from(PluginDevPlugin.this.project.components.findByName('java'))
+                mavenPublication.from(PluginDevPlugin.this.project.components.findByName(JAVA_COMPONENT_NAME))
                 mavenPublication.artifact(project.tasks[SOURCES_JAR_TASK_NAME], new Action<MavenArtifact>() {
                     @Override
                     void execute(MavenArtifact artifact) {
@@ -218,7 +219,7 @@ class PluginDevPlugin implements Plugin<Project> {
             desc = extension.pluginDescription
             version {
                 vcsTag = publication.version
-                attributes = ['gradle-plugin': extension.pluginId + ":" + publication.groupId + ":" + publication.artifactId]
+                attributes = ['gradle-plugin': "$extension.pluginId:$publication.groupId:$publication.artifactId"]
             }
         }
     }
