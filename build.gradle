@@ -40,7 +40,7 @@ bintray {
 
         websiteUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
         issueTrackerUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin/issues'
-        vcsUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
+        vcsUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin.git'
 
         licenses = ['Apache-2.0']
         labels = ['gradle', 'plugin']
