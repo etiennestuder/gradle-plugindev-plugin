@@ -219,6 +219,9 @@ class PluginDevPlugin implements Plugin<Project> {
         bintray.dryRun = false
         bintray.pkg {
             desc = extension.pluginDescription
+            websiteUrl = extension.projectUrl
+            issueTrackerUrl = extension.projectIssuesUrl
+            vcsUrl = extension.projectVcsUrl
             publicDownloadNumbers = true
             version {
                 vcsTag = publication.version

@@ -29,6 +29,8 @@ class PluginDevExtension {
     String authorName
     String authorEmail
     String projectUrl
+    String projectIssuesUrl
+    String projectVcsUrl
     String projectInceptionYear
     Closure pomConfiguration
 
@@ -37,6 +39,16 @@ class PluginDevExtension {
     }
 
     boolean done() {
+        // use defaults in case of github project
+        if (projectUrl?.startsWith('https://github.com')) {
+            if (!projectIssuesUrl) {
+                projectIssuesUrl = "${projectUrl}/issues"
+            }
+            if (!projectVcsUrl) {
+                projectVcsUrl = "${projectUrl}.git"
+            }
+        }
+
         // todo check for non-null values
         this.plugin.afterExtensionConfiguration(this)
     }
