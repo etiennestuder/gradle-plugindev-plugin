@@ -15,7 +15,7 @@ dependencies {
 }
 
 group = 'nu.studer'
-version = '0.0.5.DEV'
+version = '0.0.6.DEV'
 
 plugindev {
     pluginId = 'nu.studer.plugindev'
@@ -37,18 +37,11 @@ bintray {
     pkg {
         repo = 'gradle-plugins'
         name = 'nu.studer.plugindev'
-
-        websiteUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
-        issueTrackerUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin/issues'
-        vcsUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin.git'
-
         licenses = ['Apache-2.0']
         labels = ['gradle', 'plugin']
-        publicDownloadNumbers = true
     }
 
     dryRun = true
-    publish = true
 }
 
 wrapper.gradleVersion = '1.12'
