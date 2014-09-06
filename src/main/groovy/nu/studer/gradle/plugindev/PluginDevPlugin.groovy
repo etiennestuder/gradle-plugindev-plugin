@@ -216,9 +216,10 @@ class PluginDevPlugin implements Plugin<Project> {
         def bintray = project.extensions.findByType(BintrayExtension)
         bintray.publications = [publication.getName()]
         bintray.publish = true
-        bintray.dryRun = true
+        bintray.dryRun = false
         bintray.pkg {
             desc = extension.pluginDescription
+            publicDownloadNumbers = true
             version {
                 vcsTag = publication.version
                 attributes = ['gradle-plugin': "$extension.pluginId:$publication.groupId:$publication.artifactId"]
