@@ -215,6 +215,8 @@ class PluginDevPlugin implements Plugin<Project> {
         // configure bintray extension
         def bintray = project.extensions.findByType(BintrayExtension)
         bintray.publications = [publication.getName()]
+        bintray.publish = true
+        bintray.dryRun = true
         bintray.pkg {
             desc = extension.pluginDescription
             version {

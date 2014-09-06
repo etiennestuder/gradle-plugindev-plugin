@@ -15,7 +15,7 @@ dependencies {
 }
 
 group = 'nu.studer'
-version = '0.0.4'
+version = '0.0.5.DEV'
 
 plugindev {
     pluginId = 'nu.studer.plugindev'
