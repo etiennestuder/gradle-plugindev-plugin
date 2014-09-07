@@ -15,13 +15,15 @@ dependencies {
 }
 
 group = 'nu.studer'
-version = '0.0.6.DEV'
+version = '0.0.7.DEV'
 
 plugindev {
     pluginId = 'nu.studer.plugindev'
     pluginTitle = 'Gradle plugin development plugin'
     pluginDescription = 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal, JCenter, and MavenCentral.'
     pluginImplementationClass = 'nu.studer.gradle.plugindev.PluginDevPlugin'
+    pluginLicenses 'Apache-2.0'
+    pluginTags 'gradle', 'plugin', 'development'
     authorId = 'etiennestuder'
     authorName = 'Etienne Studer'
     authorEmail = 'etienne@studer.nu'
@@ -37,8 +39,6 @@ bintray {
     pkg {
         repo = 'gradle-plugins'
         name = 'nu.studer.plugindev'
-        licenses = ['Apache-2.0']
-        labels = ['gradle', 'plugin']
     }
 
     dryRun = true
