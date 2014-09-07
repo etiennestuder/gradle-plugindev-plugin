@@ -26,6 +26,7 @@ class PluginDevExtension {
     String pluginDescription
     String pluginImplementationClass
     SortedSet<String> pluginLicenses
+    SortedSet<String> pluginTags
     String authorId
     String authorName
     String authorEmail
@@ -38,6 +39,7 @@ class PluginDevExtension {
     PluginDevExtension(PluginDevPlugin plugin) {
         this.plugin = plugin
         this.pluginLicenses = new TreeSet<>()
+        this.pluginTags = new TreeSet<>()
     }
 
     boolean done() {
@@ -72,6 +74,24 @@ class PluginDevExtension {
 
     def pluginLicenses(String... licenses) {
         this.pluginLicenses.addAll licenses
+    }
+
+    def setPluginTag(String tag) {
+        this.pluginTags.clear()
+        this.pluginTags.add tag
+    }
+
+    def setPluginTags(List<String> tags) {
+        this.pluginTags.clear()
+        this.pluginTags.addAll tags
+    }
+
+    def pluginTag(String tag) {
+        this.pluginTags.add tag
+    }
+
+    def pluginTags(String... tags) {
+        this.pluginTags.addAll tags
     }
 
 }
