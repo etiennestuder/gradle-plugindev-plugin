@@ -42,22 +42,6 @@ class PluginDevExtension {
         this.pluginTags = new TreeSet<>()
     }
 
-    boolean done() {
-        // use defaults in case of github project
-        if (projectUrl?.startsWith('https://github.com')) {
-            if (!projectIssuesUrl) {
-                projectIssuesUrl = "${projectUrl}/issues"
-            }
-            if (!projectVcsUrl) {
-                projectVcsUrl = "${projectUrl}.git"
-            }
-        }
-
-        // todo check for non-null values
-        // todo check implementation class exists in jar
-        this.plugin.afterExtensionConfiguration(this)
-    }
-
     def setPluginLicense(String license) {
         this.pluginLicenses.clear()
         this.pluginLicenses.add license
@@ -92,6 +76,22 @@ class PluginDevExtension {
 
     def pluginTags(String... tags) {
         this.pluginTags.addAll tags
+    }
+
+    def done() {
+        // use defaults in case of github project
+        if (projectUrl?.startsWith('https://github.com')) {
+            if (!projectIssuesUrl) {
+                projectIssuesUrl = "${projectUrl}/issues"
+            }
+            if (!projectVcsUrl) {
+                projectVcsUrl = "${projectUrl}.git"
+            }
+        }
+
+        // todo check for non-null values
+        // todo check implementation class exists in jar
+        this.plugin.afterExtensionConfiguration(this)
     }
 
 }
