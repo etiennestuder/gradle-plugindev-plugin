@@ -224,6 +224,7 @@ class PluginDevPlugin implements Plugin<Project> {
         bintray.publish = true
         bintray.dryRun = false
         bintray.pkg {
+            name = extension.pluginName
             desc = extension.pluginDescription
             websiteUrl = extension.projectUrl
             issueTrackerUrl = extension.projectIssuesUrl
