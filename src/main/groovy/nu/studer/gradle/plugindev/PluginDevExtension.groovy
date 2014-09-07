@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 package nu.studer.gradle.plugindev
+
+import org.gradle.api.Project
+
 /**
  * Extension point to configure the plugin development plugin.
  */
 class PluginDevExtension {
 
     private final PluginDevPlugin plugin
+    private final Project project
 
     String pluginId
     String pluginName
@@ -36,49 +40,55 @@ class PluginDevExtension {
     String projectInceptionYear
     Closure pomConfiguration
 
-    PluginDevExtension(PluginDevPlugin plugin) {
+    PluginDevExtension(PluginDevPlugin plugin, Project project) {
         this.plugin = plugin
+        this.project = project
         this.pluginLicenses = new TreeSet<>()
         this.pluginTags = new TreeSet<>()
     }
 
     def setPluginLicense(String license) {
-        this.pluginLicenses.clear()
-        this.pluginLicenses.add license
+        pluginLicenses.clear()
+        pluginLicenses.add license
     }
 
     def setPluginLicenses(List<String> licenses) {
-        this.pluginLicenses.clear()
-        this.pluginLicenses.addAll licenses
+        pluginLicenses.clear()
+        pluginLicenses.addAll licenses
     }
 
     def pluginLicense(String license) {
-        this.pluginLicenses.add license
+        pluginLicenses.add license
     }
 
     def pluginLicenses(String... licenses) {
-        this.pluginLicenses.addAll licenses
+        pluginLicenses.addAll licenses
     }
 
     def setPluginTag(String tag) {
-        this.pluginTags.clear()
-        this.pluginTags.add tag
+        pluginTags.clear()
+        pluginTags.add tag
     }
 
     def setPluginTags(List<String> tags) {
-        this.pluginTags.clear()
-        this.pluginTags.addAll tags
+        pluginTags.clear()
+        pluginTags.addAll tags
     }
 
     def pluginTag(String tag) {
-        this.pluginTags.add tag
+        pluginTags.add tag
     }
 
     def pluginTags(String... tags) {
-        this.pluginTags.addAll tags
+        pluginTags.addAll tags
     }
 
     def done() {
+        // use default in case of missing plugin name
+        if (!pluginName) {
+            pluginName = project.name
+        }
+
         // use defaults in case of github project
         if (projectUrl?.startsWith('https://github.com')) {
             if (!projectIssuesUrl) {
@@ -91,7 +101,7 @@ class PluginDevExtension {
 
         // todo check for non-null values
         // todo check implementation class exists in jar
-        this.plugin.afterExtensionConfiguration(this)
+        plugin.afterExtensionConfiguration this
     }
 
 }

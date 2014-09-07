@@ -59,7 +59,7 @@ class PluginDevPlugin implements Plugin<Project> {
         this.project = project
 
         // add a new 'plugindev' extension
-        def pluginDevExtension = project.extensions.create(PluginDevConstants.PLUGINDEV_EXTENSION_NAME, PluginDevExtension, this)
+        def pluginDevExtension = project.extensions.create(PluginDevConstants.PLUGINDEV_EXTENSION_NAME, PluginDevExtension, this, project)
         LOGGER.debug("Registered extension '$PluginDevConstants.PLUGINDEV_EXTENSION_NAME'")
 
         // apply the Java plugin
@@ -192,11 +192,11 @@ class PluginDevPlugin implements Plugin<Project> {
         }
 
         // register a publication that includes the generated artifact, the sources, and the docs
-        PublishingExtension publishing = this.project.extensions.findByType(PublishingExtension)
+        PublishingExtension publishing = project.extensions.findByType(PublishingExtension)
         def publication = publishing.publications.create(PUBLICATION_NAME, MavenPublication, new Action<MavenPublication>() {
             @Override
             void execute(MavenPublication mavenPublication) {
-                mavenPublication.from(PluginDevPlugin.this.project.components.findByName(JAVA_COMPONENT_NAME))
+                mavenPublication.from(project.components.findByName(JAVA_COMPONENT_NAME))
                 mavenPublication.artifact(project.tasks[SOURCES_JAR_TASK_NAME], new Action<MavenArtifact>() {
                     @Override
                     void execute(MavenArtifact artifact) {
