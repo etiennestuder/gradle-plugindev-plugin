@@ -228,6 +228,7 @@ class PluginDevPlugin implements Plugin<Project> {
             websiteUrl = extension.projectUrl
             issueTrackerUrl = extension.projectIssuesUrl
             vcsUrl = extension.projectVcsUrl
+            licenses = extension.pluginLicenses
             publicDownloadNumbers = true
             version {
                 vcsTag = publication.version
