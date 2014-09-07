@@ -131,7 +131,7 @@ class PluginDevPlugin implements Plugin<Project> {
                     'Implementation-Title': new Object() {
                         @Override
                         String toString() {
-                            pluginDevExtension.pluginTitle
+                            pluginDevExtension.pluginName
                         }
                     },
                     'Implementation-Version': new Object() {
@@ -167,7 +167,7 @@ class PluginDevPlugin implements Plugin<Project> {
     def afterExtensionConfiguration(PluginDevExtension extension) {
         // configure the POM configuration closure
         def pomConfig = extension.pomConfiguration ?: {
-            name extension.pluginTitle
+            name extension.pluginName
             description extension.pluginDescription
             url extension.projectUrl
             inceptionYear extension.projectInceptionYear

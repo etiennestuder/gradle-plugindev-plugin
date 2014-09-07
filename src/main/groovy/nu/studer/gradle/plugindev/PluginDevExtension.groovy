@@ -22,7 +22,7 @@ class PluginDevExtension {
     private final PluginDevPlugin plugin
 
     String pluginId
-    String pluginTitle
+    String pluginName
     String pluginDescription
     String pluginImplementationClass
     SortedSet<String> pluginLicenses
