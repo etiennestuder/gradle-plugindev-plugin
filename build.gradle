@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         jcenter()
-        // mavenLocal()
     }
     dependencies {
         classpath "nu.studer:gradle-plugindev-plugin:$plugindevPluginVersion"
@@ -35,11 +34,7 @@ plugindev {
 bintray {
     user = "$BINTRAY_USER"
     key = "$BINTRAY_API_KEY"
-
-    pkg {
-        repo = 'gradle-plugins'
-    }
-
+    pkg.repo = 'gradle-plugins'
     dryRun = true
 }
 
