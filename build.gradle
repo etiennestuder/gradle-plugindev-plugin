@@ -16,11 +16,10 @@ dependencies {
 }
 
 group = 'nu.studer'
-version = '0.0.10.DEV'
+version = '0.0.11.DEV'
 
 plugindev {
     pluginId = 'nu.studer.plugindev'
-    pluginName = 'gradle-plugindev-plugin'
     pluginDescription = 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal, JCenter, and MavenCentral.'
     pluginImplementationClass = 'nu.studer.gradle.plugindev.PluginDevPlugin'
     pluginLicenses 'Apache-2.0'
