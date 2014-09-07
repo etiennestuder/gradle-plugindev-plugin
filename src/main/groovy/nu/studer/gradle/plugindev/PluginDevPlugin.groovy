@@ -17,6 +17,7 @@ package nu.studer.gradle.plugindev
 
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayPlugin
+import nu.studer.gradle.util.Licenses
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -177,10 +178,15 @@ class PluginDevPlugin implements Plugin<Project> {
                     email extension.authorEmail
                 }
             }
-            licenses {
-                license {
-                    name 'Apache License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.html'
+            if (extension.pluginLicenses) {
+                licenses {
+                    extension.pluginLicenses.each { String licenseTypeKey ->
+                        def licenseType = Licenses.LICENSE_TYPES[licenseTypeKey]
+                        license {
+                            name licenseType[0]
+                            url licenseType[1]
+                        }
+                    }
                 }
             }
         }

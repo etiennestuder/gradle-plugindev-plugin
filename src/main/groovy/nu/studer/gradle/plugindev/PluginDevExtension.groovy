@@ -25,6 +25,7 @@ class PluginDevExtension {
     String pluginTitle
     String pluginDescription
     String pluginImplementationClass
+    SortedSet<String> pluginLicenses
     String authorId
     String authorName
     String authorEmail
@@ -36,6 +37,7 @@ class PluginDevExtension {
 
     PluginDevExtension(PluginDevPlugin plugin) {
         this.plugin = plugin
+        this.pluginLicenses = new TreeSet<>()
     }
 
     boolean done() {
@@ -50,7 +52,26 @@ class PluginDevExtension {
         }
 
         // todo check for non-null values
+        // todo check implementation class exists in jar
         this.plugin.afterExtensionConfiguration(this)
+    }
+
+    def setPluginLicense(String license) {
+        this.pluginLicenses.clear()
+        this.pluginLicenses.add license
+    }
+
+    def setPluginLicenses(List<String> licenses) {
+        this.pluginLicenses.clear()
+        this.pluginLicenses.addAll licenses
+    }
+
+    def pluginLicense(String license) {
+        this.pluginLicenses.add license
+    }
+
+    def pluginLicenses(String... licenses) {
+        this.pluginLicenses.addAll licenses
     }
 
 }
