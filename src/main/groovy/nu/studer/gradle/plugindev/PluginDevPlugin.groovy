@@ -171,9 +171,6 @@ class PluginDevPlugin implements Plugin<Project> {
             description extension.pluginDescription
             url extension.projectUrl
             inceptionYear extension.projectInceptionYear
-            scm {
-                url extension.projectVcsUrl
-            }
             if (extension.pluginLicenses) {
                 licenses {
                     extension.pluginLicenses.each { String licenseTypeKey ->
@@ -184,6 +181,9 @@ class PluginDevPlugin implements Plugin<Project> {
                         }
                     }
                 }
+            }
+            scm {
+                url extension.projectVcsUrl
             }
             developers {
                 developer {
