@@ -84,17 +84,30 @@ class PluginDevExtension {
     }
 
     def done() {
+        // use default in case of missing plugin id
+        if (!pluginId) {
+            if (pluginImplementationClass?.indexOf('.') > -1) {
+                pluginId = pluginImplementationClass.
+                        substring(0, pluginImplementationClass.lastIndexOf('.')).
+                        replaceAll('.gradle', '')
+            }
+        }
+
         // use default in case of missing plugin name
         if (!pluginName) {
             pluginName = project.name
         }
 
-        // use defaults in case of github project
-        if (projectUrl?.startsWith('https://github.com')) {
-            if (!projectIssuesUrl) {
+        // use defaults for github project in case of missing issues url
+        if (!projectIssuesUrl) {
+            if (projectUrl?.startsWith('https://github.com')) {
                 projectIssuesUrl = "${projectUrl}/issues"
             }
-            if (!projectVcsUrl) {
+        }
+
+        // use defaults for github project in case of missing vcs url
+        if (!projectVcsUrl) {
+            if (projectUrl?.startsWith('https://github.com')) {
                 projectVcsUrl = "${projectUrl}.git"
             }
         }
