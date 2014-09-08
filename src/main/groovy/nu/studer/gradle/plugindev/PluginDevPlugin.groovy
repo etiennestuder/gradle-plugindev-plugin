@@ -174,13 +174,6 @@ class PluginDevPlugin implements Plugin<Project> {
             scm {
                 url extension.projectVcsUrl
             }
-            developers {
-                developer {
-                    id extension.authorId
-                    name extension.authorName
-                    email extension.authorEmail
-                }
-            }
             if (extension.pluginLicenses) {
                 licenses {
                     extension.pluginLicenses.each { String licenseTypeKey ->
@@ -190,6 +183,13 @@ class PluginDevPlugin implements Plugin<Project> {
                             url licenseType[1]
                         }
                     }
+                }
+            }
+            developers {
+                developer {
+                    id extension.authorId
+                    name extension.authorName
+                    email extension.authorEmail
                 }
             }
         }
