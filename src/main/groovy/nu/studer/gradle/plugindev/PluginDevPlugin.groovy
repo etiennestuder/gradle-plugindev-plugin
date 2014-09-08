@@ -171,6 +171,9 @@ class PluginDevPlugin implements Plugin<Project> {
             description extension.pluginDescription
             url extension.projectUrl
             inceptionYear extension.projectInceptionYear
+            scm {
+                url extension.projectVcsUrl
+            }
             developers {
                 developer {
                     id extension.authorId
