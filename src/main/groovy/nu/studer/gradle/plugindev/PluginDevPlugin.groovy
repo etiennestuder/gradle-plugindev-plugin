@@ -120,6 +120,8 @@ class PluginDevPlugin implements Plugin<Project> {
         // include the plugin descriptor in the production jar file
         project.tasks[JavaPlugin.JAR_TASK_NAME].into('META-INF/gradle-plugins') { from generatePluginDescriptorFile }
 
+        // todo ensure plugin class is contained in jar task
+
         // add a MANIFEST file and optionally a LICENSE file to each jar file (lazily through toString() implementation)
         project.tasks.withType(Jar) { Jar jar ->
             jar.manifest.attributes(
@@ -153,7 +155,7 @@ class PluginDevPlugin implements Plugin<Project> {
                     'Build-Plugin': new Object() {
                         @Override
                         String toString() {
-                            "$PluginDevPlugin.name-$project.version"
+                            PluginDevPlugin.name
                         }
                     }
             )
