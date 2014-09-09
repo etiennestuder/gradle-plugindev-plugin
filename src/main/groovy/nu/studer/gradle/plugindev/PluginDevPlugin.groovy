@@ -62,17 +62,12 @@ class PluginDevPlugin implements Plugin<Project> {
         def pluginDevExtension = project.extensions.create(PluginDevConstants.PLUGINDEV_EXTENSION_NAME, PluginDevExtension, this, project)
         LOGGER.debug("Registered extension '$PluginDevConstants.PLUGINDEV_EXTENSION_NAME'")
 
-        // apply the Java plugin
-        project.plugins.apply(JavaPlugin)
-        LOGGER.debug("Applied plugin 'JavaPlugin'")
-
-        // apply the MavenPublishPlugin plugin
-        project.plugins.apply(MavenPublishPlugin)
-        LOGGER.debug("Applied plugin 'MavenPublishPlugin'")
-
-        // apply the BintrayPlugin plugin
-        project.plugins.apply(BintrayPlugin)
-        LOGGER.debug("Applied plugin 'BintrayPlugin'")
+        // apply the JavaPlugin, MavenPublishPlugin, and BintrayPlugin plugin
+        def pluginsToApply = [JavaPlugin, MavenPublishPlugin, BintrayPlugin]
+        pluginsToApply.each { Class plugin ->
+            project.plugins.apply plugin
+            LOGGER.debug("Applied plugin '$plugin.simpleName'")
+        }
 
         // add the JCenter repository
         project.repositories.add(project.repositories.jcenter())
@@ -154,7 +149,13 @@ class PluginDevPlugin implements Plugin<Project> {
                     },
                     'Build-Date': new SimpleDateFormat("yyyy-MM-dd").format(new Date()),
                     'Build-JDK': System.getProperty('java.version'),
-                    'Build-Gradle': project.gradle.gradleVersion
+                    'Build-Gradle': project.gradle.gradleVersion,
+                    'Build-Plugin': new Object() {
+                        @Override
+                        String toString() {
+                            "$PluginDevPlugin.name-$project.version"
+                        }
+                    }
             )
             File license = project.file('LICENSE')
             if (license.exists()) {
