@@ -26,6 +26,8 @@ import org.gradle.api.tasks.TaskAction
  */
 class GeneratePluginDescriptorTask extends DefaultTask {
 
+    private static final def IMPLEMENTATION_CLASS_ATTRIBUTE = "implementation-class"
+
     @Input
     def pluginId
 
@@ -41,7 +43,8 @@ class GeneratePluginDescriptorTask extends DefaultTask {
     @TaskAction
     def generate() {
         def resolvedPluginImplementationClass = resolveAsString(pluginImplementationClass, 'pluginImplementationClass')
-        propertiesFile.text = "implementation-class=$resolvedPluginImplementationClass"
+        validateClassName(resolvedPluginImplementationClass)
+        propertiesFile.text = "$IMPLEMENTATION_CLASS_ATTRIBUTE=$resolvedPluginImplementationClass"
     }
 
     private String resolveAsString(def propertyValue, String propertyName) {
@@ -51,6 +54,15 @@ class GeneratePluginDescriptorTask extends DefaultTask {
             resolveAsString(propertyValue(), propertyName)
         } else {
             throw new IllegalArgumentException("Property '$propertyName' has value of unsupported type: ${propertyValue?.class}")
+        }
+    }
+
+    static def validateClassName(String className) {
+        try {
+            Class.forName(className)
+        } catch (Exception e) {
+            def exceptionClassName = e.class.name
+            throw new IllegalArgumentException("Invalid value for plugin descriptor attribute '$IMPLEMENTATION_CLASS_ATTRIBUTE': $className ($exceptionClassName", e)
         }
     }
 

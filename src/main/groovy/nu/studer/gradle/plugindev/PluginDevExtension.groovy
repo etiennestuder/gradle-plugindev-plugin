@@ -114,7 +114,6 @@ class PluginDevExtension {
 
         // todo add version check and include version range in plugin descriptor
         // todo check for non-null values
-        // todo check implementation class exists in jar
         plugin.afterExtensionConfiguration this
     }
 
