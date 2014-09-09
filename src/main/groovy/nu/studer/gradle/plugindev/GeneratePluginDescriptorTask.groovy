@@ -47,7 +47,7 @@ class GeneratePluginDescriptorTask extends DefaultTask {
         propertiesFile.text = "$IMPLEMENTATION_CLASS_ATTRIBUTE=$resolvedPluginImplementationClass"
     }
 
-    private String resolveAsString(def propertyValue, String propertyName) {
+    private static String resolveAsString(def propertyValue, String propertyName) {
         if (propertyValue instanceof String) {
             propertyValue
         } else if (propertyValue instanceof Closure) {
@@ -57,7 +57,7 @@ class GeneratePluginDescriptorTask extends DefaultTask {
         }
     }
 
-    static def validateClassName(String className) {
+    private static void validateClassName(String className) {
         try {
             Class.forName(className)
         } catch (Exception e) {
