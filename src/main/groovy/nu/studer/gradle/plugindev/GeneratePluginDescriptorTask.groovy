@@ -53,7 +53,7 @@ class GeneratePluginDescriptorTask extends DefaultTask {
         } else if (propertyValue instanceof Closure) {
             resolveAsString(propertyValue(), propertyName)
         } else {
-            throw new IllegalArgumentException("Property '$propertyName' has value of unsupported type: ${propertyValue?.class}")
+            throw new IllegalArgumentException("Property '$propertyName' has a value of unsupported type: ${propertyValue?.class}")
         }
     }
 
