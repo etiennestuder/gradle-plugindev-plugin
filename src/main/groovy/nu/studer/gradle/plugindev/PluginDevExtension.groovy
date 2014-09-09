@@ -15,6 +15,7 @@
  */
 package nu.studer.gradle.plugindev
 
+import nu.studer.gradle.util.Licenses
 import org.gradle.api.Project
 
 /**
@@ -29,8 +30,8 @@ class PluginDevExtension {
     String pluginName
     String pluginDescription
     String pluginImplementationClass
-    SortedSet<String> pluginLicenses
-    SortedSet<String> pluginTags
+    Set<String> pluginLicenses
+    Set<String> pluginTags
     String authorId
     String authorName
     String authorEmail
@@ -43,8 +44,8 @@ class PluginDevExtension {
     PluginDevExtension(PluginDevPlugin plugin, Project project) {
         this.plugin = plugin
         this.project = project
-        this.pluginLicenses = new TreeSet<>()
-        this.pluginTags = new TreeSet<>()
+        this.pluginLicenses = new LinkedHashSet<>()
+        this.pluginTags = new LinkedHashSet<>()
     }
 
     def setPluginLicense(String license) {
@@ -84,7 +85,15 @@ class PluginDevExtension {
     }
 
     def done() {
-        // use default in case of missing plugin id
+        applyDefaultValuesForEmptyValues()
+        checkPropertiesHaveNonEmptyValues()
+        checkPropertiesHaveValidValues()
+
+        plugin.afterExtensionConfiguration this
+    }
+
+    private void applyDefaultValuesForEmptyValues() {
+        // use default in case of missing plugin id, derived from package path of plugin class
         if (!pluginId) {
             if (pluginImplementationClass?.indexOf('.') > -1) {
                 pluginId = pluginImplementationClass.
@@ -93,28 +102,67 @@ class PluginDevExtension {
             }
         }
 
-        // use default in case of missing plugin name
+        // use default in case of missing plugin name, derived from project name
         if (!pluginName) {
             pluginName = project.name
         }
 
-        // use defaults for github project in case of missing issues url
+        // use defaults for github project in case of missing issues url, derived from project url
         if (!projectIssuesUrl) {
             if (projectUrl?.startsWith('https://github.com')) {
                 projectIssuesUrl = "${projectUrl}/issues"
             }
         }
 
-        // use defaults for github project in case of missing vcs url
+        // use defaults for github project in case of missing vcs url, derived from project url
         if (!projectVcsUrl) {
             if (projectUrl?.startsWith('https://github.com')) {
                 projectVcsUrl = "${projectUrl}.git"
             }
         }
+    }
 
-        // todo add version check and include version range in plugin descriptor
-        // todo check for non-null values
-        plugin.afterExtensionConfiguration this
+    private void checkPropertiesHaveNonEmptyValues() {
+        checkPropertyNotEmpty(pluginId, 'pluginId')
+        checkPropertyNotEmpty(pluginName, 'pluginName')
+        checkPropertyNotEmpty(pluginDescription, 'pluginDescription')
+        checkPropertyNotEmpty(pluginImplementationClass, 'pluginImplementationClass')
+        checkPropertyNotEmpty(pluginLicenses, 'pluginLicenses')
+        checkPropertyNotEmpty(pluginTags, 'pluginTags')
+        checkPropertyNotEmpty(authorId, 'authorId')
+        checkPropertyNotEmpty(authorName, 'authorName')
+        checkPropertyNotEmpty(authorEmail, 'authorEmail')
+        checkPropertyNotEmpty(projectUrl, 'projectUrl')
+        checkPropertyNotEmpty(projectIssuesUrl, 'projectIssuesUrl')
+        checkPropertyNotEmpty(projectVcsUrl, 'projectVcsUrl')
+        checkPropertyNotEmpty(projectInceptionYear, 'projectInceptionYear')
+    }
+
+    private void checkPropertiesHaveValidValues() {
+        // ensure fully qualified plugin id
+        if (!pluginId.contains('.')) {
+            throw new IllegalStateException("Property 'pluginId' must be a fully qualified id: $pluginId")
+        }
+
+        // ensure valid license type
+        pluginLicenses.each { String licenseTypeKey ->
+            if (!Licenses.LICENSE_TYPES[licenseTypeKey]) {
+                throw new IllegalStateException("Property 'pluginLicenses' contains a non-supported license type: $licenseTypeKey. " +
+                        "Currently supported license types are: " + Licenses.LICENSE_TYPES.keySet().join(", "))
+            }
+        }
+    }
+
+    private static void checkPropertyNotEmpty(String propertyValue, String propertyName) {
+        if (!propertyValue?.trim()) {
+            throw new IllegalStateException("Property '$propertyName' is missing or empty")
+        }
+    }
+
+    private static void checkPropertyNotEmpty(Set propertyValue, String propertyName) {
+        if (!propertyValue) {
+            throw new IllegalStateException("Property '$propertyName' is missing or empty")
+        }
     }
 
 }
