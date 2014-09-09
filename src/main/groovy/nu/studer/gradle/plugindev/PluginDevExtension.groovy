@@ -165,4 +165,25 @@ class PluginDevExtension {
         }
     }
 
+
+    @Override
+    public String toString() {
+        return "PluginDevExtension{" +
+                ", pluginId='" + pluginId + '\'' +
+                ", pluginName='" + pluginName + '\'' +
+                ", pluginDescription='" + pluginDescription + '\'' +
+                ", pluginImplementationClass='" + pluginImplementationClass + '\'' +
+                ", pluginLicenses=" + pluginLicenses +
+                ", pluginTags=" + pluginTags +
+                ", authorId='" + authorId + '\'' +
+                ", authorName='" + authorName + '\'' +
+                ", authorEmail='" + authorEmail + '\'' +
+                ", projectUrl='" + projectUrl + '\'' +
+                ", projectIssuesUrl='" + projectIssuesUrl + '\'' +
+                ", projectVcsUrl='" + projectVcsUrl + '\'' +
+                "  projectInceptionYear='" + projectInceptionYear + '\'' +
+                ", pomConfiguration=" + pomConfiguration +
+                '}';
+    }
+
 }
