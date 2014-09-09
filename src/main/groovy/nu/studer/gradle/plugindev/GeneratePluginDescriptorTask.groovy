@@ -43,7 +43,6 @@ class GeneratePluginDescriptorTask extends DefaultTask {
     @TaskAction
     def generate() {
         def resolvedPluginImplementationClass = resolveAsString(pluginImplementationClass, 'pluginImplementationClass')
-        validateClassName(resolvedPluginImplementationClass)
         propertiesFile.text = "$IMPLEMENTATION_CLASS_ATTRIBUTE=$resolvedPluginImplementationClass"
     }
 
@@ -54,15 +53,6 @@ class GeneratePluginDescriptorTask extends DefaultTask {
             resolveAsString(propertyValue(), propertyName)
         } else {
             throw new IllegalArgumentException("Property '$propertyName' has a value of unsupported type: ${propertyValue?.class}")
-        }
-    }
-
-    private static void validateClassName(String className) {
-        try {
-            Class.forName(className)
-        } catch (Exception e) {
-            def exceptionClassName = e.class.name
-            throw new IllegalArgumentException("Invalid value for plugin descriptor attribute '$IMPLEMENTATION_CLASS_ATTRIBUTE': $className ($exceptionClassName", e)
         }
     }
 
