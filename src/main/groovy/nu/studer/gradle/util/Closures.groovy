@@ -28,13 +28,13 @@ final class Closures {
      * @param propertyName the name of the property
      * @return the property value resolved as a string
      */
-    static String resolveAsString(def propertyValue, String propertyName) {
+    static String resolveAsString(def propertyValue) {
         if (propertyValue == null) {
             null
         } else if (propertyValue instanceof String) {
             propertyValue
         } else if (propertyValue instanceof Closure) {
-            resolveAsString(propertyValue(), propertyName)
+            resolveAsString(propertyValue())
         } else {
             propertyValue.toString()
         }

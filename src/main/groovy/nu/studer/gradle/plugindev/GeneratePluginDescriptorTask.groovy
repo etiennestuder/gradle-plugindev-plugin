@@ -37,13 +37,13 @@ class GeneratePluginDescriptorTask extends DefaultTask {
 
     @OutputFile
     public File getPropertiesFile() {
-        def resolvedPluginId = Closures.resolveAsString(pluginId, 'pluginId')
+        def resolvedPluginId = Closures.resolveAsString(pluginId)
         return project.file("${project.buildDir}/plugindev/${resolvedPluginId}.properties")
     }
 
     @TaskAction
     def generate() {
-        def resolvedPluginImplementationClass = Closures.resolveAsString(pluginImplementationClass, 'pluginImplementationClass')
+        def resolvedPluginImplementationClass = Closures.resolveAsString(pluginImplementationClass)
         propertiesFile.text = "$IMPLEMENTATION_CLASS_ATTRIBUTE=$resolvedPluginImplementationClass"
     }
 
