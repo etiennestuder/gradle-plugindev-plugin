@@ -183,7 +183,7 @@ class PluginDevExtension {
                 ", projectVcsUrl='" + projectVcsUrl + '\'' +
                 "  projectInceptionYear='" + projectInceptionYear + '\'' +
                 ", pomConfiguration=" + pomConfiguration +
-                '}';
+                "}"
     }
 
 }
