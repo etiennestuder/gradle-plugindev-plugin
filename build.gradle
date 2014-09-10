@@ -18,7 +18,6 @@ group = 'nu.studer'
 version = '0.0.12.DEV'
 
 plugindev {
-    pluginId 'nu.studer.plugindev'
     pluginDescription 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.'
     pluginImplementationClass 'nu.studer.gradle.plugindev.PluginDevPlugin'
     pluginLicenses 'Apache-2.0'
