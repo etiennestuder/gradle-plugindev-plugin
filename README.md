@@ -22,7 +22,7 @@ The following functionality is provided by the gradle-plugindev plugin:
  * Applies the Java plugin to the project
  * Includes JCenter as a repository for dependency resolution
  * Adds the Gradle API to the 'compile' configuration
- * Sets the compiler source and target compatibility to 1.6, the minimum version supported by Gradle
+ * Sets the compiler source and target compatibility to 1.6, minimum version supported by Gradle
  * Adds a task that puts all main Java and/or Groovy sources into a Jar file
  * Adds a task that puts all Javadoc and/or Groovydoc into a Jar file
  * Adds a task that generates the plugin descriptor file
