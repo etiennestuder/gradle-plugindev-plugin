@@ -23,6 +23,6 @@ class PluginDevConstants {
     private PluginDevConstants() {
     }
 
-    public static final String PLUGINDEV_EXTENSION_NAME = "plugindev"
+    static final String PLUGINDEV_EXTENSION_NAME = "plugindev"
 
 }
