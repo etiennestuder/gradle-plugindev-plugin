@@ -22,11 +22,11 @@ plugindev {
     done()
 }
 
-group = 'org.example'
-version = '0.0.1.DEV'
-
 bintray {
     user = "$BINTRAY_USER"
     key = "$BINTRAY_API_KEY"
     pkg.repo = 'gradle-plugins'
 }
+
+group = 'org.example'
+version = '0.0.1.DEV'
