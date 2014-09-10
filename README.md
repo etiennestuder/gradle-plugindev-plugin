@@ -9,12 +9,12 @@ of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCen
 The gradle-plugindev plugin takes care of creating the artifacts of a Gradle plugin and of uploading these to Bintray. The 
 following high-level goals are driving the functionality of the gradle-plugindev plugin: 
 
- * All boiler-plate configuration to bundle and upload the Gradle plugin artifacts must be avoided
- * Compliance of the Gradle plugin artifacts with the Gradle Plugin Portal, JCenter, and MavenCentral requirements must be ensured
- * All bundling and uploading configuration must happen in one place and without any redundancy
- * High consistency between the representation of different plugins should be achieved
+ * All boiler-plate configuration to bundle and upload the Gradle plugin artifacts should be avoided
+ * Compliance of the Gradle plugin artifacts with the Gradle Plugin Portal, JCenter, and MavenCentral must be ensured
+ * All bundle and upload configuration must happen without redundancy
  * Customization of the provided functionality should be possible 
-
+ * High consistency between the representation of different plugins should be achieved
+ 
 # Functionality
 
 The following functionality is provided by the gradle-plugindev plugin:
@@ -27,10 +27,10 @@ The following functionality is provided by the gradle-plugindev plugin:
  * Adds a task that puts all Javadoc and/or Groovydoc into a Jar file
  * Adds a task that generates the plugin descriptor file
  * Includes the generated plugin descriptor file in the production Jar file
- * Validates that the plugin implementation class declared in the plugin descriptor file is contained in the production Jar file
- * Adds a manifest file with meta data about the plugin to each Jar file
+ * Validates the plugin implementation class declared in the plugin descriptor file is contained in the production Jar file
+ * Adds a manifest file to each Jar file with meta data about the plugin
  * Adds a license file to each Jar file if available in the root of the project
- * Creates a POM file with the required metadata
+ * Creates a POM file with the required metadata derived from the plugin configuration
  * Creates a publication with the production Jar file, sources Jar file, documentation Jar file, and the POM file
  * Publishes the bundled plugin artifacts to Bintray as a new version and optionally in a new package
  * Ensures the published version has the required Bintray attributes set
