@@ -16,6 +16,7 @@
 
 package nu.studer.gradle.plugindev
 
+import nu.studer.gradle.util.Closures
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
@@ -36,24 +37,14 @@ class GeneratePluginDescriptorTask extends DefaultTask {
 
     @OutputFile
     public File getPropertiesFile() {
-        def resolvedPluginId = resolveAsString(pluginId, 'pluginId')
+        def resolvedPluginId = Closures.resolveAsString(pluginId, 'pluginId')
         return project.file("${project.buildDir}/plugindev/${resolvedPluginId}.properties")
     }
 
     @TaskAction
     def generate() {
-        def resolvedPluginImplementationClass = resolveAsString(pluginImplementationClass, 'pluginImplementationClass')
+        def resolvedPluginImplementationClass = Closures.resolveAsString(pluginImplementationClass, 'pluginImplementationClass')
         propertiesFile.text = "$IMPLEMENTATION_CLASS_ATTRIBUTE=$resolvedPluginImplementationClass"
-    }
-
-    private static String resolveAsString(def propertyValue, String propertyName) {
-        if (propertyValue instanceof String) {
-            propertyValue
-        } else if (propertyValue instanceof Closure) {
-            resolveAsString(propertyValue(), propertyName)
-        } else {
-            throw new IllegalArgumentException("Property '$propertyName' has a value of unsupported type: ${propertyValue?.class}")
-        }
     }
 
 }
