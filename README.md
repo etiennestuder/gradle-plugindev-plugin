@@ -55,6 +55,7 @@ buildscript {
         classpath "nu.studer:gradle-plugindev-plugin:1.0.0"
     }
 }
+
 apply plugin: 'nu.studer.plugindev'
 ```
 
