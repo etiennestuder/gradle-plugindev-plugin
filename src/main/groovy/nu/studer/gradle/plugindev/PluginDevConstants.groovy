@@ -20,7 +20,7 @@ package nu.studer.gradle.plugindev
  */
 class PluginDevConstants {
 
-    static final String PLUGINDEV_EXTENSION_NAME = "plugindev"
+    static final String PLUGINDEV_EXTENSION_NAME = 'plugindev'
 
     private PluginDevConstants() {
     }
