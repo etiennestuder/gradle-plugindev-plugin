@@ -39,9 +39,9 @@ The following functionality is provided by the gradle-plugindev plugin:
 
 # Configuration
 
-## Building and uploading a new plugin
+## Apply gradle-plugindev plugin
 
-Apply the gradle-plugindev plugin in your Gradle project. Make sure to also 
+Apply the gradle-plugindev plugin to your Gradle plugin project. Make sure to also 
 apply the 'groovy' plugin if you intend to write your plugin in Groovy. 
 
 ```groovy
@@ -56,15 +56,26 @@ buildscript {
 apply plugin: 'nu.studer.plugindev'
 ```
 
-Set the group and version of your plugin project.
+## Set group and version
+
+Set the group and version of your Gradle plugin project. By default, the name of 
+the project is derived from the containing folder by Gradle. A custom name 
+could be set during the initialization phase in the settings.gradle file.
 
 ```groovy
 group = 'org.example'
 version = '0.0.1.DEV'
 ```
 
-Configure the gradle-plugindev plugin through the `plugindev` configuration block. The 
-complete set of configuration properties is shown and explained further down.  
+## Configure gradle-plugindev plugin
+
+Configure the gradle-plugindev plugin through the `plugindev` configuration block.
+
+### Building and uploading a new plugin
+
+Provide the minimum set of configuration properties and let the plugindev-plugin derive
+the values for the remaining attributes. This will also ensure the highest degree of
+consistency. The complete set of configuration properties is shown and explained further down.  
 
 ```groovy
 plugindev {
@@ -81,6 +92,29 @@ plugindev {
 }
 ```
 
+### Building and uploading an existing plugin
+
+Provide the default set of configuration properties that match your current Gradle plugin project 
+setup and let the plugindev-plugin derive the values for the remaining attributes. The complete 
+set of configuration properties is shown and explained further down.  
+
+```groovy
+plugindev {
+    pluginId = 'org.example.foo'
+    pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
+    pluginDescription 'Gradle plugin that does foo.'
+    pluginLicenses 'Apache-2.0'
+    pluginTags 'gradle', 'plugin', 'foo'
+    authorId 'etiennestuder'
+    authorName 'Etienne Studer'
+    authorEmail 'etienne@example.org'
+    projectUrl 'https://github.com/etiennestuder/gradle-foo-plugin'
+    projectInceptionYear = '2014'
+    done()
+}
+```
+## Configure bintray plugin
+
 Provide the remaining bintray configuration through the `bintray` configuration block. A 
 good place to store the bintray credentials is the gradle.properties file in your Gradle 
 user home directory. 
@@ -93,6 +127,8 @@ bintray {
 }
 ```
 
+## Run bintray task
+
 Run the `bintray` Gradle task which will build and upload the Gradle plugin artifacts. Use 
 the `-i` option to get more detailed feedback about the bundling and uploading process. 
 
@@ -100,25 +136,7 @@ the `-i` option to get more detailed feedback about the bundling and uploading p
 gradle bintray
 ```
  
-## Building and uploading an existing plugin
-
-```groovy
-plugindev {
-    pluginId = 'org.example.foo'
-    pluginDescription 'Gradle plugin that does foo.'
-    pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
-    pluginLicenses 'Apache-2.0'
-    pluginTags 'gradle', 'plugin', 'foo'
-    authorId 'etiennestuder'
-    authorName 'Etienne Studer'
-    authorEmail 'etienne@example.org'
-    projectUrl 'https://github.com/etiennestuder/gradle-foo-plugin'
-    projectInceptionYear = '2014'
-    done()
-}
-```
-
-## Customization
+# Customization
 
 # Introduction on how to create and publish a Gradle plugin
 
