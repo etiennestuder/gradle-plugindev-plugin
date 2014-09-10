@@ -36,7 +36,7 @@ class ClassFileMatchingAction implements Action<FileCopyDetails> {
     @Override
     void execute(FileCopyDetails fileCopyDetails) {
         resolvedClassToMatch = resolvedClassToMatch ?: Closures.resolveAsString(classToMatch).replace('.', '/') + ".class"
-        found = found | fileCopyDetails.relativePath.pathString.equals(resolvedClassToMatch)
+        found = found || fileCopyDetails.relativePath.pathString.equals(resolvedClassToMatch)
     }
 
 }
