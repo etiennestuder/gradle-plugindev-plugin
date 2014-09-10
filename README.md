@@ -136,7 +136,7 @@ the `-i` option to get more detailed feedback about the bundling and uploading p
 gradle bintray
 ```
 
-You can find the complete example [here](example/build.gradle).
+You can find the complete example [here](example/build.gradle). 30 lines of code is all it takes.
 
 # Customization
 
