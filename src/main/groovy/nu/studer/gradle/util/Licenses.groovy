@@ -20,7 +20,7 @@ package nu.studer.gradle.util;
  */
 final class Licenses {
 
-    public static final def LICENSE_TYPES = [
+    static final def LICENSE_TYPES = [
             'Apache-2.0': ['Apache License, Version 2.0', 'http://www.apache.org/licenses/LICENSE-2.0.html'],
             'GPL-3.0'   : ['GNU General Public License, Version 3.0', 'http://www.gnu.org/licenses/gpl.html'],
             'GPL-2.0'   : ['GNU General Public License, Version 2.0', 'http://www.gnu.org/licenses/old-licenses/gpl-2.0.html'],
