@@ -147,21 +147,22 @@ class PluginDevExtension {
         // ensure valid license type
         pluginLicenses.each { String licenseTypeKey ->
             if (!Licenses.LICENSE_TYPES[licenseTypeKey]) {
-                throw new IllegalStateException("Property 'pluginLicenses' contains a non-supported license type: $licenseTypeKey. " +
-                        "Currently supported license types are: " + Licenses.LICENSE_TYPES.keySet().join(", "))
+                String supportedLicenseTypes = Licenses.LICENSE_TYPES.keySet().join(", ")
+                throw new IllegalStateException("Property 'pluginLicenses' contains a non-supported license type: $licenseTypeKey." +
+                        " Currently supported license types are: " + supportedLicenseTypes + ".")
             }
         }
     }
 
     private static void checkPropertyNotEmpty(String propertyValue, String propertyName) {
         if (!propertyValue?.trim()) {
-            throw new IllegalStateException("Property '$propertyName' is missing or empty")
+            throw new IllegalStateException("Property '$propertyName' is missing or empty.")
         }
     }
 
     private static void checkPropertyNotEmpty(Set propertyValue, String propertyName) {
         if (!propertyValue) {
-            throw new IllegalStateException("Property '$propertyName' is missing or empty")
+            throw new IllegalStateException("Property '$propertyName' is missing or empty.")
         }
     }
 
