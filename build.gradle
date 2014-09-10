@@ -18,16 +18,16 @@ group = 'nu.studer'
 version = '0.0.12.DEV'
 
 plugindev {
-    pluginId = 'nu.studer.plugindev'
-    pluginDescription = 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal, JCenter, and MavenCentral.'
-    pluginImplementationClass = 'nu.studer.gradle.plugindev.PluginDevPlugin'
+    pluginId 'nu.studer.plugindev'
+    pluginDescription 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin portal, JCenter, and MavenCentral.'
+    pluginImplementationClass 'nu.studer.gradle.plugindev.PluginDevPlugin'
     pluginLicenses 'Apache-2.0'
     pluginTags 'gradle', 'plugin', 'development'
-    authorId = 'etiennestuder'
-    authorName = 'Etienne Studer'
-    authorEmail = 'etienne@studer.nu'
-    projectUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
-    projectInceptionYear = '2014'
+    authorId 'etiennestuder'
+    authorName 'Etienne Studer'
+    authorEmail 'etienne@studer.nu'
+    projectUrl 'https://github.com/etiennestuder/gradle-plugindev-plugin'
+    projectInceptionYear '2014'
     done()
 }
 
