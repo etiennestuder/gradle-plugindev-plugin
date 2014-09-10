@@ -23,6 +23,8 @@ import org.gradle.api.Project
  */
 class PluginDevExtension {
 
+    private static final String GITHUB_URL_PREFIX = 'https://github.com'
+
     private final PluginDevPlugin plugin
     private final Project project
 
@@ -93,7 +95,7 @@ class PluginDevExtension {
     }
 
     private void applyDefaultValuesForEmptyValues() {
-        // use default in case of missing plugin id, derived from package path of plugin class
+        // use default in case of missing plugin id, derived from package path of plugin class minus 'gradle' intermediate packages
         if (!pluginId) {
             if (pluginImplementationClass?.indexOf('.') > -1) {
                 pluginId = pluginImplementationClass.
@@ -107,16 +109,16 @@ class PluginDevExtension {
             pluginName = project.name
         }
 
-        // use defaults for github project in case of missing issues url, derived from project url
+        // use default for github project in case of missing project issues url, derived from project url
         if (!projectIssuesUrl) {
-            if (projectUrl?.startsWith('https://github.com')) {
+            if (projectUrl?.startsWith(GITHUB_URL_PREFIX)) {
                 projectIssuesUrl = "${projectUrl}/issues"
             }
         }
 
-        // use defaults for github project in case of missing vcs url, derived from project url
+        // use default for github project in case of missing project vcs url, derived from project url
         if (!projectVcsUrl) {
-            if (projectUrl?.startsWith('https://github.com')) {
+            if (projectUrl?.startsWith(GITHUB_URL_PREFIX)) {
                 projectVcsUrl = "${projectUrl}.git"
             }
         }
