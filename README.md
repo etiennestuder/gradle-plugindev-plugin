@@ -9,8 +9,8 @@ of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCen
 The gradle-plugindev plugin takes care of creating the artifacts of a Gradle plugin and of uploading these to Bintray. The 
 following high-level goals are driving the functionality of the gradle-plugindev plugin: 
 
- * All boiler-plate configuration to bundle and upload the Gradle plugin artifacts should be avoided
  * Compliance of the Gradle plugin artifacts with the Gradle Plugin Portal, JCenter, and MavenCentral must be ensured
+ * All boiler-plate configuration to bundle and upload the Gradle plugin artifacts should be avoided
  * All bundle and upload configuration must happen without redundancy
  * Customization of the provided functionality should be possible 
  * High consistency between the representation of different plugins should be achieved
