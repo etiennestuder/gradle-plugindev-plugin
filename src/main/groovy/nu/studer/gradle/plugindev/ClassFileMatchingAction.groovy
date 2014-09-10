@@ -21,7 +21,7 @@ import org.gradle.api.Action
 import org.gradle.api.file.FileCopyDetails
 
 /**
- * Action to match a given class.
+ * Action to match a given fully qualified class to a class file.
  */
 class ClassFileMatchingAction implements Action<FileCopyDetails> {
 
