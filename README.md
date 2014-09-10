@@ -63,7 +63,7 @@ apply plugin: 'nu.studer.plugindev'
 
 ```groovy
 plugins {
-  id "nu.studer.plugindev" version "1.0.0"
+  id 'nu.studer.plugindev' version '1.0.0'
 }
 ```
 
