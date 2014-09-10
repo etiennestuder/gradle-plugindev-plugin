@@ -18,7 +18,7 @@ package nu.studer.gradle.util;
 /**
  * Utility class for dealing with licenses.
  */
-public final class Licenses {
+final class Licenses {
 
     public static final def LICENSE_TYPES = [
             'Apache-2.0': ['Apache License, Version 2.0', 'http://www.apache.org/licenses/LICENSE-2.0.html'],
