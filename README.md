@@ -6,7 +6,7 @@ gradle-plugindev-plugin
 [Gradle](http://www.gradle.org) plugin that facilitates the bundling and uploading 
 of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.
 
-# High-level goals
+# Goals
 
 The gradle-plugindev plugin takes care of creating the artifacts of a Gradle plugin and of uploading these to Bintray. The 
 following high-level goals are driving the functionality of the gradle-plugindev plugin: 
@@ -56,7 +56,7 @@ buildscript {
 apply plugin: 'nu.studer.plugindev'
 ```
 
-Set the group and version of your plugin.
+Set the group and version of your plugin project.
 
 ```groovy
 group = 'org.example'
@@ -93,7 +93,7 @@ bintray {
 }
 ```
 
-Run the `bintray` Gradle task and the Gradle plugin artifacts are built and uploaded. Use 
+Run the `bintray` Gradle task which will build and upload the Gradle plugin artifacts. Use 
 the `-i` option to get more detailed feedback about the bundling and uploading process. 
 
 ```console
