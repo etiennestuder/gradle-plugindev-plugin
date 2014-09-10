@@ -43,7 +43,7 @@ import java.text.SimpleDateFormat
  */
 class PluginDevPlugin implements Plugin<Project> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class)
 
     private static final String MINIMUM_GRADLE_JAVA_VERSION = '1.6'
     private static final String SOURCES_JAR_TASK_NAME = 'sourcesJar'
@@ -78,7 +78,7 @@ class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Added dependency 'Gradle API'")
 
         // set the source/target compatibility of Java compile and optionally of Groovy compile to 1.6
-        JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
+        JavaPluginConvention javaConvention = project.convention.getPlugin(JavaPluginConvention.class)
         javaConvention.sourceCompatibility = MINIMUM_GRADLE_JAVA_VERSION
         javaConvention.targetCompatibility = MINIMUM_GRADLE_JAVA_VERSION
         LOGGER.debug("Set source and target compatibility for Java and Groovy to $MINIMUM_GRADLE_JAVA_VERSION")
@@ -118,9 +118,18 @@ class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Registered task '$generatePluginDescriptorFile.name'")
 
         // include the plugin descriptor in the production jar file
-        project.tasks[JavaPlugin.JAR_TASK_NAME].into('META-INF/gradle-plugins') { from generatePluginDescriptorFile }
+        Jar jarTask = project.tasks[JavaPlugin.JAR_TASK_NAME] as Jar
+        jarTask.into('META-INF/gradle-plugins') { from generatePluginDescriptorFile }
 
-        // todo ensure plugin class is contained in jar task
+        // ensure the production jar file contains the declared plugin implementation class
+        def findImplementationClass = new ClassFileMatchingAction({ pluginDevExtension.pluginImplementationClass })
+        jarTask.filesMatching("**/*.class", findImplementationClass)
+        jarTask.doLast({
+            if (!findImplementationClass.isFound()) {
+                def errorMessage = "Plugin implementation class $pluginDevExtension.pluginImplementationClass must be contained in $jarTask.archivePath."
+                throw new IllegalStateException(errorMessage)
+            }
+        })
 
         // add a MANIFEST file and optionally a LICENSE file to each jar file (lazily through toString() implementation)
         project.tasks.withType(Jar) { Jar jar ->
@@ -149,15 +158,10 @@ class PluginDevPlugin implements Plugin<Project> {
                             pluginDevExtension.projectUrl
                         }
                     },
-                    'Build-Date': new SimpleDateFormat("yyyy-MM-dd").format(new Date()),
+                    'Build-Date': new SimpleDateFormat('yyyy-MM-dd').format(new Date()),
                     'Build-JDK': System.getProperty('java.version'),
                     'Build-Gradle': project.gradle.gradleVersion,
-                    'Build-Plugin': new Object() {
-                        @Override
-                        String toString() {
-                            PluginDevPlugin.name
-                        }
-                    }
+                    'Build-Plugin': PluginDevPlugin.name
             )
             File license = project.file('LICENSE')
             if (license.exists()) {
@@ -226,7 +230,7 @@ class PluginDevPlugin implements Plugin<Project> {
 
         // configure bintray extension
         def bintray = project.extensions.findByType(BintrayExtension)
-        bintray.publications = [publication.getName()]
+        bintray.publications = [publication.name]
         bintray.publish = true
         bintray.dryRun = false
         bintray.pkg {
