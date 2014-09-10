@@ -37,7 +37,7 @@ The following functionality is provided by the gradle-plugindev plugin:
 
 # Configuration
 
-## Publishing a new plugin
+## Building and uploading a new plugin
 
 Apply the gradle-plugindev plugin in your Gradle project:
 
@@ -94,7 +94,7 @@ gradle bintray
 
 Use `gradle bintray -i` to get more detailed feedback about the bundling and uploading.
  
-## Publishing an existing plugin
+## Building and uploading an existing plugin
 
 ```groovy
 plugindev {
