@@ -71,7 +71,7 @@ version = '0.0.1.DEV'
 
 Configure the gradle-plugindev plugin through the `plugindev` configuration block.
 
-### Building and uploading a new plugin
+### When building and uploading a new plugin
 
 Provide the minimum set of configuration properties and let the plugindev-plugin derive
 the values for the remaining attributes. This will also ensure the highest degree of
@@ -92,7 +92,7 @@ plugindev {
 }
 ```
 
-### Building and uploading an existing plugin
+### When building and uploading an existing plugin
 
 Provide the default set of configuration properties that match your current Gradle plugin project 
 setup and let the plugindev-plugin derive the values for the remaining attributes. The complete 
@@ -135,7 +135,9 @@ the `-i` option to get more detailed feedback about the bundling and uploading p
 ```console
 gradle bintray
 ```
- 
+
+You can find the complete example [here](example/build.gradle).
+
 # Customization
 
 # Introduction on how to create and publish a Gradle plugin
