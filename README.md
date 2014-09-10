@@ -44,6 +44,8 @@ The following functionality is provided by the gradle-plugindev plugin:
 Apply the gradle-plugindev plugin to your Gradle plugin project. Make sure to also 
 apply the 'groovy' plugin if you intend to write your plugin in Groovy. 
 
+### Gradle 1.x and 2.0
+
 ```groovy
 buildscript {
     repositories {
@@ -54,6 +56,14 @@ buildscript {
     }
 }
 apply plugin: 'nu.studer.plugindev'
+```
+
+### Gradle 2.1 and higher
+
+```groovy
+plugins {
+  id "nu.studer.plugindev" version "1.0.0"
+}
 ```
 
 ## Set group and version
