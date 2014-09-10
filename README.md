@@ -2,10 +2,12 @@ gradle-plugindev-plugin
 =======================
 
 # Overview
+
 [Gradle](http://www.gradle.org) plugin that facilitates the bundling and uploading 
 of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.
 
 # High-level goals
+
 The gradle-plugindev plugin takes care of creating the artifacts of a Gradle plugin and of uploading these to Bintray. The 
 following high-level goals are driving the functionality of the gradle-plugindev plugin: 
 
@@ -39,7 +41,8 @@ The following functionality is provided by the gradle-plugindev plugin:
 
 ## Building and uploading a new plugin
 
-Apply the gradle-plugindev plugin in your Gradle project:
+Apply the gradle-plugindev plugin in your Gradle project. Make sure to also 
+apply the 'groovy' plugin if you intend to write your plugin in Groovy. 
 
 ```groovy
 buildscript {
@@ -53,9 +56,15 @@ buildscript {
 apply plugin: 'nu.studer.plugindev'
 ```
 
-Make sure to also apply the 'groovy' plugin if you intend to write your plugin in Groovy.
+Set the group and version of your plugin.
 
-Configure the gradle-plugindev plugin through the `plugindev` configuration block.  
+```groovy
+group = 'org.example'
+version = '0.0.1.DEV'
+```
+
+Configure the gradle-plugindev plugin through the `plugindev` configuration block. The 
+complete set of configuration properties is shown and explained further down.  
 
 ```groovy
 plugindev {
@@ -72,9 +81,9 @@ plugindev {
 }
 ```
 
-The complete set of configuration properties is shown and explained further down.
-
-Provide the remaining bintray configuration through the `bintray` configuration block.
+Provide the remaining bintray configuration through the `bintray` configuration block. A 
+good place to store the bintray credentials is the gradle.properties file in your Gradle 
+user home directory. 
 
 ```groovy
 bintray {
@@ -84,15 +93,12 @@ bintray {
 }
 ```
 
-A good place to store the bintray credentials is the gradle.properties file in your Gradle user home directory.
-
-Run the `bintray` Gradle task and the Gradle plugin artifacts are built and uploaded. 
+Run the `bintray` Gradle task and the Gradle plugin artifacts are built and uploaded. Use 
+the `-i` option to get more detailed feedback about the bundling and uploading process. 
 
 ```console
 gradle bintray
 ```
-
-Use `gradle bintray -i` to get more detailed feedback about the bundling and uploading.
  
 ## Building and uploading an existing plugin
 
