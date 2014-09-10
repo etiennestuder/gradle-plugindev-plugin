@@ -39,7 +39,9 @@ import org.slf4j.LoggerFactory
 import java.text.SimpleDateFormat
 
 /**
- * Plugin that extends the Java plugin, adds a task to create a sources jar, and adds a task to create a documentation jar.
+ * Plugin for Gradle plugin development. The PluginDevPlugin creates a MavenPublication of the Gradle plugin project that the plugin is applied to
+ * and uploads the publication to Bintray. Almost all configuration can happen in one central location through the 'plugindev' extension. The
+ * PluginDevPlugin ensures that the uploaded publication matches all requirements given by Bintray, JCenter, and the Gradle Plugin Portal.
  */
 class PluginDevPlugin implements Plugin<Project> {
 
