@@ -52,7 +52,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "nu.studer:gradle-plugindev-plugin:1.0.0"
+        classpath 'nu.studer:gradle-plugindev-plugin:1.0.0'
     }
 }
 
