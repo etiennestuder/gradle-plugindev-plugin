@@ -5,7 +5,7 @@ gradle-plugindev-plugin
 [Gradle](http://www.gradle.org) plugin that facilitates the bundling and uploading 
 of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.
 
-## High-level goals
+# High-level goals
 The gradle-plugindev plugin takes care of creating the artifacts of a Gradle plugin and of uploading these to Bintray. The 
 following high-level goals are driving the functionality of the gradle-plugindev plugin: 
 
@@ -15,7 +15,7 @@ following high-level goals are driving the functionality of the gradle-plugindev
  * High consistency between the representation of different plugins should be achieved
  * Customization of the provided functionality should be possible 
 
-## Functionality
+# Functionality
 
 The following functionality is provided by the gradle-plugindev plugin:
  
@@ -35,9 +35,86 @@ The following functionality is provided by the gradle-plugindev plugin:
  * Publishes the bundled plugin artifacts to Bintray as a new version and optionally in a new package
  * Ensures the published version has the required Bintray attributes set
 
-## Configuration
+# Configuration
+
+## Publishing a new plugin
+
+Apply the gradle-plugindev plugin in your Gradle project:
+
+```groovy
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "nu.studer:gradle-plugindev-plugin:1.0.0"
+    }
+}
+apply plugin: 'nu.studer.plugindev'
+```
+
+Make sure to also apply the 'groovy' plugin if you intend to write your plugin in Groovy.
+
+Configure the gradle-plugindev plugin through the `plugindev` configuration block.  
+
+```groovy
+plugindev {
+    pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
+    pluginDescription 'Gradle plugin that does foo.'
+    pluginLicenses 'Apache-2.0'
+    pluginTags 'gradle', 'plugin', 'foo'
+    authorId 'etiennestuder'
+    authorName 'Etienne Studer'
+    authorEmail 'etienne@example.org'
+    projectUrl 'https://github.com/etiennestuder/gradle-foo-plugin'
+    projectInceptionYear '2014'
+    done()
+}
+```
+
+The complete set of configuration properties is shown and explained further down.
+
+Provide the remaining bintray configuration through the `bintray` configuration block.
+
+```groovy
+bintray {
+    user = "$BINTRAY_USER"
+    key = "$BINTRAY_API_KEY"
+    pkg.repo = 'gradle-plugins'
+}
+```
+
+A good place to store the bintray credentials is the gradle.properties file in your Gradle user home directory.
+
+Run the `bintray` Gradle task and the Gradle plugin artifacts are built and uploaded. 
+
+```console
+gradle bintray
+```
+
+Use `gradle bintray -i` to get more detailed feedback about the bundling and uploading.
+ 
+## Publishing an existing plugin
+
+```groovy
+plugindev {
+    pluginId = 'org.example.foo'
+    pluginDescription 'Gradle plugin that does foo.'
+    pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
+    pluginLicenses 'Apache-2.0'
+    pluginTags 'gradle', 'plugin', 'foo'
+    authorId 'etiennestuder'
+    authorName 'Etienne Studer'
+    authorEmail 'etienne@example.org'
+    projectUrl 'https://github.com/etiennestuder/gradle-foo-plugin'
+    projectInceptionYear = '2014'
+    done()
+}
+```
 
 ## Customization
+
+# Introduction on how to create and publish a Gradle plugin
 
 # Feedback and Contributions
 
