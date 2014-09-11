@@ -8,11 +8,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "nu.studer:gradle-plugindev-plugin:0.0.11"
+        classpath "nu.studer:gradle-plugindev-plugin:0.0.12"
     }
 }
 
 apply plugin: 'nu.studer.plugindev'
+
+group = 'org.example'
+version = '0.0.1.DEV'
 
 plugindev {
     pluginId 'org.example.foo'
@@ -29,7 +32,7 @@ plugindev {
     projectVcsUrl 'https://github.com/etiennestuder/gradle-foo-plugin.git'
     projectInceptionYear '2014'
     pomConfiguration {
-        name = 'gradle-foo-plugin'
+        name 'gradle-foo-plugin'
         description 'Gradle plugin that does foo.'
         url 'https://github.com/etiennestuder/gradle-foo-plugin'
         inceptionYear '2014'
@@ -58,7 +61,3 @@ bintray {
     key = "$BINTRAY_API_KEY"
     pkg.repo = 'gradle-plugins'
 }
-
-group = 'org.example'
-version = '0.0.1.DEV'
-
