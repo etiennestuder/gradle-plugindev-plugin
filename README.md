@@ -34,7 +34,7 @@ The following functionality is provided by the gradle-plugindev plugin:
  * Adds a license file to each Jar file if available in the root of the project
  * Creates a POM file with the required metadata derived from the plugin configuration
  * Creates a publication with the production Jar file, sources Jar file, documentation Jar file, and the POM file
- * Publishes the bundled plugin artifacts to Bintray as a new version and optionally in a new package
+ * Publishes the bundled plugin artifacts to Bintray as a new version to a new or existing package
  * Ensures the published version has the required Bintray attributes set
 
 # Configuration
