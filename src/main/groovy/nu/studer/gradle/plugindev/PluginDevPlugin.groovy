@@ -17,8 +17,10 @@ package nu.studer.gradle.plugindev
 
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayPlugin
+import com.jfrog.bintray.gradle.BintrayUploadTask
 import nu.studer.gradle.util.Licenses
 import org.gradle.api.Action
+import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.XmlProvider
@@ -31,6 +33,7 @@ import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenArtifact
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
+import org.gradle.api.publish.plugins.PublishingPlugin
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.bundling.Jar
 import org.slf4j.Logger
@@ -51,7 +54,8 @@ class PluginDevPlugin implements Plugin<Project> {
     private static final String SOURCES_JAR_TASK_NAME = 'sourcesJar'
     private static final String DOCS_JAR_TASK_NAME = 'docsJar'
     private static final String GENERATE_PLUGIN_DESCRIPTOR_FILE_TASK_NAME = 'generatePluginDescriptorFile'
-    private static final String PUBLICATION_NAME = 'mavenJava'
+    private static final String UPLOAD_PLUGIN_TASK_NAME = 'uploadPlugin'
+    private static final String PUBLICATION_NAME = 'plugin'
     private static final String JAVA_COMPONENT_NAME = 'java'
 
     private Project project
@@ -206,22 +210,26 @@ class PluginDevPlugin implements Plugin<Project> {
         // register a publication that includes the generated artifact, the sources, and the docs
         PublishingExtension publishing = project.extensions.findByType(PublishingExtension)
         def publication = publishing.publications.create(PUBLICATION_NAME, MavenPublication, new Action<MavenPublication>() {
+
             @Override
             void execute(MavenPublication mavenPublication) {
                 mavenPublication.from(project.components.findByName(JAVA_COMPONENT_NAME))
                 mavenPublication.artifact(project.tasks[SOURCES_JAR_TASK_NAME], new Action<MavenArtifact>() {
+
                     @Override
                     void execute(MavenArtifact artifact) {
                         artifact.classifier = "sources"
                     }
                 })
                 mavenPublication.artifact(project.tasks[DOCS_JAR_TASK_NAME], new Action<MavenArtifact>() {
+
                     @Override
                     void execute(MavenArtifact artifact) {
                         artifact.classifier = "javadoc"
                     }
                 })
                 mavenPublication.pom.withXml(new Action<XmlProvider>() {
+
                     @Override
                     void execute(XmlProvider xmlProvider) {
                         xmlProvider.asNode().children().last() + pomConfig
@@ -249,6 +257,14 @@ class PluginDevPlugin implements Plugin<Project> {
                 attributes = ['gradle-plugin': "$extension.pluginId:$publication.groupId:$publication.artifactId"]
             }
         }
+
+        // add a task instance that uploads the complete plugin publication to Bintray
+        String myTaskName = UPLOAD_PLUGIN_TASK_NAME
+        DefaultTask myTask = project.tasks.create(myTaskName, DefaultTask.class)
+        myTask.description = "Uploads complete publication 'plugin' to Bintray."
+        myTask.group = PublishingPlugin.PUBLISH_TASK_GROUP
+        myTask.dependsOn project.tasks[BintrayUploadTask.NAME]
+        LOGGER.debug("Registered task '$myTask.name'")
     }
 
 }
