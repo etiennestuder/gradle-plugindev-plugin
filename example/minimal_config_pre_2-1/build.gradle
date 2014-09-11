@@ -1,0 +1,37 @@
+/*
+ * Complete Gradle build file to bundle and upload a Gradle plugin, assuming the
+ * project is hosted on GitHub.
+ */
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "nu.studer:gradle-plugindev-plugin:0.0.11"
+    }
+}
+
+apply plugin: 'nu.studer.plugindev'
+
+plugindev {
+    pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
+    pluginDescription 'Gradle plugin that does foo.'
+    pluginLicenses 'Apache-2.0'
+    pluginTags 'gradle', 'plugin', 'foo'
+    authorId 'etiennestuder'
+    authorName 'Etienne Studer'
+    authorEmail 'etienne@example.org'
+    projectUrl 'https://github.com/etiennestuder/gradle-foo-plugin'
+    projectInceptionYear '2014'
+    done()
+}
+
+bintray {
+    user = "$BINTRAY_USER"
+    key = "$BINTRAY_API_KEY"
+    pkg.repo = 'gradle-plugins'
+}
+
+group = 'org.example'
+version = '0.0.1.DEV'

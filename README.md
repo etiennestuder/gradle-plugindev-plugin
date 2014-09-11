@@ -150,7 +150,8 @@ the `-i` option to get more detailed feedback about the bundling and uploading p
 gradle publishPluginToBintray
 ```
 
-You can find the complete example [here](example/build.gradle). 30 lines of code is all it takes.
+You can find the complete example [here for 1.x and 2.0](example/minimal_config_pre_2-1/build.gradle) and 
+[here for 2.1 and newer](example/minimal_config_from_2-1/build.gradle).
 
 # Customization
 

@@ -1,17 +1,11 @@
 /*
- * Complete Gradle build file to bundle and upload a Gradle plugin.
+ * Complete Gradle build file to bundle and upload a Gradle plugin using
+ * Gradle 2.1 or newer, assuming the project is hosted on GitHub.
  */
- 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath "nu.studer:gradle-plugindev-plugin:0.0.11"
-    }
-}
 
-apply plugin: 'nu.studer.plugindev'
+plugins {
+    id 'nu.studer.plugindev' version '0.0.11'
+}
 
 plugindev {
     pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
