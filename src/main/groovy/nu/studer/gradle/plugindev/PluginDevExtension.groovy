@@ -95,12 +95,15 @@ class PluginDevExtension {
     }
 
     private void applyDefaultValuesForEmptyValues() {
-        // use default in case of missing plugin id, derived from package path of plugin class minus 'gradle' intermediate packages
+        // use default in case of missing plugin id, derived from package path of plugin class minus 'gradle' & 'plugin' packages
         if (!pluginId) {
             if (pluginImplementationClass?.indexOf('.') > -1) {
                 pluginId = pluginImplementationClass.
                         substring(0, pluginImplementationClass.lastIndexOf('.')).
-                        replaceAll('.gradle', '')
+                        replaceAll('.gradle.', '.').
+                        replaceAll('.gradle$', '').
+                        replaceAll('.plugin.', '.').
+                        replaceAll('.plugin$', '')
             }
         }
 
@@ -167,7 +170,6 @@ class PluginDevExtension {
             throw new IllegalStateException("Property '$propertyName' is missing or empty.")
         }
     }
-
 
     @Override
     public String toString() {
