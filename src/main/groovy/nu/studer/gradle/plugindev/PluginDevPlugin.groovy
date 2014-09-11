@@ -170,7 +170,7 @@ class PluginDevPlugin implements Plugin<Project> {
                     'Build-Date': new SimpleDateFormat('yyyy-MM-dd').format(new Date()),
                     'Build-JDK': System.getProperty('java.version'),
                     'Build-Gradle': project.gradle.gradleVersion,
-                    'Build-Plugin': PluginDevPlugin.name
+                    'Build-Plugin': PluginDevPlugin.simpleName
             )
             File license = project.file('LICENSE')
             if (license.exists()) {
