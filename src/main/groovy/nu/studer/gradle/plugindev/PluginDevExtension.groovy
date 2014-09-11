@@ -172,7 +172,7 @@ class PluginDevExtension {
     @Override
     public String toString() {
         return "PluginDevExtension{" +
-                ", pluginId='" + pluginId + '\'' +
+                "pluginId='" + pluginId + '\'' +
                 ", pluginName='" + pluginName + '\'' +
                 ", pluginDescription='" + pluginDescription + '\'' +
                 ", pluginImplementationClass='" + pluginImplementationClass + '\'' +
