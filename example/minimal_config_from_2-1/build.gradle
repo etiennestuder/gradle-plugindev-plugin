@@ -5,8 +5,11 @@
  */
 
 plugins {
-    id 'nu.studer.plugindev' version '0.0.11'
+    id 'nu.studer.plugindev' version '0.0.12'
 }
+
+group = 'org.example'
+version = '0.0.1.DEV'
 
 plugindev {
     pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
@@ -26,6 +29,3 @@ bintray {
     key = "$BINTRAY_API_KEY"
     pkg.repo = 'gradle-plugins'
 }
-
-group = 'org.example'
-version = '0.0.1.DEV'
