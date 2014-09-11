@@ -67,6 +67,9 @@ plugins {
 }
 ```
 
+Please refer to the [Gradle DSL PluginDependenciesSpec](http://www.gradle.org/docs/current/dsl/org.gradle.plugin.use.PluginDependenciesSpec.html) to 
+understand the behavior and limitations when using the new syntax to declare plugin dependencies.
+
 ## Set group and version
 
 Set the group and version of your Gradle plugin project. By default, the name of 
