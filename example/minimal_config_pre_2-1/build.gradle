@@ -8,11 +8,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "nu.studer:gradle-plugindev-plugin:0.0.11"
+        classpath "nu.studer:gradle-plugindev-plugin:0.0.12"
     }
 }
 
 apply plugin: 'nu.studer.plugindev'
+
+group = 'org.example'
+version = '0.0.1.DEV'
 
 plugindev {
     pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
@@ -32,6 +35,3 @@ bintray {
     key = "$BINTRAY_API_KEY"
     pkg.repo = 'gradle-plugins'
 }
-
-group = 'org.example'
-version = '0.0.1.DEV'
