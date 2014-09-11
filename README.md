@@ -70,17 +70,6 @@ plugins {
 Please refer to the [Gradle DSL PluginDependenciesSpec](http://www.gradle.org/docs/current/dsl/org.gradle.plugin.use.PluginDependenciesSpec.html) to 
 understand the behavior and limitations when using the new syntax to declare plugin dependencies.
 
-## Set group and version
-
-Set the group and version of your Gradle plugin project. By default, the name of 
-the project is derived from the containing folder by Gradle. A custom name 
-could be set during the initialization phase in the settings.gradle file.
-
-```groovy
-group = 'org.example'
-version = '0.0.1.DEV'
-```
-
 ## Configure gradle-plugindev plugin
 
 Configure the gradle-plugindev plugin through the `plugindev` configuration block.
@@ -139,6 +128,17 @@ bintray {
     key = "$BINTRAY_API_KEY"
     pkg.repo = 'gradle-plugins'
 }
+```
+
+## Set group and version
+
+Set the group and version of your Gradle plugin project. By default, the name of 
+the project is derived from the containing folder by Gradle. A custom name 
+could be set during the initialization phase in the settings.gradle file.
+
+```groovy
+group = 'org.example'
+version = '0.0.1.DEV'
 ```
 
 ## Run uploadPlugin task
