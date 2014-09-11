@@ -1,6 +1,6 @@
 /*
- * Complete Gradle build file to bundle and upload a Gradle plugin, assuming the
- * project is hosted on GitHub.
+ * Complete Gradle build file with the minimal configuration to bundle and
+ * upload a Gradle plugin, assuming the project is hosted on GitHub.
  */
 
 buildscript {

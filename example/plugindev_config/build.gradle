@@ -1,0 +1,64 @@
+/*
+ * Complete Gradle build file with all available properties of the 'plugindev' block
+ * configured explicitly to bundle and upload a Gradle plugin.
+ */
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "nu.studer:gradle-plugindev-plugin:0.0.11"
+    }
+}
+
+apply plugin: 'nu.studer.plugindev'
+
+plugindev {
+    pluginId 'org.example.foo'
+    pluginName 'gradle-foo-plugin'
+    pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
+    pluginDescription 'Gradle plugin that does foo.'
+    pluginLicenses 'Apache-2.0'
+    pluginTags 'gradle', 'plugin', 'foo'
+    authorId 'etiennestuder'
+    authorName 'Etienne Studer'
+    authorEmail 'etienne@example.org'
+    projectUrl 'https://github.com/etiennestuder/gradle-foo-plugin'
+    projectIssuesUrl 'https://github.com/etiennestuder/gradle-foo-plugin/issues'
+    projectVcsUrl 'https://github.com/etiennestuder/gradle-foo-plugin.git'
+    projectInceptionYear '2014'
+    pomConfiguration {
+        name = 'gradle-foo-plugin'
+        description 'Gradle plugin that does foo.'
+        url 'https://github.com/etiennestuder/gradle-foo-plugin'
+        inceptionYear '2014'
+        licenses {
+            license {
+                name 'Apache License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.html'
+            }
+        }
+        scm {
+            url 'https://github.com/etiennestuder/gradle-foo-plugin.git'
+        }
+        developers {
+            developer {
+                id 'etiennestuder'
+                name 'Etienne Studer'
+                email 'etienne@example.org'
+            }
+        }
+    }
+    done()
+}
+
+bintray {
+    user = "$BINTRAY_USER"
+    key = "$BINTRAY_API_KEY"
+    pkg.repo = 'gradle-plugins'
+}
+
+group = 'org.example'
+version = '0.0.1.DEV'
+
