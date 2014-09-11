@@ -33,7 +33,6 @@ import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenArtifact
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
-import org.gradle.api.publish.plugins.PublishingPlugin
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.bundling.Jar
 import org.slf4j.Logger
@@ -266,7 +265,7 @@ class PluginDevPlugin implements Plugin<Project> {
         String myTaskName = UPLOAD_PLUGIN_TASK_NAME
         DefaultTask myTask = project.tasks.create(myTaskName, DefaultTask.class)
         myTask.description = "Publishes the complete publication 'plugin' to Bintray."
-        myTask.group = PublishingPlugin.PUBLISH_TASK_GROUP
+        myTask.group = 'Plugin publishing'
         myTask.dependsOn project.tasks[BintrayUploadTask.NAME]
         LOGGER.debug("Registered task '$myTask.name'")
     }
