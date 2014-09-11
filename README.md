@@ -141,13 +141,13 @@ bintray {
 }
 ```
 
-## Run bintray task
+## Run uploadPlugin task
 
-Run the `bintray` Gradle task which will build and upload the Gradle plugin artifacts. Use 
+Run the `uploadPlugin` Gradle task which will build and upload the Gradle plugin artifacts. Use 
 the `-i` option to get more detailed feedback about the bundling and uploading process. 
 
 ```console
-gradle bintray
+gradle uploadPlugin
 ```
 
 You can find the complete example [here](example/build.gradle). 30 lines of code is all it takes.
