@@ -54,7 +54,7 @@ class PluginDevPlugin implements Plugin<Project> {
     private static final String SOURCES_JAR_TASK_NAME = 'sourcesJar'
     private static final String DOCS_JAR_TASK_NAME = 'docsJar'
     private static final String GENERATE_PLUGIN_DESCRIPTOR_FILE_TASK_NAME = 'generatePluginDescriptorFile'
-    private static final String UPLOAD_PLUGIN_TASK_NAME = 'uploadPlugin'
+    private static final String UPLOAD_PLUGIN_TASK_NAME = 'publishPluginToBintray'
     private static final String PUBLICATION_NAME = 'plugin'
     private static final String JAVA_COMPONENT_NAME = 'java'
 
@@ -141,24 +141,28 @@ class PluginDevPlugin implements Plugin<Project> {
         project.tasks.withType(Jar) { Jar jar ->
             jar.manifest.attributes(
                     'Implementation-Title': new Object() {
+
                         @Override
                         String toString() {
                             pluginDevExtension.pluginName
                         }
                     },
                     'Implementation-Version': new Object() {
+
                         @Override
                         String toString() {
                             project.version
                         }
                     },
                     'Implementation-Vendor': new Object() {
+
                         @Override
                         String toString() {
                             pluginDevExtension.authorName
                         }
                     },
                     'Implementation-Website': new Object() {
+
                         @Override
                         String toString() {
                             pluginDevExtension.projectUrl
@@ -261,7 +265,7 @@ class PluginDevPlugin implements Plugin<Project> {
         // add a task instance that uploads the complete plugin publication to Bintray
         String myTaskName = UPLOAD_PLUGIN_TASK_NAME
         DefaultTask myTask = project.tasks.create(myTaskName, DefaultTask.class)
-        myTask.description = "Uploads complete publication 'plugin' to Bintray."
+        myTask.description = "Publishes the complete publication 'plugin' to Bintray."
         myTask.group = PublishingPlugin.PUBLISH_TASK_GROUP
         myTask.dependsOn project.tasks[BintrayUploadTask.NAME]
         LOGGER.debug("Registered task '$myTask.name'")

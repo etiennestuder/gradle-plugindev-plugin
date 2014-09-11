@@ -141,13 +141,13 @@ group = 'org.example'
 version = '0.0.1.DEV'
 ```
 
-## Run uploadPlugin task
+## Run publishPluginToBintray task
 
-Run the `uploadPlugin` Gradle task which will build and upload the Gradle plugin artifacts. Use 
+Run the `publishPluginToBintray` Gradle task which will build and upload the Gradle plugin artifacts. Use 
 the `-i` option to get more detailed feedback about the bundling and uploading process. 
 
 ```console
-gradle uploadPlugin
+gradle publishPluginToBintray
 ```
 
 You can find the complete example [here](example/build.gradle). 30 lines of code is all it takes.
