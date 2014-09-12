@@ -151,10 +151,9 @@ the `-i` option to get more detailed feedback about the bundling and uploading p
 gradle publishPluginToBintray
 ```
 
-You can find the complete example [here for 1.x and 2.0](example/minimal_config_pre_2-1/build.gradle) and 
-[here for 2.1 and newer](example/minimal_config_from_2-1/build.gradle).
-
 ## Complete example
+
+The previously explained configuration steps lead to the following functional build file. 
 
 ```
 buildscript {
@@ -176,10 +175,10 @@ plugindev {
     pluginDescription 'Gradle plugin that does foo.'
     pluginLicenses 'Apache-2.0'
     pluginTags 'gradle', 'plugin', 'foo'
-    authorId 'etiennestuder'
-    authorName 'Etienne Studer'
-    authorEmail 'etienne@example.org'
-    projectUrl 'https://github.com/etiennestuder/gradle-foo-plugin'
+    authorId 'homer'
+    authorName 'Homer Simpson'
+    authorEmail 'homer@simpson.org'
+    projectUrl 'https://github.com/homer/gradle-foo-plugin'
     projectInceptionYear '2014'
     done()
 }
@@ -191,9 +190,15 @@ bintray {
 }
 ```
 
+You can also find the complete examples [for 1.x and 2.0](example/minimal_config_pre_2-1/build.gradle) and 
+[for 2.1 and newer](example/minimal_config_from_2-1/build.gradle) on GitHub.
+
 # Customization
 
 TBD
+
+You can also find the complete examples [with plugindev configuration](example/plugindev_config/build.gradle) and 
+[with bintray configuration ](example/bintray_config/build.gradle) on GitHub.
 
 # Feedback and Contributions
 
