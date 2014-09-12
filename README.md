@@ -8,8 +8,8 @@ of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCen
 
 # Goals
 
-The gradle-plugindev plugin takes care of creating the artifacts of a Gradle plugin and of uploading these to Bintray. The 
-following high-level goals are driving the functionality of the gradle-plugindev plugin: 
+The plugindev plugin takes care of creating the artifacts of a Gradle plugin and of uploading these to Bintray. The 
+following high-level goals are driving the functionality of the plugindev plugin: 
 
  * Compliance of the Gradle plugin artifacts with the Gradle Plugin Portal, JCenter, and MavenCentral must be ensured
  * All boiler-plate configuration to bundle and upload the Gradle plugin artifacts should be avoided
@@ -19,7 +19,7 @@ following high-level goals are driving the functionality of the gradle-plugindev
  
 # Functionality
 
-The following functionality is provided by the gradle-plugindev plugin:
+The following functionality is provided by the plugindev plugin:
  
  * Applies the Java plugin to the project
  * Includes JCenter as a repository for dependency resolution
@@ -39,10 +39,10 @@ The following functionality is provided by the gradle-plugindev plugin:
 
 # Configuration
 
-## Apply gradle-plugindev plugin
+## Apply plugindev plugin
 
-Apply the gradle-plugindev plugin to your Gradle plugin project. Make sure to also 
-apply the 'groovy' plugin if you intend to write your plugin in Groovy. 
+Apply the `nu.studer.plugindev` plugin to your Gradle plugin project. Make sure to also 
+apply the `groovy` plugin if you intend to write your plugin in Groovy. 
 
 ### Gradle 1.x and 2.0
 
@@ -72,8 +72,8 @@ understand the behavior and limitations when using the new syntax to declare plu
 
 ## Set group and version
 
-Set the group and version of your Gradle plugin project. By default, Gradle derives 
-the name of the project from the containing folder. A custom name could be set during 
+Set the `group` and `version` of your Gradle plugin project. By default, Gradle derives 
+the name of the project from the containing folder. A custom project name could be set during 
 the initialization phase in the settings.gradle file.
 
 ```groovy
@@ -82,13 +82,13 @@ group = 'org.example'
 version = '0.0.1.DEV'
 ```
 
-## Configure gradle-plugindev plugin
+## Configure plugindev plugin
 
-Configure the gradle-plugindev plugin through the `plugindev` configuration block.
+Configure the plugindev plugin through the `plugindev` configuration block.
 
 ### When building and uploading a new plugin
 
-Provide the minimum set of configuration properties and let the plugindev-plugin derive
+Provide the minimum set of configuration properties and let the plugindev plugin derive
 the values for the remaining attributes. This will also ensure the highest degree of
 consistency. The complete set of configuration properties is shown and explained further down.  
 
@@ -98,10 +98,10 @@ plugindev {
     pluginDescription 'Gradle plugin that does foo.'
     pluginLicenses 'Apache-2.0'
     pluginTags 'gradle', 'plugin', 'foo'
-    authorId 'etiennestuder'
-    authorName 'Etienne Studer'
-    authorEmail 'etienne@example.org'
-    projectUrl 'https://github.com/etiennestuder/gradle-foo-plugin'
+    authorId 'homer'
+    authorName 'Homer Simpson'
+    authorEmail 'homer@simpson.org'
+    projectUrl 'https://github.com/homer/gradle-foo-plugin'
     projectInceptionYear '2014'
     done()
 }
@@ -109,9 +109,9 @@ plugindev {
 
 ### When building and uploading an existing plugin
 
-Provide the default set of configuration properties that match your current Gradle plugin project 
-setup and let the plugindev-plugin derive the values for the remaining attributes. The complete 
-set of configuration properties is shown and explained further down.  
+Provide the default set of configuration properties that match the setup of your current Gradle 
+plugin project and let the plugindev plugin derive the values for the remaining attributes. The 
+complete set of configuration properties is shown and explained further down.  
 
 ```groovy
 plugindev {
@@ -120,10 +120,10 @@ plugindev {
     pluginDescription 'Gradle plugin that does foo.'
     pluginLicenses 'Apache-2.0'
     pluginTags 'gradle', 'plugin', 'foo'
-    authorId 'etiennestuder'
-    authorName 'Etienne Studer'
-    authorEmail 'etienne@example.org'
-    projectUrl 'https://github.com/etiennestuder/gradle-foo-plugin'
+    authorId 'homer'
+    authorName 'Homer Simpson'
+    authorEmail 'homer@simpson.org'
+    projectUrl 'https://github.com/homer/gradle-foo-plugin'
     projectInceptionYear = '2014'
     done()
 }
@@ -153,6 +153,43 @@ gradle publishPluginToBintray
 
 You can find the complete example [here for 1.x and 2.0](example/minimal_config_pre_2-1/build.gradle) and 
 [here for 2.1 and newer](example/minimal_config_from_2-1/build.gradle).
+
+## Complete example
+
+```
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "nu.studer:gradle-plugindev-plugin:0.0.12"
+    }
+}
+
+apply plugin: 'nu.studer.plugindev'
+
+group = 'org.example'
+version = '0.0.1.DEV'
+
+plugindev {
+    pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
+    pluginDescription 'Gradle plugin that does foo.'
+    pluginLicenses 'Apache-2.0'
+    pluginTags 'gradle', 'plugin', 'foo'
+    authorId 'etiennestuder'
+    authorName 'Etienne Studer'
+    authorEmail 'etienne@example.org'
+    projectUrl 'https://github.com/etiennestuder/gradle-foo-plugin'
+    projectInceptionYear '2014'
+    done()
+}
+
+bintray {
+    user = "$BINTRAY_USER"
+    key = "$BINTRAY_API_KEY"
+    pkg.repo = 'gradle-plugins'
+}
+```
 
 # Customization
 
