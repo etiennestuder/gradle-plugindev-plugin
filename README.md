@@ -155,7 +155,7 @@ You can find the complete example [here for 1.x and 2.0](example/minimal_config_
 
 # Customization
 
-# Introduction on how to create and publish a Gradle plugin
+TBD
 
 # Feedback and Contributions
 
