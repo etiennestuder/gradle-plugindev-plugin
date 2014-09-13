@@ -7,7 +7,7 @@ gradle-plugindev-plugin
 of Gradle plugins as expected by the [Gradle Plugin Portal](http://plugins.gradle.org/), 
 [JCenter](https://bintray.com/bintray/jcenter), and [MavenCentral](http://search.maven.org/).
 
-The plugin ensures that all requirements for inclusion in the Gradle Plugin Portal, 
+The plugin further ensures that all requirements for inclusion in the Gradle Plugin Portal, 
 Bintray, and MavenCentral are met.
 
 # Goals
@@ -93,7 +93,7 @@ the name of the project from the containing folder. A custom project name could 
 the initialization phase in the settings.gradle file.
 
 ```groovy
-// make sure to define the group and version before the 'plugindev' configuration
+// make sure to define the group and version before the 'plugindev' extension
 group = 'org.example'
 version = '0.0.1.DEV'
 ```
@@ -161,6 +161,7 @@ good place to store the bintray credentials is the gradle.properties file in you
 user home directory. 
 
 ```groovy
+// make sure to define the bintray properties after the 'plugindev' extension
 bintray {
     user = "$BINTRAY_USER"
     key = "$BINTRAY_API_KEY"
