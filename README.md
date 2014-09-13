@@ -91,9 +91,7 @@ understand the behavior and limitations when using the new syntax to declare plu
 
 ## Set group and version
 
-Set the `group` and `version` of your Gradle plugin project. By default, Gradle derives 
-the name of the project from the containing folder. A custom project name could be set during 
-the initialization phase in the settings.gradle file.
+Set the `group` and `version` of your Gradle plugin project.
 
 ```groovy
 // make sure to define the group and version before the 'plugindev' extension
@@ -281,7 +279,9 @@ for *org.example.gradle.foo.FooPlugin* the derived plugin id is *org.example.foo
 
 The name of the plugin. The name shows up in the manifest files of the Jar files and is used as the Bintray package name.
 
-If not set explicitly, the plugin name is derived from the name of the containing Gradle project. 
+If not set explicitly, the plugin name is derived from the name of the containing Gradle project. By default, 
+Gradle derives the name of the project from the containing folder. A custom project name could be set during
+the initialization phase in the settings.gradle file.
 
 ### pluginImplementationClass
 
