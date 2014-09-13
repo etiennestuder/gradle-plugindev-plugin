@@ -335,7 +335,7 @@ The inception year of the plugin.
 
 The closure to apply to populate the POM file. 
 
-If not set explicitly, the POM file will be enriched with the values defined through the above devplugin properties.
+If not set explicitly, the POM file is enriched with the values defined through the devplugin configuration properties.
 
 ### Complete example
 
