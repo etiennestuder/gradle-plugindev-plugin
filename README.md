@@ -324,7 +324,7 @@ issue management url will be set.
 
 The location where the project's issues are managed.
 
-If not set explicitly and the `projectUrl' points to 'https://github.com/...', the project's GitHub 
+If not set explicitly and the `projectUrl` points to 'https://github.com/...', the project's GitHub 
 vcs will be set. 
 
 ### projectInceptionYear
