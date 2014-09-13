@@ -279,7 +279,7 @@ If not set explicitly, the plugin name is derived from the name of the containin
 
 ### pluginImplementationClass
 
-The entry point of your plugin. The referenced class implements `org.gradle.api.Plugin`.
+The entry point of your plugin. A reference to the class that implements `org.gradle.api.Plugin`.
  
 ### pluginDescription
 
@@ -294,7 +294,8 @@ Apache (`Apache-2.0`), GPL (`GPL-3.0`, `GPL-2.0`, `GPL-1.0`), LGPL (`LGPL-3.0`, 
 
 ### pluginTags
 
-The tags of your plugin. The tags show up in the Bintray package description and as a consequence in the Gradle Plugin Portal.
+The tags of your plugin. Multiple tags can be specified as a comma-separated list. The tags show up in the Bintray package description and 
+as a consequence in the Gradle Plugin Portal.
 
 ### authorId
 
@@ -316,7 +317,7 @@ The location where the project is hosted.
 
 The location where the project's issues are managed.
 
-If not set explicitly and the `projectUrl' points to 'https://github.com/...', the project's GitHub 
+If not set explicitly and the `projectUrl` points to 'https://github.com/...', the project's GitHub 
 issue management url will be set. 
 
 ### projectVcsUrl
