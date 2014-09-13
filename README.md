@@ -184,10 +184,16 @@ gradle publishPluginToBintray
 
 ## Complete example
 
-The previously explained configuration steps lead to the following functional build file
-with the minimal set of required configuration properties. 
+The previously explained configuration steps lead to the following functional build file, applying 
+the minimal set of required configuration properties.
 
-```
+If you want or need need a different plugin id than the one automatically derived from the plugin implementation class, you 
+also have to specify the ```pluginId```.
+
+If your plugin is not hosted on GitHub, you 
+also have to specify the ```projectIssuesUrl``` and the ```projectVcsUrl```.
+
+```groovy
 buildscript {
     repositories {
         jcenter()
@@ -230,7 +236,7 @@ You can also find the complete examples [for 1.x and 2.0](example/minimal_config
 The following configuration contains the complete set of configuration properties.
 
 ```groovy
-{
+plugindev {
     pluginId 'org.example.foo'
     pluginName 'gradle-foo-plugin'
     pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
