@@ -3,7 +3,7 @@ gradle-plugindev-plugin
 
 # Overview
 
-[Gradle](http://www.gradle.org) plugin that facilitates the bundling and uploading 
+[Gradle](http://www.gradle.org) plugin that facilitates the bundling and publishing 
 of Gradle plugins as expected by the [Gradle Plugin Portal](http://plugins.gradle.org/), 
 [JCenter](https://bintray.com/bintray/jcenter), and [MavenCentral](http://search.maven.org/).
 
@@ -12,12 +12,12 @@ Bintray, and MavenCentral are met.
 
 # Goals
 
-The plugindev plugin takes care of creating the artifacts of a Gradle plugin and of uploading these to Bintray. The 
+The plugindev plugin takes care of creating the artifacts of a Gradle plugin and of publishing these to Bintray. The 
 following high-level goals are driving the functionality of the plugindev plugin: 
 
  * Compliance of the Gradle plugin artifacts with the Gradle Plugin Portal, JCenter, and MavenCentral must be ensured
- * All boiler-plate configuration to bundle and upload the Gradle plugin artifacts should be avoided
- * All bundle and upload configuration must happen without redundancy
+ * All boiler-plate configuration to bundle and publish the Gradle plugin artifacts should be avoided
+ * All bundle and publish configuration must happen without redundancy
  * Customization of the provided functionality should be possible 
  * High consistency between the representation of different plugins should be achieved
  * Functionality provided by existing plugins and Gradle should be reused as much as possible
@@ -102,7 +102,7 @@ version = '0.0.1.DEV'
 
 Configure the plugindev plugin through the `plugindev` extension.
 
-### When building and uploading a new plugin
+### When building and publishing a new plugin
 
 Provide the minimum set of configuration properties and let the plugindev plugin derive
 the values for the remaining attributes. This will also ensure the highest degree of
@@ -127,7 +127,7 @@ In the example above, it is assumed that the plugin is hosted on [GitHub](https:
 the configuration properties for the issue url and the vcs url are automatically derived by the 
 plugindev plugin.
 
-### When building and uploading an existing plugin
+### When building and publishing an existing plugin
 
 Provide the default set of configuration properties that match the setup of your current Gradle 
 plugin project and let the plugindev plugin derive the values for the remaining attributes. The 
@@ -225,12 +225,49 @@ bintray {
 You can also find the complete examples [for 1.x and 2.0](example/minimal_config_pre_2-1/build.gradle) and 
 [for 2.1 and newer](example/minimal_config_from_2-1/build.gradle) on GitHub.
 
-# Customization
+## Configuration reference
 
-TBD
+The following configuration contains the complete set of configuration properties.
+
+```groovy
+{
+    pluginId 'org.example.foo'
+    pluginName 'gradle-foo-plugin'
+    pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
+    pluginDescription 'Gradle plugin that does foo.'
+    pluginLicenses 'Apache-2.0'
+    pluginTags 'gradle', 'plugin', 'foo'
+    authorId 'etiennestuder'
+    authorName 'Etienne Studer'
+    authorEmail 'etienne@example.org'
+    projectUrl 'https://github.com/etiennestuder/gradle-foo-plugin'
+    projectIssuesUrl 'https://github.com/etiennestuder/gradle-foo-plugin/issues'
+    projectVcsUrl 'https://github.com/etiennestuder/gradle-foo-plugin.git'
+    projectInceptionYear '2014'
+    pomConfiguration {
+        name 'gradle-foo-plugin'
+        description 'Gradle plugin that does foo.'
+        url 'https://github.com/etiennestuder/gradle-foo-plugin'
+        inceptionYear '2014'
+        ...
+    }
+    done()
+}
+```
 
 You can also find the complete examples [with plugindev configuration](example/plugindev_config/build.gradle) and 
 [with bintray configuration ](example/bintray_config/build.gradle) on GitHub.
+
+# Customization
+
+At least the following customizations are possible:
+ 
+ * change the source and target compatibility version
+ * add more sources and more documentation to the generated artifacts
+ * include additional artifacts in the plugin publication
+ * customize the bintray configuration
+  
+This documentation will be enhanced with more details regarding customization upon request.
 
 # Feedback and Contributions
 
