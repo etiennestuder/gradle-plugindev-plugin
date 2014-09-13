@@ -4,7 +4,8 @@ gradle-plugindev-plugin
 # Overview
 
 [Gradle](http://www.gradle.org) plugin that facilitates the bundling and uploading 
-of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.
+of Gradle plugins as expected by the [Gradle Plugin Portal](http://plugins.gradle.org/), 
+[JCenter](https://bintray.com/bintray/jcenter), and [MavenCentral](http://search.maven.org/).
 
 # Goals
 
@@ -16,6 +17,7 @@ following high-level goals are driving the functionality of the plugindev plugin
  * All bundle and upload configuration must happen without redundancy
  * Customization of the provided functionality should be possible 
  * High consistency between the representation of different plugins should be achieved
+ * Functionality provided by existing plugins and Gradle should be reused as much as possible
  
 # Functionality
 
@@ -37,6 +39,17 @@ The following functionality is provided by the plugindev plugin:
  * Publishes the bundled plugin artifacts to Bintray as a new version to a new or existing package
  * Ensures the published version has the required Bintray attributes set
 
+# Design
+
+The plugindev plugin creates all the required artifacts through Gradle core tasks. The configuration of these 
+artifacts happens in a central place through the `plugindev` extension. The 
+[MavenPublishPlugin](http://www.gradle.org/docs/current/userguide/publishing_maven.html) is leveraged to create 
+a publication of these artifacts.
+
+The configuration of the metadata at the publication target (Bintray) happens through the `plugindev` extension and 
+the `bintray` extension. The [BintrayPlugin](https://github.com/bintray/gradle-bintray-plugin) is leveraged to publish 
+the artifacts to Bintray.
+ 
 # Configuration
 
 ## Apply plugindev plugin
@@ -107,6 +120,10 @@ plugindev {
 }
 ```
 
+In the example above, it is assumed that the plugin is hosted on [GitHub](https://github.com/). Thus, 
+the configuration properties for the issue url and the vcs url are automatically derived by the 
+plugindev plugin.
+
 ### When building and uploading an existing plugin
 
 Provide the default set of configuration properties that match the setup of your current Gradle 
@@ -123,11 +140,17 @@ plugindev {
     authorId 'homer'
     authorName 'Homer Simpson'
     authorEmail 'homer@simpson.org'
-    projectUrl 'https://github.com/homer/gradle-foo-plugin'
+    projectUrl 'https://simpson.org/homer/gradle-foo-plugin'
+    projectIssuesUrl 'https://simpson.org/gradle-foo-plugin/issue-tracking'
+    projectVcsUrl 'https://simpson.org/gradle-foo-plugin/svn
     projectInceptionYear = '2014'
     done()
 }
 ```
+
+In the example above, no assumptions are made about where your project is hosted. Thus, the configuration properties 
+for the issue url and the vcs url must be declared explicitly.
+
 ## Configure bintray plugin
 
 Provide the remaining bintray configuration through the `bintray` configuration block. A 
