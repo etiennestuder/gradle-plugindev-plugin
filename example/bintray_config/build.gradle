@@ -30,6 +30,8 @@ plugindev {
     done()
 }
 
+// see https://github.com/bintray/gradle-bintray-plugin for
+// the complete set of configuration properties
 bintray {
     user = "$BINTRAY_USER"
     key = "$BINTRAY_API_KEY"
