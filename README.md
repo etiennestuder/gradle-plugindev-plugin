@@ -142,7 +142,7 @@ plugindev {
     authorEmail 'homer@simpson.org'
     projectUrl 'https://simpson.org/homer/gradle-foo-plugin'
     projectIssuesUrl 'https://simpson.org/gradle-foo-plugin/issue-tracking'
-    projectVcsUrl 'https://simpson.org/gradle-foo-plugin/svn
+    projectVcsUrl 'https://simpson.org/gradle-foo-plugin/svn'
     projectInceptionYear = '2014'
     done()
 }
