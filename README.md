@@ -315,17 +315,17 @@ The location where the project is hosted.
 
 ### projectIssuesUrl
 
-The location where the project's issues are managed.
+The location of the project's issue management.
 
 If not set explicitly and the `projectUrl` points to 'https://github.com/...', the project's GitHub 
 issue management url will be set. 
 
 ### projectVcsUrl
 
-The location where the project's issues are managed.
+The location of the project's version control.
 
 If not set explicitly and the `projectUrl` points to 'https://github.com/...', the project's GitHub 
-vcs will be set. 
+vcs url will be set. 
 
 ### projectInceptionYear
 
