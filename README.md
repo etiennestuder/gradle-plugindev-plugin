@@ -119,7 +119,7 @@ plugindev {
     authorEmail 'homer@simpson.org'
     projectUrl 'https://github.com/homer/gradle-foo-plugin'
     projectInceptionYear '2014'
-    done()
+    done() // do not omit this
 }
 ```
 
@@ -147,7 +147,7 @@ plugindev {
     projectIssuesUrl 'https://simpson.org/gradle-foo-plugin/issue-tracking'
     projectVcsUrl 'https://simpson.org/gradle-foo-plugin/svn'
     projectInceptionYear '2014'
-    done()
+    done() // do not omit this
 }
 ```
 
@@ -218,7 +218,7 @@ plugindev {
     authorEmail 'homer@simpson.org'
     projectUrl 'https://github.com/homer/gradle-foo-plugin'
     projectInceptionYear '2014'
-    done()
+    done() // do not omit this
 }
 
 bintray {
@@ -257,7 +257,7 @@ plugindev {
         inceptionYear '2014'
         ...
     }
-    done()
+    done() // do not omit this
 }
 ```
 
