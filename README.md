@@ -349,7 +349,7 @@ At least the following customizations are possible:
  * include additional artifacts in the plugin publication
  * customize the bintray configuration
   
-This documentation will be enhanced with more details regarding customization upon request.
+The documentation will be enhanced with more details regarding customization upon request.
 
 # Feedback and Contributions
 
