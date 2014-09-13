@@ -261,7 +261,84 @@ plugindev {
 }
 ```
 
-You can also find an example [with plugindev configuration](example/plugindev_config/build.gradle) and 
+### pluginId
+
+The id of the plugin. The id is how your plugin will be referenced in Gradle builds, e.g. 
+through *apply plugin: 'thePluginId'*. 
+
+If not set explicitly, the id is derived from 
+the `pluginImplementationClass` property by taking the package name of that class and 
+removing any occurrences of *gradle* and *plugin* package names, e.g. 
+for *org.example.gradle.foo.FooPlugin* the derived plugin id is *org.example.foo*.
+   
+### pluginName
+
+The name of the plugin. The name shows up in the manifest files of the Jar files and is used as the Bintray package name.
+
+If not set explicitly, the plugin name is derived from the name of the containing Gradle project. 
+
+### pluginImplementationClass
+
+The entry point of your plugin. The referenced class implements `org.gradle.api.Plugin`.
+ 
+### pluginDescription
+
+The full-text description of the plugin. The description shows up in the POM file, in the Bintray package description, and as
+a consequence in the Gradle Plugin Portal.
+ 
+### pluginLicenses
+
+The license(s) under which the plugin is available. Multiple licenses can be specified as a comma-separated list. The specified
+licenses show up in the POM file with full name and url and in the Bintray package description. Currently, the plugindev plugin can handle the 
+Apache (`Apache-2.0`), GPL (`GPL-3.0`, `GPL-2.0`, `GPL-1.0`), LGPL (`LGPL-3.0`, `LGPL-2.1`), and MIT (`MIT`) licenses.  
+
+### pluginTags
+
+The tags of your plugin. The tags show up in the Bintray package description and as a consequence in the Gradle Plugin Portal.
+
+### authorId
+
+The plugin author's id. The author id shows up in the POM file.
+
+### authorName
+
+The plugin author's name. The author name shows up in the POM file.
+
+### authorEmail
+
+The plugin author's email address. The author name shows up in the POM file.
+
+### projectUrl
+
+The location where the project is hosted.
+
+### projectIssuesUrl
+
+The location where the project's issues are managed.
+
+If not set explicitly and the `projectUrl' points to 'https://github.com/...', the project's GitHub 
+issue management url will be set. 
+
+### projectVcsUrl
+
+The location where the project's issues are managed.
+
+If not set explicitly and the `projectUrl' points to 'https://github.com/...', the project's GitHub 
+vcs will be set. 
+
+### projectInceptionYear
+
+The inception year of the plugin.
+
+### pomConfiguration
+
+The closure to apply to populate the POM file. 
+
+If not set explicitly, the POM file will be enriched with the values defined through the above devplugin properties.
+
+### Complete example
+
+You can find an example [with plugindev configuration](example/plugindev_config/build.gradle) and 
 [with bintray configuration ](example/bintray_config/build.gradle) on GitHub.
 
 # Customization
