@@ -261,6 +261,9 @@ plugindev {
 }
 ```
 
+You can find an example [with plugindev configuration](example/plugindev_config/build.gradle) and 
+[with bintray configuration ](example/bintray_config/build.gradle) on GitHub.
+
 ### pluginId
 
 The id of the plugin. The id is how your plugin will be referenced in Gradle builds, e.g. 
@@ -336,11 +339,6 @@ The inception year of the plugin.
 The closure to apply to populate the POM file. 
 
 If not set explicitly, the POM file is enriched with the values defined through the devplugin configuration properties.
-
-### Complete example
-
-You can find an example [with plugindev configuration](example/plugindev_config/build.gradle) and 
-[with bintray configuration ](example/bintray_config/build.gradle) on GitHub.
 
 # Customization
 
