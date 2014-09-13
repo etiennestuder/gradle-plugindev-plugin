@@ -7,6 +7,9 @@ gradle-plugindev-plugin
 of Gradle plugins as expected by the [Gradle Plugin Portal](http://plugins.gradle.org/), 
 [JCenter](https://bintray.com/bintray/jcenter), and [MavenCentral](http://search.maven.org/).
 
+The plugin ensures that all requirements for inclusion in the Gradle Plugin Portal, 
+Bintray, and MavenCentral are met.
+
 # Goals
 
 The plugindev plugin takes care of creating the artifacts of a Gradle plugin and of uploading these to Bintray. The 
@@ -148,8 +151,8 @@ plugindev {
 }
 ```
 
-In the example above, no assumptions are made about where your project is hosted. Thus, the configuration properties 
-for the issue url and the vcs url must be declared explicitly.
+In the example above, no assumptions are made about where your project is hosted. Thus, 
+the configuration properties for the issue url and the vcs url must be declared explicitly.
 
 ## Configure bintray plugin
 
@@ -165,6 +168,10 @@ bintray {
 }
 ```
 
+Note that the specified Bintray repo is where your package will be added to. The repo must already
+exist at the time of the plugin publication. The package itself will be created automatically 
+if it does not yet exist. 
+
 ## Run publishPluginToBintray task
 
 Run the `publishPluginToBintray` Gradle task which will build the plugin artifacts and publish them 
@@ -176,7 +183,8 @@ gradle publishPluginToBintray
 
 ## Complete example
 
-The previously explained configuration steps lead to the following functional build file. 
+The previously explained configuration steps lead to the following functional build file
+with the minimal set of required configuration properties. 
 
 ```
 buildscript {
