@@ -10,6 +10,9 @@ of Gradle plugins as expected by the [Gradle Plugin Portal](http://plugins.gradl
 The plugin further ensures that all requirements for inclusion in the Gradle Plugin Portal, 
 Bintray, and MavenCentral are met.
 
+The plugindev plugin is hosted at [Bintray's JCenter](https://bintray.com/etienne/gradle-plugins/gradle-plugindev-plugin).
+
+
 # Goals
 
 The plugindev plugin takes care of creating the artifacts of a Gradle plugin and of publishing these to Bintray. The 
