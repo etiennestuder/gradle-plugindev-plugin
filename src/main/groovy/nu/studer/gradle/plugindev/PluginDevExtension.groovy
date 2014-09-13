@@ -100,10 +100,10 @@ class PluginDevExtension {
             if (pluginImplementationClass?.indexOf('.') > -1) {
                 pluginId = pluginImplementationClass.
                         substring(0, pluginImplementationClass.lastIndexOf('.')).
-                        replaceAll('.gradle.', '.').
-                        replaceAll('.gradle$', '').
-                        replaceAll('.plugin.', '.').
-                        replaceAll('.plugin$', '')
+                        replaceAll('\\.gradle\\.', '.').
+                        replaceAll('\\.gradle$', '').
+                        replaceAll('\\.plugin\\.', '.').
+                        replaceAll('\\.plugin$', '')
             }
         }
 
