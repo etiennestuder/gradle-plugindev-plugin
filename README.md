@@ -143,7 +143,7 @@ plugindev {
     projectUrl 'https://simpson.org/homer/gradle-foo-plugin'
     projectIssuesUrl 'https://simpson.org/gradle-foo-plugin/issue-tracking'
     projectVcsUrl 'https://simpson.org/gradle-foo-plugin/svn'
-    projectInceptionYear = '2014'
+    projectInceptionYear '2014'
     done()
 }
 ```
