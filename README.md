@@ -167,8 +167,8 @@ bintray {
 
 ## Run publishPluginToBintray task
 
-Run the `publishPluginToBintray` Gradle task which will build and upload the Gradle plugin artifacts. Use 
-the `-i` option to get more detailed feedback about the bundling and uploading process. 
+Run the `publishPluginToBintray` Gradle task which will build the plugin artifacts and publish them 
+to Bintray. Use the `-i` option to get more detailed feedback about the bundling and publishing progress. 
 
 ```console
 gradle publishPluginToBintray
