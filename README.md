@@ -261,7 +261,7 @@ plugindev {
 }
 ```
 
-You can also find the complete examples [with plugindev configuration](example/plugindev_config/build.gradle) and 
+You can also find an example [with plugindev configuration](example/plugindev_config/build.gradle) and 
 [with bintray configuration ](example/bintray_config/build.gradle) on GitHub.
 
 # Customization
