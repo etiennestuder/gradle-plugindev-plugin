@@ -23,7 +23,7 @@ import org.gradle.api.Project
  */
 class PluginDevExtension {
 
-    private static final String GITHUB_URL_PREFIX = 'https://github.com'
+    private static final String GITHUB_URL_PREFIX = 'https://github.com/'
 
     private final PluginDevPlugin plugin
     private final Project project
