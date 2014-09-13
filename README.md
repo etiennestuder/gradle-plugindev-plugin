@@ -97,7 +97,7 @@ version = '0.0.1.DEV'
 
 ## Configure plugindev plugin
 
-Configure the plugindev plugin through the `plugindev` configuration block.
+Configure the plugindev plugin through the `plugindev` extension.
 
 ### When building and uploading a new plugin
 
@@ -153,7 +153,7 @@ for the issue url and the vcs url must be declared explicitly.
 
 ## Configure bintray plugin
 
-Provide the remaining bintray configuration through the `bintray` configuration block. A 
+Provide the remaining bintray configuration through the `bintray` extension. A 
 good place to store the bintray credentials is the gradle.properties file in your Gradle 
 user home directory. 
 
