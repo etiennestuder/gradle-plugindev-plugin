@@ -21,7 +21,7 @@ plugindev {
     pluginDescription 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.'
     pluginImplementationClass 'nu.studer.gradle.plugindev.PluginDevPlugin'
     pluginLicenses 'Apache-2.0'
-    pluginTags 'gradle', 'plugin', 'development'
+    pluginTags 'gradle', 'plugin', 'plugindevelopment'
     authorId 'etiennestuder'
     authorName 'Etienne Studer'
     authorEmail 'etienne@studer.nu'
