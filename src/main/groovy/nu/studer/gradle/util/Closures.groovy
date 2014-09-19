@@ -40,4 +40,7 @@ final class Closures {
         }
     }
 
+    private Closures() {
+    }
+
 }
