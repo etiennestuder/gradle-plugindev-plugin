@@ -27,13 +27,17 @@ import org.gradle.api.tasks.TaskAction
  */
 class GeneratePluginDescriptorTask extends DefaultTask {
 
-    private static final def IMPLEMENTATION_CLASS_ATTRIBUTE = "implementation-class"
+    static final def IMPLEMENTATION_CLASS_ATTRIBUTE = 'implementation-class'
+    static final def IMPLEMENTATION_VERSION_ATTRIBUTE = 'implementation-version'
 
     @Input
     def pluginId
 
     @Input
     def pluginImplementationClass
+
+    @Input
+    def pluginVersion
 
     @OutputFile
     public File getPropertiesFile() {
@@ -44,7 +48,25 @@ class GeneratePluginDescriptorTask extends DefaultTask {
     @TaskAction
     def generate() {
         def resolvedPluginImplementationClass = Closures.resolveAsString(pluginImplementationClass)
-        propertiesFile.text = "$IMPLEMENTATION_CLASS_ATTRIBUTE=$resolvedPluginImplementationClass"
+        def resolvedPluginVersion = Closures.resolveAsString(pluginVersion)
+
+        def properties = new LinkedHashMap()
+        properties.put(IMPLEMENTATION_CLASS_ATTRIBUTE, resolvedPluginImplementationClass)
+        properties.put(IMPLEMENTATION_VERSION_ATTRIBUTE, resolvedPluginVersion)
+
+        BufferedWriter bw = null
+        try {
+            bw = new BufferedWriter(new FileWriter(propertiesFile))
+            properties.each {
+                bw.write "$it.key=$it.value" as String
+                bw.newLine()
+            }
+            bw.flush()
+        } finally {
+            if (bw != null) {
+                bw.close()
+            }
+        }
     }
 
 }

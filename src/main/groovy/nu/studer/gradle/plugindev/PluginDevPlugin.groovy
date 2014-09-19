@@ -49,7 +49,9 @@ class PluginDevPlugin implements Plugin<Project> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class)
 
+    private static final String PLUGINDEV_EXTENSION_NAME = 'plugindev'
     private static final String MINIMUM_GRADLE_JAVA_VERSION = '1.6'
+    private static final String PLUGIN_DESCRIPTOR_LOCATION = 'META-INF/gradle-plugins'
     private static final String SOURCES_JAR_TASK_NAME = 'sourcesJar'
     private static final String DOCS_JAR_TASK_NAME = 'docsJar'
     private static final String GENERATE_PLUGIN_DESCRIPTOR_FILE_TASK_NAME = 'generatePluginDescriptorFile'
@@ -64,8 +66,8 @@ class PluginDevPlugin implements Plugin<Project> {
         this.project = project
 
         // add a new 'plugindev' extension
-        def pluginDevExtension = project.extensions.create(PluginDevConstants.PLUGINDEV_EXTENSION_NAME, PluginDevExtension, this, project)
-        LOGGER.debug("Registered extension '$PluginDevConstants.PLUGINDEV_EXTENSION_NAME'")
+        def pluginDevExtension = project.extensions.create(PLUGINDEV_EXTENSION_NAME, PluginDevExtension, this, project)
+        LOGGER.debug("Registered extension '$PLUGINDEV_EXTENSION_NAME'")
 
         // apply the JavaPlugin, MavenPublishPlugin, and BintrayPlugin plugin
         def pluginsToApply = [JavaPlugin, MavenPublishPlugin, BintrayPlugin]
@@ -120,11 +122,12 @@ class PluginDevPlugin implements Plugin<Project> {
         generatePluginDescriptorFile.group = BasePlugin.BUILD_GROUP
         generatePluginDescriptorFile.pluginId = { pluginDevExtension.pluginId }
         generatePluginDescriptorFile.pluginImplementationClass = { pluginDevExtension.pluginImplementationClass }
+        generatePluginDescriptorFile.pluginVersion = { project.version }
         LOGGER.debug("Registered task '$generatePluginDescriptorFile.name'")
 
         // include the plugin descriptor in the production jar file
         Jar jarTask = project.tasks[JavaPlugin.JAR_TASK_NAME] as Jar
-        jarTask.into('META-INF/gradle-plugins') { from generatePluginDescriptorFile }
+        jarTask.into(PLUGIN_DESCRIPTOR_LOCATION) { from generatePluginDescriptorFile }
 
         // ensure the production jar file contains the declared plugin implementation class
         def findImplementationClass = new ClassFileMatchingAction({ pluginDevExtension.pluginImplementationClass })
@@ -170,7 +173,25 @@ class PluginDevPlugin implements Plugin<Project> {
                     'Build-Date': new SimpleDateFormat('yyyy-MM-dd').format(new Date()),
                     'Build-JDK': System.getProperty('java.version'),
                     'Build-Gradle': project.gradle.gradleVersion,
-                    'Build-Plugin': PluginDevPlugin.simpleName
+                    'Build-PluginDevPlugin': new Object() {
+
+                        @Override
+                        String toString() {
+
+                            InputStream resourceAsStream
+                            try {
+                                resourceAsStream = PluginDevPlugin.getResourceAsStream("/$PLUGIN_DESCRIPTOR_LOCATION/nu.studer.plugindev.properties")
+                                def props = new Properties()
+                                props.load(resourceAsStream)
+                                def version = props.getProperty(GeneratePluginDescriptorTask.IMPLEMENTATION_VERSION_ATTRIBUTE)
+                                return version ?: 'unknown'
+                            } finally {
+                                if (resourceAsStream != null) {
+                                    resourceAsStream.close()
+                                }
+                            }
+                        }
+                    }
             )
             File license = project.file('LICENSE')
             if (license.exists()) {
