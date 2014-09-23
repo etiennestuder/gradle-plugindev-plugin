@@ -47,17 +47,18 @@ import java.text.SimpleDateFormat
  */
 class PluginDevPlugin implements Plugin<Project> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class)
+    static final String PLUGINDEV_EXTENSION_NAME = 'plugindev'
+    static final String SOURCES_JAR_TASK_NAME = 'sourcesJar'
+    static final String DOCS_JAR_TASK_NAME = 'docsJar'
+    static final String GENERATE_PLUGIN_DESCRIPTOR_FILE_TASK_NAME = 'generatePluginDescriptorFile'
+    static final String UPLOAD_PLUGIN_TASK_NAME = 'publishPluginToBintray'
+    static final String PUBLICATION_NAME = 'plugin'
+    static final String JAVA_COMPONENT_NAME = 'java'
 
-    private static final String PLUGINDEV_EXTENSION_NAME = 'plugindev'
     private static final String MINIMUM_GRADLE_JAVA_VERSION = '1.6'
     private static final String PLUGIN_DESCRIPTOR_LOCATION = 'META-INF/gradle-plugins'
-    private static final String SOURCES_JAR_TASK_NAME = 'sourcesJar'
-    private static final String DOCS_JAR_TASK_NAME = 'docsJar'
-    private static final String GENERATE_PLUGIN_DESCRIPTOR_FILE_TASK_NAME = 'generatePluginDescriptorFile'
-    private static final String UPLOAD_PLUGIN_TASK_NAME = 'publishPluginToBintray'
-    private static final String PUBLICATION_NAME = 'plugin'
-    private static final String JAVA_COMPONENT_NAME = 'java'
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class)
 
     private Project project
 
