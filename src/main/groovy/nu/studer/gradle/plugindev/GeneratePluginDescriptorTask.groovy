@@ -22,6 +22,8 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
+import static nu.studer.java.util.OrderedProperties.OrderedPropertiesBuilder
+
 /**
  * Task to generate the Gradle plugin descriptor file.
  */
@@ -50,21 +52,17 @@ class GeneratePluginDescriptorTask extends DefaultTask {
         def resolvedPluginImplementationClass = Closures.resolveAsString(pluginImplementationClass)
         def resolvedPluginVersion = Closures.resolveAsString(pluginVersion)
 
-        def properties = new LinkedHashMap()
-        properties.put(IMPLEMENTATION_CLASS_ATTRIBUTE, resolvedPluginImplementationClass)
-        properties.put(IMPLEMENTATION_VERSION_ATTRIBUTE, resolvedPluginVersion)
+        def properties = new OrderedPropertiesBuilder().withSuppressDateInComment(true).build()
+        properties.setProperty(IMPLEMENTATION_CLASS_ATTRIBUTE, resolvedPluginImplementationClass)
+        properties.setProperty(IMPLEMENTATION_VERSION_ATTRIBUTE, resolvedPluginVersion)
 
-        BufferedWriter bw = null
+        Writer writer = null
         try {
-            bw = new BufferedWriter(new FileWriter(propertiesFile))
-            properties.each {
-                bw.write "$it.key=$it.value" as String
-                bw.newLine()
-            }
-            bw.flush()
+            writer = new FileWriter(propertiesFile)
+            properties.store(writer, null)
         } finally {
-            if (bw != null) {
-                bw.close()
+            if (writer != null) {
+                writer.close()
             }
         }
     }

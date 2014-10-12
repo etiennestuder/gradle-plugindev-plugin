@@ -12,6 +12,7 @@ apply plugin: 'nu.studer.plugindev'
 
 dependencies {
     compile "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayPluginVersion"
+    compile "nu.studer:java-ordered-properties-class:$orderedPropertiesVersion"
 }
 
 group = 'nu.studer'
