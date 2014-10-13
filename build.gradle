@@ -16,7 +16,7 @@ dependencies {
 }
 
 group = 'nu.studer'
-version = '1.0.2'
+version = '1.0.3.DEV'
 
 plugindev {
     pluginDescription 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.'
