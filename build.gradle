@@ -16,7 +16,7 @@ dependencies {
 }
 
 group = 'nu.studer'
-version = '1.0.2.DEV'
+version = '1.0.2'
 
 plugindev {
     pluginDescription 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.'
@@ -35,7 +35,7 @@ bintray {
     user = "$BINTRAY_USER"
     key = "$BINTRAY_API_KEY"
     pkg.repo = 'gradle-plugins'
-    dryRun = true
+    dryRun = false
 }
 
 wrapper.gradleVersion = '1.12'
