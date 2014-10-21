@@ -50,12 +50,19 @@ The following functionality is provided by the plugindev plugin:
 The plugindev plugin creates all the required artifacts through Gradle core tasks. The configuration of these 
 artifacts happens in a central place through the `plugindev` extension. The 
 [MavenPublishPlugin](http://www.gradle.org/docs/current/userguide/publishing_maven.html) is leveraged to create 
-a publication of these artifacts.
+a publication from these artifacts.
 
-The configuration of the metadata at the publication target (Bintray) happens through the `plugindev` extension and 
+The configuration of the metadata at the publication destination (Bintray) happens through the `plugindev` extension and 
 the `bintray` extension. The [BintrayPlugin](https://github.com/bintray/gradle-bintray-plugin) is leveraged to publish 
-the artifacts to Bintray.
+the publication to Bintray.
+
+# Prerequisites
  
+The following manual, one-time setup is required in order for the plugindev plugin to do its work:
+
+1. You must have a user account with [Bintray](https://bintray.com/)
+1. The Bintray repository in which to store the published plugin must already exist, e.g. `gradle-plugins`
+
 # Configuration
 
 ## Apply plugindev plugin
