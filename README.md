@@ -56,6 +56,22 @@ The configuration of the metadata at the publication destination (Bintray) happe
 the `bintray` extension. The [BintrayPlugin](https://github.com/bintray/gradle-bintray-plugin) is leveraged to publish 
 the publication to Bintray.
 
+# High-level steps
+
+Following are the high-level steps to get your plugin into the [Gradle Plugin Portal](http://plugins.gradle.org/) when using the plugindev plugin:
+ 
+1. Apply and configure the plugindev plugin to your Gradle project as explained in the Configuration section below.
+   This will take care of [Gradle Submission Process, Section 1 & 4](http://plugins.gradle.org/submit). 
+1. Publish the plugin to bintray using the `gradle publishPluginToBintray` command.
+   This takes care of [Gradle Submission Process, Section 2](http://plugins.gradle.org/submit).
+1. Request inclusion of your plugin package in the [JCenter](https://bintray.com/bintray/jcenter) repository.
+   This is [Gradle Submission Process, Section 3](http://plugins.gradle.org/submit).
+1. Request inclusion of your plugin package in the [Gradle Plugin Portal](http://plugins.gradle.org/).
+   This is [Gradle Submission Process, Section 5](http://plugins.gradle.org/submit).
+1. Wait a few minutes for your plugin to appear in the [Gradle Plugin Portal](http://plugins.gradle.org/).
+   This is [Gradle Submission Process, Section 6](http://plugins.gradle.org/submit).
+
+
 # Prerequisites
  
 The following manual, one-time setup is required in order for the plugindev plugin to do its work:
