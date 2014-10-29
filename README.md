@@ -60,7 +60,7 @@ the publication to Bintray.
 
 Following are the high-level steps to get your plugin into the [Gradle Plugin Portal](http://plugins.gradle.org/) when using the plugindev plugin:
  
-1. Apply and configure the plugindev plugin to your Gradle project as explained [below](configuration).  
+1. Apply and configure the plugindev plugin to your Gradle project as explained [below](#configuration).  
    This will take care of [Gradle Submission Process, Section 1 & 4](http://plugins.gradle.org/submit). 
 1. Publish the plugin to bintray using the `gradle publishPluginToBintray` command.  
    This takes care of [Gradle Submission Process, Section 2](http://plugins.gradle.org/submit).
