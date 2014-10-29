@@ -18,7 +18,7 @@ The plugindev plugin is hosted at [Bintray's JCenter](https://bintray.com/etienn
 The plugindev plugin takes care of creating the artifacts of a Gradle plugin and of publishing these to Bintray. The 
 following high-level goals are driving the functionality of the plugindev plugin: 
 
- * Compliance of the Gradle plugin artifacts with the Gradle Plugin Portal, JCenter, and MavenCentral must be ensured
+ * Compliance of the Gradle plugin artifacts with the Plugin Portal, JCenter, and MavenCentral must be ensured
  * All boiler-plate configuration to bundle and publish the Gradle plugin artifacts should be avoided
  * All bundle and publish configuration must happen without redundancy
  * Customization of the provided functionality should be possible 
@@ -61,7 +61,7 @@ the publication to Bintray.
 Following are the high-level steps to get your plugin into the [Gradle Plugin Portal](http://plugins.gradle.org/) when using the plugindev plugin:
  
 1. Apply and configure the plugindev plugin to your Gradle project as explained [below](#configuration).  
-   *(this will take care of [Gradle Submission Process, Section 1 & 4](http://plugins.gradle.org/submit))*
+   *(this takes care of [Gradle Submission Process, Section 1 & 4](http://plugins.gradle.org/submit))*
 1. Publish the plugin to bintray using the `gradle publishPluginToBintray` command.  
    *(this takes care of [Gradle Submission Process, Section 2](http://plugins.gradle.org/submit))*
 1. Request inclusion of your plugin package in the [JCenter](https://bintray.com/bintray/jcenter) repository.  
