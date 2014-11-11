@@ -32,4 +32,4 @@ bintray {
     dryRun = false
 }
 
-wrapper.gradleVersion = '2.1'
+wrapper.gradleVersion = '2.2'
