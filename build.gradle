@@ -1,16 +1,8 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath "nu.studer:gradle-plugindev-plugin:$plugindevPluginVersion"
-        classpath "nu.studer:gradle-credentials-plugin:$credentialsPluginVersion"
-    }
+plugins {
+  id 'groovy'
+  id 'nu.studer.plugindev' version '1.0.3'
+  id 'nu.studer.credentials' version '1.0.0'
 }
-
-apply plugin: 'groovy'
-apply plugin: 'nu.studer.plugindev'
-apply plugin: 'nu.studer.credentials'
 
 dependencies {
     compile "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayPluginVersion"
@@ -40,4 +32,4 @@ bintray {
     dryRun = false
 }
 
-wrapper.gradleVersion = '1.12'
+wrapper.gradleVersion = '2.2'
