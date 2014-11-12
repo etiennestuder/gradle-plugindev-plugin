@@ -44,7 +44,7 @@ class GeneratePluginDescriptorTask extends DefaultTask {
     @OutputFile
     public File getPropertiesFile() {
         def resolvedPluginId = Closures.resolveAsString(pluginId)
-        project.file("${project.buildDir}/plugindev/${resolvedPluginId}.properties")
+        project.file("${project.buildDir}/plugindev/META-INF/gradle-plugins/${resolvedPluginId}.properties")
     }
 
     @TaskAction
