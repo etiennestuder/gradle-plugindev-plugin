@@ -62,6 +62,8 @@ class PluginDevPlugin implements Plugin<Project> {
 
     // miscellaneous
     private static final String MINIMUM_GRADLE_JAVA_VERSION = '1.6'
+    private static final String BINTRAY_USER_DEFAULT_PROPERTY_NAME = 'bintrayUser'
+    private static final String BINTRAY_API_KEY_DEFAULT_PROPERTY_NAME = 'bintrayApiKey'
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class)
 
@@ -270,6 +272,8 @@ class PluginDevPlugin implements Plugin<Project> {
 
         // configure bintray extension
         def bintray = project.extensions.findByType(BintrayExtension)
+        bintray.user = project.properties[BINTRAY_USER_DEFAULT_PROPERTY_NAME]
+        bintray.key = project.properties[BINTRAY_API_KEY_DEFAULT_PROPERTY_NAME]
         bintray.publications = [publication.name]
         bintray.publish = true
         bintray.dryRun = false
