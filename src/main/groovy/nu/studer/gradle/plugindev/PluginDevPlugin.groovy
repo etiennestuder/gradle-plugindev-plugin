@@ -126,11 +126,11 @@ class PluginDevPlugin implements Plugin<Project> {
         generatePluginDescriptorFile.pluginVersion = { project.version }
         LOGGER.debug("Registered task '$generatePluginDescriptorFile.name'")
 
-        // include the plugin descriptor in the production jar file
-        Jar jarTask = project.tasks[JavaPlugin.JAR_TASK_NAME] as Jar
-        jarTask.into(PLUGIN_DESCRIPTOR_LOCATION) { from generatePluginDescriptorFile }
+        // include the plugin descriptor in the main source set
+        mainSourceSet.output.dir("${project.buildDir}/plugindev/generated-resources/main", builtBy: generatePluginDescriptorFileTaskName)
 
         // ensure the production jar file contains the declared plugin implementation class
+        Jar jarTask = project.tasks[JavaPlugin.JAR_TASK_NAME] as Jar
         def findImplementationClass = new ClassFileMatchingAction({ pluginDevExtension.pluginImplementationClass })
         jarTask.filesMatching("**/*.class", findImplementationClass)
         jarTask.doLast({
