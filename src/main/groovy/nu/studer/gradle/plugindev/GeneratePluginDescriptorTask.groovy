@@ -22,6 +22,8 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
+import static nu.studer.gradle.plugindev.PluginDevPlugin.MAIN_GENERATED_RESOURCES_LOCATION
+import static nu.studer.gradle.plugindev.PluginDevPlugin.PLUGIN_DESCRIPTOR_LOCATION
 import static nu.studer.java.util.OrderedProperties.OrderedPropertiesBuilder
 
 /**
@@ -44,7 +46,7 @@ class GeneratePluginDescriptorTask extends DefaultTask {
     @OutputFile
     public File getPropertiesFile() {
         def resolvedPluginId = Closures.resolveAsString(pluginId)
-        project.file("${project.buildDir}/plugindev/${resolvedPluginId}.properties")
+        project.file("$project.buildDir/$MAIN_GENERATED_RESOURCES_LOCATION/$PLUGIN_DESCRIPTOR_LOCATION/${resolvedPluginId}.properties")
     }
 
     @TaskAction

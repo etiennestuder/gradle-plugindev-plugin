@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat
  */
 class PluginDevPlugin implements Plugin<Project> {
 
+    // names
     static final String PLUGINDEV_EXTENSION_NAME = 'plugindev'
     static final String SOURCES_JAR_TASK_NAME = 'sourcesJar'
     static final String DOCS_JAR_TASK_NAME = 'docsJar'
@@ -55,8 +56,14 @@ class PluginDevPlugin implements Plugin<Project> {
     static final String PUBLICATION_NAME = 'plugin'
     static final String JAVA_COMPONENT_NAME = 'java'
 
+    // locations
+    static final String MAIN_GENERATED_RESOURCES_LOCATION = 'plugindev/generated-resources/main'
+    static final String PLUGIN_DESCRIPTOR_LOCATION = 'META-INF/gradle-plugins'
+
+    // miscellaneous
     private static final String MINIMUM_GRADLE_JAVA_VERSION = '1.6'
-    private static final String PLUGIN_DESCRIPTOR_LOCATION = 'META-INF/gradle-plugins'
+    private static final String BINTRAY_USER_DEFAULT_PROPERTY_NAME = 'bintrayUser'
+    private static final String BINTRAY_API_KEY_DEFAULT_PROPERTY_NAME = 'bintrayApiKey'
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class)
 
@@ -126,11 +133,11 @@ class PluginDevPlugin implements Plugin<Project> {
         generatePluginDescriptorFile.pluginVersion = { project.version }
         LOGGER.debug("Registered task '$generatePluginDescriptorFile.name'")
 
-        // include the plugin descriptor in the production jar file
-        Jar jarTask = project.tasks[JavaPlugin.JAR_TASK_NAME] as Jar
-        jarTask.into(PLUGIN_DESCRIPTOR_LOCATION) { from generatePluginDescriptorFile }
+        // include the plugin descriptor in the main source set
+        mainSourceSet.output.dir("$project.buildDir/$MAIN_GENERATED_RESOURCES_LOCATION", builtBy: generatePluginDescriptorFileTaskName)
 
         // ensure the production jar file contains the declared plugin implementation class
+        Jar jarTask = project.tasks[JavaPlugin.JAR_TASK_NAME] as Jar
         def findImplementationClass = new ClassFileMatchingAction({ pluginDevExtension.pluginImplementationClass })
         jarTask.filesMatching("**/*.class", findImplementationClass)
         jarTask.doLast({
@@ -265,6 +272,8 @@ class PluginDevPlugin implements Plugin<Project> {
 
         // configure bintray extension
         def bintray = project.extensions.findByType(BintrayExtension)
+        bintray.user = project.properties[BINTRAY_USER_DEFAULT_PROPERTY_NAME]
+        bintray.key = project.properties[BINTRAY_API_KEY_DEFAULT_PROPERTY_NAME]
         bintray.publications = [publication.name]
         bintray.publish = true
         bintray.dryRun = false
