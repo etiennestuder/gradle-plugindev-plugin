@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat
  */
 class PluginDevPlugin implements Plugin<Project> {
 
+    // names
     static final String PLUGINDEV_EXTENSION_NAME = 'plugindev'
     static final String SOURCES_JAR_TASK_NAME = 'sourcesJar'
     static final String DOCS_JAR_TASK_NAME = 'docsJar'
@@ -55,8 +56,12 @@ class PluginDevPlugin implements Plugin<Project> {
     static final String PUBLICATION_NAME = 'plugin'
     static final String JAVA_COMPONENT_NAME = 'java'
 
+    // locations
+    static final String MAIN_GENERATED_RESOURCES_LOCATION = 'plugindev/generated-resources/main'
+    static final String PLUGIN_DESCRIPTOR_LOCATION = 'META-INF/gradle-plugins'
+
+    // miscellaneous
     private static final String MINIMUM_GRADLE_JAVA_VERSION = '1.6'
-    private static final String PLUGIN_DESCRIPTOR_LOCATION = 'META-INF/gradle-plugins'
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class)
 
@@ -127,7 +132,7 @@ class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Registered task '$generatePluginDescriptorFile.name'")
 
         // include the plugin descriptor in the main source set
-        mainSourceSet.output.dir("${project.buildDir}/plugindev/generated-resources/main", builtBy: generatePluginDescriptorFileTaskName)
+        mainSourceSet.output.dir("$project.buildDir/$MAIN_GENERATED_RESOURCES_LOCATION", builtBy: generatePluginDescriptorFileTaskName)
 
         // ensure the production jar file contains the declared plugin implementation class
         Jar jarTask = project.tasks[JavaPlugin.JAR_TASK_NAME] as Jar
