@@ -214,7 +214,7 @@ gradle publishPluginToBintray
 The previously explained configuration steps lead to the following functional build file, applying
 the minimal set of required configuration properties.
 
-If you want or need need a different plugin id than the one automatically derived from the plugin implementation class, you
+If you want or need a different plugin id than the one automatically derived from the plugin implementation class, you
 also have to specify the ```pluginId```.
 
 If your plugin is not hosted on GitHub, you
