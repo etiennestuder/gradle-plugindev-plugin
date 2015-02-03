@@ -75,7 +75,6 @@ class PluginDevPlugin implements Plugin<Project> {
 
         // add a new 'plugindev' extension
         def pluginDevExtension = project.extensions.create(PLUGINDEV_EXTENSION_NAME, PluginDevExtension, this, project)
-        project.extensions.create('foo', PluginImplementation)
         LOGGER.debug("Registered extension '$PLUGINDEV_EXTENSION_NAME'")
 
         // apply the JavaPlugin, MavenPublishPlugin, and BintrayPlugin plugin
