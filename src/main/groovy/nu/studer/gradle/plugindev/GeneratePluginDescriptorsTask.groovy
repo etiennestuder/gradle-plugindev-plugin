@@ -19,7 +19,7 @@ package nu.studer.gradle.plugindev
 import nu.studer.gradle.util.Closures
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.OutputFiles
 import org.gradle.api.tasks.TaskAction
 
 import static nu.studer.gradle.plugindev.PluginDevPlugin.MAIN_GENERATED_RESOURCES_LOCATION
@@ -27,40 +27,38 @@ import static nu.studer.gradle.plugindev.PluginDevPlugin.PLUGIN_DESCRIPTOR_LOCAT
 import static nu.studer.java.util.OrderedProperties.OrderedPropertiesBuilder
 
 /**
- * Task to generate the Gradle plugin descriptor file.
+ * Task to generate the Gradle plugin descriptor files.
  */
-class GeneratePluginDescriptorTask extends DefaultTask {
+class GeneratePluginDescriptorsTask extends DefaultTask {
 
     static final def IMPLEMENTATION_CLASS_ATTRIBUTE = 'implementation-class'
     static final def IMPLEMENTATION_VERSION_ATTRIBUTE = 'implementation-version'
 
     @Input
-    def pluginId
-
-    @Input
-    def pluginImplementationClass
+    def pluginImplementations
 
     @Input
     def pluginVersion
 
-    @OutputFile
-    public File getPropertiesFile() {
-        def resolvedPluginId = Closures.resolveAsString(pluginId)
-        project.file("$project.buildDir/$MAIN_GENERATED_RESOURCES_LOCATION/$PLUGIN_DESCRIPTOR_LOCATION/${resolvedPluginId}.properties")
+    @OutputFiles
+    public Collection<File> getPropertiesFiles() {
+        getPluginImplementations().collect {
+            getPropertiesFile(it)
+        }
     }
 
-    @TaskAction
-    def generate() {
-        def resolvedPluginImplementationClass = Closures.resolveAsString(pluginImplementationClass)
-        def resolvedPluginVersion = Closures.resolveAsString(pluginVersion)
+    public File getPropertiesFile(def pluginImplementation) {
+        project.file("$project.buildDir/$MAIN_GENERATED_RESOURCES_LOCATION/$PLUGIN_DESCRIPTOR_LOCATION/${pluginImplementation.pluginId}.properties")
+    }
 
+    def writeDescriptor(def pluginImplementation, def resolvedPluginVersion) {
         def properties = new OrderedPropertiesBuilder().withSuppressDateInComment(true).build()
-        properties.setProperty(IMPLEMENTATION_CLASS_ATTRIBUTE, resolvedPluginImplementationClass)
+        properties.setProperty(IMPLEMENTATION_CLASS_ATTRIBUTE, pluginImplementation.pluginImplementationClass)
         properties.setProperty(IMPLEMENTATION_VERSION_ATTRIBUTE, resolvedPluginVersion)
 
         Writer writer = null
         try {
-            writer = new FileWriter(propertiesFile)
+            writer = new FileWriter(getPropertiesFile(pluginImplementation))
             properties.store(writer, null)
         } finally {
             if (writer != null) {
@@ -69,4 +67,11 @@ class GeneratePluginDescriptorTask extends DefaultTask {
         }
     }
 
+    @TaskAction
+    def generate() {
+        def resolvedPluginVersion = Closures.resolveAsString(pluginVersion)
+        getPluginImplementations().each {
+            writeDescriptor(it, resolvedPluginVersion)
+        }
+    }
 }

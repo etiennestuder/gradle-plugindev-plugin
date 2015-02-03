@@ -18,6 +18,8 @@ package nu.studer.gradle.plugindev
 import nu.studer.gradle.util.Licenses
 import org.gradle.api.Project
 
+import static nu.studer.gradle.plugindev.PluginChecks.checkPropertyNotEmpty
+
 /**
  * Extension point to configure the plugin development plugin.
  */
@@ -28,10 +30,8 @@ class PluginDevExtension {
     private final PluginDevPlugin plugin
     private final Project project
 
-    String pluginId
     String pluginName
     String pluginDescription
-    String pluginImplementationClass
     Set<String> pluginLicenses
     Set<String> pluginTags
     String authorId
@@ -42,6 +42,7 @@ class PluginDevExtension {
     String projectVcsUrl
     String projectInceptionYear
     Closure pomConfiguration
+    Collection<PluginImplementation> pluginImplementations = []
 
     PluginDevExtension(PluginDevPlugin plugin, Project project) {
         this.plugin = plugin
@@ -86,6 +87,14 @@ class PluginDevExtension {
         pluginTags.addAll tags
     }
 
+    def pluginImplementation(Closure closure) {
+        PluginImplementation pluginAttributes = new PluginImplementation()
+        closure.delegate = pluginAttributes
+        closure.call()
+
+        pluginImplementations.add(pluginAttributes)
+    }
+
     def done() {
         applyDefaultValuesForEmptyValues()
         checkPropertiesHaveNonEmptyValues()
@@ -95,16 +104,8 @@ class PluginDevExtension {
     }
 
     private void applyDefaultValuesForEmptyValues() {
-        // use default in case of missing plugin id, derived from package path of plugin class minus 'gradle' & 'plugin' packages
-        if (!pluginId) {
-            if (pluginImplementationClass?.indexOf('.') > -1) {
-                pluginId = pluginImplementationClass.
-                        substring(0, pluginImplementationClass.lastIndexOf('.')).
-                        replaceAll('\\.gradle\\.', '.').
-                        replaceAll('\\.gradle$', '').
-                        replaceAll('\\.plugin\\.', '.').
-                        replaceAll('\\.plugin$', '')
-            }
+        for (def plugin in pluginImplementations) {
+            plugin.applyDefaultValuesForEmptyValues()
         }
 
         // use default in case of missing plugin name, derived from project name
@@ -128,10 +129,14 @@ class PluginDevExtension {
     }
 
     private void checkPropertiesHaveNonEmptyValues() {
-        checkPropertyNotEmpty(pluginId, 'pluginId')
+        if (pluginImplementations.isEmpty()) {
+            throw new IllegalStateException("No gradle plugin implementation was specified")
+        }
+        for (def plugin in pluginImplementations) {
+            plugin.checkPropertiesHaveNonEmptyValues()
+        }
         checkPropertyNotEmpty(pluginName, 'pluginName')
         checkPropertyNotEmpty(pluginDescription, 'pluginDescription')
-        checkPropertyNotEmpty(pluginImplementationClass, 'pluginImplementationClass')
         checkPropertyNotEmpty(pluginLicenses, 'pluginLicenses')
         checkPropertyNotEmpty(pluginTags, 'pluginTags')
         checkPropertyNotEmpty(authorId, 'authorId')
@@ -144,9 +149,8 @@ class PluginDevExtension {
     }
 
     private void checkPropertiesHaveValidValues() {
-        // ensure fully qualified plugin id
-        if (!pluginId.contains('.')) {
-            throw new IllegalStateException("Property 'pluginId' must be a fully qualified id: $pluginId")
+        for (def pluginImplementation in pluginImplementations) {
+            pluginImplementation.checkPropertiesHaveValidValues()
         }
 
         // ensure valid license type
@@ -159,25 +163,11 @@ class PluginDevExtension {
         }
     }
 
-    private static void checkPropertyNotEmpty(String propertyValue, String propertyName) {
-        if (!propertyValue?.trim()) {
-            throw new IllegalStateException("Property '$propertyName' is missing or empty.")
-        }
-    }
-
-    private static void checkPropertyNotEmpty(Set propertyValue, String propertyName) {
-        if (!propertyValue) {
-            throw new IllegalStateException("Property '$propertyName' is missing or empty.")
-        }
-    }
-
     @Override
     public String toString() {
         return "PluginDevExtension{" +
-                "pluginId='" + pluginId + '\'' +
-                ", pluginName='" + pluginName + '\'' +
+                "pluginName='" + pluginName + '\'' +
                 ", pluginDescription='" + pluginDescription + '\'' +
-                ", pluginImplementationClass='" + pluginImplementationClass + '\'' +
                 ", pluginLicenses=" + pluginLicenses +
                 ", pluginTags=" + pluginTags +
                 ", authorId='" + authorId + '\'' +
@@ -188,6 +178,7 @@ class PluginDevExtension {
                 ", projectVcsUrl='" + projectVcsUrl + '\'' +
                 "  projectInceptionYear='" + projectInceptionYear + '\'' +
                 ", pomConfiguration=" + pomConfiguration +
+                pluginImplementations.collect { "pluginImplementation{ ${it.toString()} }" }.join(', ') +
                 "}"
     }
 

@@ -51,7 +51,7 @@ class PluginDevPlugin implements Plugin<Project> {
     static final String PLUGINDEV_EXTENSION_NAME = 'plugindev'
     static final String SOURCES_JAR_TASK_NAME = 'sourcesJar'
     static final String DOCS_JAR_TASK_NAME = 'docsJar'
-    static final String GENERATE_PLUGIN_DESCRIPTOR_FILE_TASK_NAME = 'generatePluginDescriptorFile'
+    static final String GENERATE_PLUGIN_DESCRIPTOR_FILES_TASK_NAME = 'generatePluginDescriptorFiles'
     static final String UPLOAD_PLUGIN_TASK_NAME = 'publishPluginToBintray'
     static final String PUBLICATION_NAME = 'plugin'
     static final String JAVA_COMPONENT_NAME = 'java'
@@ -75,6 +75,7 @@ class PluginDevPlugin implements Plugin<Project> {
 
         // add a new 'plugindev' extension
         def pluginDevExtension = project.extensions.create(PLUGINDEV_EXTENSION_NAME, PluginDevExtension, this, project)
+        project.extensions.create('foo', PluginImplementation)
         LOGGER.debug("Registered extension '$PLUGINDEV_EXTENSION_NAME'")
 
         // apply the JavaPlugin, MavenPublishPlugin, and BintrayPlugin plugin
@@ -124,28 +125,31 @@ class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Registered task '$docsJarTask.name'")
 
         // add a task instance that generates the plugin descriptor file
-        String generatePluginDescriptorFileTaskName = GENERATE_PLUGIN_DESCRIPTOR_FILE_TASK_NAME
-        GeneratePluginDescriptorTask generatePluginDescriptorFile = project.tasks.create(generatePluginDescriptorFileTaskName, GeneratePluginDescriptorTask.class)
-        generatePluginDescriptorFile.description = "Generates the plugin descriptor file."
-        generatePluginDescriptorFile.group = BasePlugin.BUILD_GROUP
-        generatePluginDescriptorFile.pluginId = { pluginDevExtension.pluginId }
-        generatePluginDescriptorFile.pluginImplementationClass = { pluginDevExtension.pluginImplementationClass }
-        generatePluginDescriptorFile.pluginVersion = { project.version }
-        LOGGER.debug("Registered task '$generatePluginDescriptorFile.name'")
+        String generatePluginDescriptorFilesTaskName = GENERATE_PLUGIN_DESCRIPTOR_FILES_TASK_NAME
+        GeneratePluginDescriptorsTask generatePluginDescriptorFiles = project.tasks.create(generatePluginDescriptorFilesTaskName, GeneratePluginDescriptorsTask.class)
+        generatePluginDescriptorFiles.description = "Generates the plugin descriptor files."
+        generatePluginDescriptorFiles.group = BasePlugin.BUILD_GROUP
+        generatePluginDescriptorFiles.conventionMapping.map "pluginImplementations", {
+            pluginDevExtension.pluginImplementations
+        }
+        generatePluginDescriptorFiles.pluginVersion = { project.version }
+        LOGGER.debug("Registered task '$generatePluginDescriptorFiles.name'")
 
         // include the plugin descriptor in the main source set
-        mainSourceSet.output.dir("$project.buildDir/$MAIN_GENERATED_RESOURCES_LOCATION", builtBy: generatePluginDescriptorFileTaskName)
+        mainSourceSet.output.dir("$project.buildDir/$MAIN_GENERATED_RESOURCES_LOCATION", builtBy: generatePluginDescriptorFilesTaskName)
 
         // ensure the production jar file contains the declared plugin implementation class
         Jar jarTask = project.tasks[JavaPlugin.JAR_TASK_NAME] as Jar
-        def findImplementationClass = new ClassFileMatchingAction({ pluginDevExtension.pluginImplementationClass })
-        jarTask.filesMatching("**/*.class", findImplementationClass)
-        jarTask.doLast({
-            if (!findImplementationClass.isFound()) {
-                def errorMessage = "Plugin implementation class $pluginDevExtension.pluginImplementationClass must be contained in $jarTask.archivePath."
-                throw new IllegalStateException(errorMessage)
-            }
-        })
+        pluginDevExtension.pluginImplementations.each {
+            def findImplementationClass = new ClassFileMatchingAction({ it.pluginImplementationClass })
+            jarTask.filesMatching("**/*.class", findImplementationClass)
+            jarTask.doLast({
+                if (!findImplementationClass.isFound()) {
+                    def errorMessage = "Plugin implementation class $it.pluginImplementationClass must be contained in $jarTask.archivePath."
+                    throw new IllegalStateException(errorMessage)
+                }
+            })
+        }
 
         // add a MANIFEST file and optionally a LICENSE file to each jar file (lazily through toString() implementation)
         project.tasks.withType(Jar) { Jar jar ->
@@ -191,7 +195,7 @@ class PluginDevPlugin implements Plugin<Project> {
                                 resourceAsStream = PluginDevPlugin.getResourceAsStream("/$PLUGIN_DESCRIPTOR_LOCATION/nu.studer.plugindev.properties")
                                 def props = new Properties()
                                 props.load(resourceAsStream)
-                                def version = props.getProperty(GeneratePluginDescriptorTask.IMPLEMENTATION_VERSION_ATTRIBUTE)
+                                def version = props.getProperty(GeneratePluginDescriptorsTask.IMPLEMENTATION_VERSION_ATTRIBUTE)
                                 return version ?: 'unknown'
                             } finally {
                                 if (resourceAsStream != null) {
@@ -288,7 +292,9 @@ class PluginDevPlugin implements Plugin<Project> {
             publicDownloadNumbers = true
             version {
                 vcsTag = publication.version
-                attributes = ['gradle-plugin': "$extension.pluginId:$publication.groupId:$publication.artifactId"]
+                attributes = ['gradle-plugin': extension.pluginImplementations.collect {
+                    "$it.pluginId:$publication.groupId:$publication.artifactId"
+                }.join(',')]
             }
         }
 
