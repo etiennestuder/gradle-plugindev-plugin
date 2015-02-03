@@ -138,18 +138,19 @@ class PluginDevPlugin implements Plugin<Project> {
         mainSourceSet.output.dir("$project.buildDir/$MAIN_GENERATED_RESOURCES_LOCATION", builtBy: generatePluginDescriptorFilesTaskName)
 
         // ensure the production jar file contains the declared plugin implementation class
-        Jar jarTask = project.tasks[JavaPlugin.JAR_TASK_NAME] as Jar
-        pluginDevExtension.pluginImplementations.each {
-            def findImplementationClass = new ClassFileMatchingAction({ it.pluginImplementationClass })
-            jarTask.filesMatching("**/*.class", findImplementationClass)
-            jarTask.doLast({
-                if (!findImplementationClass.isFound()) {
-                    def errorMessage = "Plugin implementation class $it.pluginImplementationClass must be contained in $jarTask.archivePath."
-                    throw new IllegalStateException(errorMessage)
-                }
-            })
+        project.afterEvaluate {
+            Jar jarTask = project.tasks[JavaPlugin.JAR_TASK_NAME] as Jar
+            pluginDevExtension.pluginImplementations.each { pluginImplementation ->
+                def findImplementationClass = new ClassFileMatchingAction(pluginImplementation.pluginImplementationClass)
+                jarTask.filesMatching("**/*.class", findImplementationClass)
+                jarTask.doLast({
+                    if (!findImplementationClass.isFound()) {
+                        def errorMessage = "Plugin implementation class $pluginImplementation.pluginImplementationClass must be contained in $jarTask.archivePath."
+                        throw new IllegalStateException(errorMessage)
+                    }
+                })
+            }
         }
-
         // add a MANIFEST file and optionally a LICENSE file to each jar file (lazily through toString() implementation)
         project.tasks.withType(Jar) { Jar jar ->
             jar.manifest.attributes(
