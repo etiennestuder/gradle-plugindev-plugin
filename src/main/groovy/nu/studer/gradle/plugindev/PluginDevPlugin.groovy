@@ -294,7 +294,7 @@ class PluginDevPlugin implements Plugin<Project> {
                 vcsTag = publication.version
                 attributes = ['gradle-plugin': extension.pluginImplementations.collect {
                     "$it.pluginId:$publication.groupId:$publication.artifactId"
-                }.join(',')]
+                }]
             }
         }
 
