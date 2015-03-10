@@ -213,6 +213,10 @@ Note that the specified Bintray repo is where your package will be added to. The
 exist at the time of the plugin publication. The package itself will be created automatically
 if it does not yet exist.
 
+If your package should be added to a Bintray repo which is owned not by you, but by a Bintray [organization]
+(https://bintray.com/docs/usermanual/interacting/interacting_bintrayorganizations.html)
+of which you are a member, you must *also* set the `pkg.userOrg` property to the name of that organization.
+
 ## Run publishPluginToBintray task
 
 Run the `publishPluginToBintray` Gradle task which will build the plugin artifacts and publish them
