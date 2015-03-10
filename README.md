@@ -215,7 +215,7 @@ if it does not yet exist.
 
 If your package should be added to a Bintray repo which is owned not by you, but by a Bintray [organization]
 (https://bintray.com/docs/usermanual/interacting/interacting_bintrayorganizations.html)
-of which you are a member, you must *also* set the `pkg.userOrg` property to the name of that organization.
+of which you are a member, you must also set the `pkg.userOrg` property to the name of that organization.
 
 ## Run publishPluginToBintray task
 
