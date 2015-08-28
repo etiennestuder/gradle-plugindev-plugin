@@ -401,6 +401,9 @@ At least the following customizations are possible:
 
 The documentation will be enhanced with more details regarding customization upon request.
 
+# Changelog
++ 1.0.4 - Upgrade to gradle-bintray-plugin 1.2
+
 # Feedback and Contributions
 
 Both feedback and contributions are very welcome.
