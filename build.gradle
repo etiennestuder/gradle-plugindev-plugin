@@ -5,6 +5,7 @@ buildscript {
     dependencies {
         classpath "nu.studer:gradle-plugindev-plugin:$plugindevPluginVersion"
         classpath "nu.studer:gradle-credentials-plugin:$credentialsPluginVersion"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayPluginVersion"
     }
 }
 
@@ -18,7 +19,7 @@ dependencies {
 }
 
 group = 'nu.studer'
-version = '1.0.4.DEV'
+version = '1.0.4'
 
 plugindev {
     pluginDescription 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.'
