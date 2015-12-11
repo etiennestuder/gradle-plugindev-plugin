@@ -151,7 +151,9 @@ consistency. The complete set of configuration properties is shown and explained
 
 ```groovy
 plugindev {
-    pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
+    pluginImplementation {
+        pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
+    }
     pluginDescription 'Gradle plugin that does foo.'
     pluginLicenses 'Apache-2.0'
     pluginTags 'gradle', 'plugin', 'foo'
@@ -176,8 +178,10 @@ complete set of configuration properties is shown and explained further down.
 
 ```groovy
 plugindev {
-    pluginId = 'org.example.foo'
-    pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
+    pluginImplementation {
+        pluginId = 'org.example.foo'
+        pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
+    }
     pluginDescription 'Gradle plugin that does foo.'
     pluginLicenses 'Apache-2.0'
     pluginTags 'gradle', 'plugin', 'foo'
@@ -257,7 +261,9 @@ group = 'org.example'
 version = '0.0.1.DEV'
 
 plugindev {
-    pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
+    pluginImplementation {
+        pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
+    }
     pluginDescription 'Gradle plugin that does foo.'
     pluginLicenses 'Apache-2.0'
     pluginTags 'gradle', 'plugin', 'foo'
@@ -285,9 +291,15 @@ The following configuration contains the complete set of configuration propertie
 
 ```groovy
 plugindev {
-    pluginId 'org.example.foo'
+    pluginImplementation {
+        pluginId 'org.example.foo'
+        pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
+    }
+    pluginImplementation {
+        pluginId 'org.anotherexample.foobar'
+        pluginImplementationClass 'org.example.gradle.foobar.FooBarPlugin'
+    }
     pluginName 'gradle-foo-plugin'
-    pluginImplementationClass 'org.example.gradle.foo.FooPlugin'
     pluginDescription 'Gradle plugin that does foo.'
     pluginLicenses 'Apache-2.0'
     pluginTags 'gradle', 'plugin', 'foo'
