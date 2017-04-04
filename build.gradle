@@ -1,24 +1,32 @@
 buildscript {
     repositories {
         jcenter()
+        maven { url "https://plugins.gradle.org/m2" }
     }
     dependencies {
         classpath "nu.studer:gradle-plugindev-plugin:$plugindevPluginVersion"
         classpath "nu.studer:gradle-credentials-plugin:$credentialsPluginVersion"
+        classpath "com.gradle:build-scan-plugin:$buildScanPluginVersion"
     }
 }
 
+apply plugin: 'com.gradle.build-scan'
 apply plugin: 'groovy'
 apply plugin: 'nu.studer.plugindev'
 apply plugin: 'nu.studer.credentials'
+
+group = 'nu.studer'
+version = '1.0.7-DEV'
+
+buildScan {
+    licenseAgreementUrl 'https://gradle.com/terms-of-service'
+    licenseAgree 'yes'
+}
 
 dependencies {
     compile "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayPluginVersion"
     compile "nu.studer:java-ordered-properties:$orderedPropertiesVersion"
 }
-
-group = 'nu.studer'
-version = '1.0.7-DEV'
 
 plugindev {
     pluginDescription 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.'
