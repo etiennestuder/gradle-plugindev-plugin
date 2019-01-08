@@ -37,7 +37,7 @@ The following functionality is provided by the plugindev plugin:
 
  * Applies the Java plugin to the project
  * Includes JCenter as a repository for dependency resolution
- * Adds the Gradle API to the 'compile' configuration
+ * Adds the Gradle API to the 'compileOnly' configuration
  * Sets the compiler source and target compatibility to 1.6, minimum version supported by Gradle
  * Adds a task that puts all main Java and/or Groovy sources into a Jar file
  * Adds a task that puts all Javadoc and/or Groovydoc into a Jar file
@@ -48,7 +48,7 @@ The following functionality is provided by the plugindev plugin:
  * Adds a license file to each Jar file if available in the root of the project
  * Creates a POM file with the required metadata derived from the plugin configuration
  * Creates a publication with the production Jar file, sources Jar file, documentation Jar file, and the POM file
- * Publishes the bundled plugin artifacts to Bintray as a new version to a new or existing package
+ * Publishes the bundled plugin artifacts to Bintray as a new version to an existing package
  * Ensures the published version has the required Bintray attributes set
 
 # Design
@@ -80,10 +80,11 @@ Following are the high-level steps to get your plugin into the [Gradle Plugin Po
 
 # Prerequisites
 
-The following manual, one-time setup is required in order for the plugindev plugin to do its work:
+The following one-time setup must already be present for the plugindev plugin to continue to do its work:
 
 1. You must have a user account with [Bintray](https://bintray.com/)
-1. The Bintray repository in which to store the published plugin must already exist, e.g. `gradle-plugins`
+1. The Bintray repository in which to store plugin packages must already exist, e.g. `gradle-plugins`
+1. The Bintray plugin package in which to store the published plugin must already exist, e.g. `gradle-plugins/gradle-foo-plugin`
 
 # Configuration
 
@@ -216,8 +217,8 @@ If the plugindev plugin finds the project properties `bintrayUser` and `bintrayA
 their values on the `bintray` extension respectively.
 
 Note that the specified Bintray repo is where your package will be added to. The repo must already
-exist at the time of the plugin publication. The package itself will be created automatically
-if it does not yet exist.
+exist at the time of the plugin publication. Given Gradle does not support hosting via Bintray anymore
+for new plugins, the package itself must already exist, too.
 
 If your package should be added to a Bintray repo which is owned not by you, but by a Bintray [organization]
 (https://bintray.com/docs/usermanual/interacting/interacting_bintrayorganizations.html)
