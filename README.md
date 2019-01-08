@@ -100,7 +100,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'nu.studer:gradle-plugindev-plugin:1.0.3'
+        classpath 'nu.studer:gradle-plugindev-plugin:1.0.7'
     }
 }
 
@@ -111,7 +111,7 @@ apply plugin: 'nu.studer.plugindev'
 
 ```groovy
 plugins {
-  id 'nu.studer.plugindev' version '1.0.3'
+  id 'nu.studer.plugindev' version '1.0.7'
 }
 ```
 
@@ -249,7 +249,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'nu.studer:gradle-plugindev-plugin:1.0.3'
+        classpath 'nu.studer:gradle-plugindev-plugin:1.0.7'
     }
 }
 
