@@ -404,7 +404,14 @@ At least the following customizations are possible:
 The documentation will be enhanced with more details regarding customization upon request.
 
 # Changelog
-+ 1.0.4 - Upgrade to gradle-bintray-plugin 1.2
++ 1.0.7 - Use version 1.8.4 of gradle-bintray-plugin. Build gradle-plugindev-plugin project with Gradle 4.10.3.
++ 1.0.6 - Downgrade to version 1.6 of gradle-bintray-plugin to avoid requirement on Java 8.
++ 1.0.5 - Use version 1.7 of gradle-bintray-plugin. Build gradle-plugindev-plugin project with Gradle 2.14.
++ 1.0.4 - Use version 1.2 of gradle-bintray-plugin.
++ 1.0.3 - Use version 1.0.1 of java-ordered-properties dependency.
++ 1.0.2 - Simplify code by making use of java-ordered-properties dependency.
++ 1.0.1 - Include the plugindev plugin version in the MANIFEST file of the archives.
++ 1.0.0 - Initial public version of the plugindev plugin.
 
 # Feedback and Contributions
 
