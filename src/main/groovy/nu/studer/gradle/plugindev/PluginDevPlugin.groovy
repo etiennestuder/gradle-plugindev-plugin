@@ -89,7 +89,7 @@ class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Added repository 'JCenter'")
 
         // add the Gradle API dependency to the 'compile' configuration
-        project.dependencies.add(JavaPlugin.COMPILE_CONFIGURATION_NAME, project.dependencies.gradleApi())
+        project.dependencies.add(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME, project.dependencies.gradleApi())
         LOGGER.debug("Added dependency 'Gradle API'")
 
         // set the source/target compatibility of Java compile and optionally of Groovy compile to 1.6
@@ -297,7 +297,7 @@ class PluginDevPlugin implements Plugin<Project> {
         DefaultTask myTask = project.tasks.create(myTaskName, DefaultTask.class)
         myTask.description = "Publishes the complete publication 'plugin' to Bintray."
         myTask.group = 'Plugin publishing'
-        myTask.dependsOn project.tasks[BintrayUploadTask.NAME]
+        myTask.dependsOn project.tasks[BintrayUploadTask.TASK_NAME]
         LOGGER.debug("Registered task '$myTask.name'")
     }
 
