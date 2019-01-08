@@ -223,6 +223,7 @@ class PluginDevPlugin implements Plugin<Project> {
                         license {
                             name licenseType[0]
                             url licenseType[1]
+                            distribution 'repo'
                         }
                     }
                 }
