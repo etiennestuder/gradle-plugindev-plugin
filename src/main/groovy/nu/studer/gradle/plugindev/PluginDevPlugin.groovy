@@ -17,7 +17,7 @@ package nu.studer.gradle.plugindev
 
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayPlugin
-import com.jfrog.bintray.gradle.BintrayUploadTask
+import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
 import nu.studer.gradle.util.Licenses
 import org.gradle.api.Action
 import org.gradle.api.DefaultTask
@@ -69,7 +69,7 @@ class PluginDevPlugin implements Plugin<Project> {
 
     private Project project
 
-    public void apply(Project project) {
+    void apply(Project project) {
         // keep the project reference
         this.project = project
 

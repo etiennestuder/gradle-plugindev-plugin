@@ -44,11 +44,12 @@ class GeneratePluginDescriptorTask extends DefaultTask {
     def pluginVersion
 
     @OutputFile
-    public File getPropertiesFile() {
+    File getPropertiesFile() {
         def resolvedPluginId = Closures.resolveAsString(pluginId)
         project.file("$project.buildDir/$MAIN_GENERATED_RESOURCES_LOCATION/$PLUGIN_DESCRIPTOR_LOCATION/${resolvedPluginId}.properties")
     }
 
+    @SuppressWarnings("unused")
     @TaskAction
     def generate() {
         def resolvedPluginImplementationClass = Closures.resolveAsString(pluginImplementationClass)
