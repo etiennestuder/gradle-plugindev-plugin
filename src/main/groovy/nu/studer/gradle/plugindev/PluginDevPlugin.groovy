@@ -231,6 +231,9 @@ class PluginDevPlugin implements Plugin<Project> {
             scm {
                 url extension.projectVcsUrl
             }
+            issueManagement {
+                url extension.projectIssuesUrl
+            }
             developers {
                 developer {
                     id extension.authorId
