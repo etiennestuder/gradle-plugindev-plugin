@@ -3,9 +3,12 @@ gradle-plugindev-plugin
 
 # Important
 
-There is now a [Plugin Publishing Plugin](https://plugins.gradle.org/docs/publish-plugin) provided by [Gradle Inc.](http://gradle.org) that allows you to upload 3rd-party Gradle plugins directly to the [Gradle Plugins Portal](https://plugins.gradle.org), without having to go through hosting at Bintray. The process is described in detail [here](https://plugins.gradle.org/docs/submit).
+There is now a [Plugin Publishing Plugin](https://plugins.gradle.org/docs/publish-plugin) provided by [Gradle Inc.](http://gradle.org) that
+allows you to upload 3rd-party Gradle plugins directly to the [Gradle Plugins Portal](https://plugins.gradle.org), without having to go 
+through hosting at Bintray. The process is described in detail [here](https://plugins.gradle.org/docs/submit).
 
-Hosting of Gradle plugins via Bintray is not offered by Gradle anymore for new plugins. Existing plugins already hosted on Bintray can be updated on Bintray though and these can still benefit from the gradle-plugindev-plugin offered here.
+Hosting of Gradle plugins via Bintray is not offered anymore by Gradle for new plugins. Existing plugins already hosted on Bintray can be 
+updated on Bintray and these can still benefit from the gradle-plugindev-plugin offered here.
 
 # Overview
 
@@ -64,19 +67,14 @@ the publication to Bintray.
 
 # High-level steps
 
-Following are the high-level steps to get your plugin into the [Gradle Plugin Portal](http://plugins.gradle.org/) when using the plugindev plugin:
+Before Gradle stopped supporting hosting of new Gradle plugins via Bintray, the following were the high-level steps to get
+your new plugin into the [Gradle Plugin Portal](http://plugins.gradle.org/) when using the plugindev plugin:
 
 1. Apply and configure the plugindev plugin to your Gradle project as explained [below](#configuration).
-   *(this takes care of [Gradle Submission Process, Section 1 & 4](http://plugins.gradle.org/submit))*
 1. Publish the plugin to bintray using the `gradle publishPluginToBintray` command.
-   *(this takes care of [Gradle Submission Process, Section 2](http://plugins.gradle.org/submit))*
 1. Request inclusion of your plugin package in the [JCenter](https://bintray.com/bintray/jcenter) repository.
-   *(this is [Gradle Submission Process, Section 3](http://plugins.gradle.org/submit))*
 1. Request inclusion of your plugin package in the [Gradle Plugin Portal](http://plugins.gradle.org/).
-   *(this is [Gradle Submission Process, Section 5](http://plugins.gradle.org/submit))*
 1. Wait a few minutes for your plugin to appear in the [Gradle Plugin Portal](http://plugins.gradle.org/).
-   *(this is [Gradle Submission Process, Section 6](http://plugins.gradle.org/submit))*
-
 
 # Prerequisites
 
@@ -84,7 +82,7 @@ The following one-time setup must already be present for the plugindev plugin to
 
 1. You must have a user account with [Bintray](https://bintray.com/)
 1. The Bintray repository in which to store plugin packages must already exist, e.g. `gradle-plugins`
-1. The Bintray plugin package in which to store the published plugin must already exist, e.g. `gradle-plugins/gradle-foo-plugin`
+1. The Bintray plugin package in which to store the published plugin version must already exist, e.g. `gradle-plugins/gradle-foo-plugin`
 
 # Configuration
 
@@ -217,8 +215,8 @@ If the plugindev plugin finds the project properties `bintrayUser` and `bintrayA
 their values on the `bintray` extension respectively.
 
 Note that the specified Bintray repo is where your package will be added to. The repo must already
-exist at the time of the plugin publication. Given Gradle does not support hosting via Bintray anymore
-for new plugins, the package itself must already exist, too.
+exist at the time of the plugin publication. Given Gradle does not support hosting of new Gradle 
+plugins via Bintray anymore, the package itself must already exist, too.
 
 If your package should be added to a Bintray repo which is owned not by you, but by a Bintray [organization]
 (https://bintray.com/docs/usermanual/interacting/interacting_bintrayorganizations.html)
