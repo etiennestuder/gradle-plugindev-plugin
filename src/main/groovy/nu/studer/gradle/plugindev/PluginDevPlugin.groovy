@@ -61,7 +61,7 @@ class PluginDevPlugin implements Plugin<Project> {
     static final String PLUGIN_DESCRIPTOR_LOCATION = 'META-INF/gradle-plugins'
 
     // miscellaneous
-    private static final String MINIMUM_GRADLE_JAVA_VERSION = '1.6'
+    private static final String MINIMUM_GRADLE_JAVA_VERSION = '1.8'
     private static final String BINTRAY_USER_DEFAULT_PROPERTY_NAME = 'bintrayUser'
     private static final String BINTRAY_API_KEY_DEFAULT_PROPERTY_NAME = 'bintrayApiKey'
 
