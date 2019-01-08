@@ -3,7 +3,9 @@ gradle-plugindev-plugin
 
 # Important
 
-There is now a [Plugin Publishing Plugin](https://plugins.gradle.org/docs/publish-plugin) provided by [Gradle Inc.](http://gradle.org) that allows to upload 3rd-party Gradle plugins directly to the [Gradle Plugins Portal](https://plugins.gradle.org), without having to go through hosting at Bintray. The process is described in detail [here](https://plugins.gradle.org/docs/submit).
+There is now a [Plugin Publishing Plugin](https://plugins.gradle.org/docs/publish-plugin) provided by [Gradle Inc.](http://gradle.org) that allows you to upload 3rd-party Gradle plugins directly to the [Gradle Plugins Portal](https://plugins.gradle.org), without having to go through hosting at Bintray. The process is described in detail [here](https://plugins.gradle.org/docs/submit).
+
+Hosting of Gradle plugins via Bintray is not offered by Gradle anymore for new plugins. Existing plugins already hosted on Bintray can be updated on Bintray though and these can still benefit from the gradle-plugindev-plugin offered here.
 
 # Overview
 
