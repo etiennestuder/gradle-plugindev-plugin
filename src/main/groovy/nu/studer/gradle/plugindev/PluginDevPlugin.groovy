@@ -126,8 +126,7 @@ class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Registered task '$sourcesJarTask.name'")
 
         // add a task instance that generates a jar with the javadoc and optionally with the groovydoc
-        String docsJarTaskName = DOCS_JAR_TASK_NAME
-        Jar docsJarTask = project.tasks.create(docsJarTaskName, Jar.class)
+        Jar docsJarTask = project.tasks.create(DOCS_JAR_TASK_NAME, Jar.class)
         docsJarTask.description = "Assembles a jar archive containing the documentation for the main source code."
         docsJarTask.group = BasePlugin.BUILD_GROUP
         docsJarTask.classifier = "javadoc"
