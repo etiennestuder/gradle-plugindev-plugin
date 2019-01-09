@@ -303,6 +303,10 @@ class PluginDevPlugin implements Plugin<Project> {
         myTask.group = 'Plugin publishing'
         myTask.dependsOn project.tasks[BintrayUploadTask.TASK_NAME]
         LOGGER.debug("Registered task '$myTask.name'")
+
+        // add the Gradle TestKit API dependency to the 'testCompile' configuration
+        project.dependencies.add(JavaPlugin.TEST_COMPILE_CONFIGURATION_NAME, project.dependencies.gradleTestKit())
+        LOGGER.debug("Added dependency 'Gradle TestKit API'")
     }
 
 }
