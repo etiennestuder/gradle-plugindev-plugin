@@ -99,7 +99,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'nu.studer:gradle-plugindev-plugin:1.0.9'
+        classpath 'nu.studer:gradle-plugindev-plugin:1.0.10'
     }
 }
 
@@ -110,7 +110,7 @@ apply plugin: 'nu.studer.plugindev'
 
 ```groovy
 plugins {
-  id 'nu.studer.plugindev' version '1.0.9'
+  id 'nu.studer.plugindev' version '1.0.10'
 }
 ```
 
@@ -248,7 +248,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'nu.studer:gradle-plugindev-plugin:1.0.9'
+        classpath 'nu.studer:gradle-plugindev-plugin:1.0.10'
     }
 }
 
@@ -403,6 +403,7 @@ At least the following customizations are possible:
 The documentation will be enhanced with more details regarding customization upon request.
 
 # Changelog
++ 1.0.10 - Include plugin under test meta data file to run functional tests with TestKit.          
 + 1.0.9 - Set issueManagement.url and license.distribution in pom.xml.
 + 1.0.8 - Set source and target compatibility for Java and Groovy to 1.8.
 + 1.0.7 - Use version 1.8.4 of gradle-bintray-plugin. Build gradle-plugindev-plugin project with Gradle 4.10.3.

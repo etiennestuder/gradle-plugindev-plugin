@@ -5,7 +5,7 @@
  */
 
 plugins {
-    id 'nu.studer.plugindev' version '1.0.9'
+    id 'nu.studer.plugindev' version '1.0.10'
 }
 
 group = 'org.example'
