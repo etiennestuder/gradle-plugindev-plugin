@@ -52,6 +52,7 @@ import java.text.SimpleDateFormat
  * and uploads the publication to Bintray. Almost all configuration can happen in one central location through the 'plugindev' extension. The
  * PluginDevPlugin ensures that the uploaded publication matches all requirements given by Bintray, JCenter, and the Gradle Plugin Portal.
  */
+@SuppressWarnings("UnstableApiUsage")
 class PluginDevPlugin implements Plugin<Project> {
 
     // names
@@ -62,7 +63,7 @@ class PluginDevPlugin implements Plugin<Project> {
 
     static final String SOURCES_JAR_TASK_NAME = 'sourcesJar'
     static final String DOCS_JAR_TASK_NAME = 'docsJar'
-    static final String PLUGIN_DESCRIPTOR_TASK_NAME = 'generatePluginDescriptorFile'
+    static final String PLUGIN_DESCRIPTOR_TASK_NAME = 'pluginDescriptorFile'
     static final String PLUGIN_UNDER_TEST_METADATA_TASK_NAME = 'pluginUnderTestMetadata'
     static final String PUBLISH_PLUGIN_TASK_NAME = 'publishPluginToBintray'
 
@@ -315,26 +316,17 @@ class PluginDevPlugin implements Plugin<Project> {
         publishPluginTask.dependsOn project.tasks[BintrayUploadTask.TASK_NAME]
         LOGGER.debug("Registered task '$publishPluginTask.name'")
 
-        // add the Gradle TestKit API dependency to the 'testCompile' configuration
-        project.dependencies.add(JavaPlugin.TEST_COMPILE_CONFIGURATION_NAME, project.dependencies.gradleTestKit())
-        LOGGER.debug("Added dependency 'Gradle TestKit API'")
-
-        // add a task instance that generates the metadata file for TesKit
-        TaskProvider<PluginUnderTestMetadata> pluginUnderTestMetadataTask = createAndConfigurePluginUnderTestMetadataTask(project)
-        establishTestKitAndPluginClasspathDependencies(project, pluginUnderTestMetadataTask)
-    }
-
-    private static TaskProvider<PluginUnderTestMetadata> createAndConfigurePluginUnderTestMetadataTask(Project project) {
-        project.getTasks().register(PLUGIN_UNDER_TEST_METADATA_TASK_NAME, PluginUnderTestMetadata.class, new Action<PluginUnderTestMetadata>() {
+        // add a task instance that generates the plugin under test metadata file for TesKit
+        TaskProvider<PluginUnderTestMetadata> pluginUnderTestMetadataTask = project.tasks.register(PLUGIN_UNDER_TEST_METADATA_TASK_NAME, PluginUnderTestMetadata.class, new Action<PluginUnderTestMetadata>() {
 
             @Override
             void execute(PluginUnderTestMetadata pluginUnderTestMetadataTask) {
-                pluginUnderTestMetadataTask.description = 'Generates the plugin metadata file.'
+                pluginUnderTestMetadataTask.description = "Generates the plugin metadata file."
                 pluginUnderTestMetadataTask.group = PLUGIN_DEVELOPMENT_GROUP_NAME
                 pluginUnderTestMetadataTask.outputDirectory.set(project.layout.buildDirectory.dir(pluginUnderTestMetadataTask.name))
                 pluginUnderTestMetadataTask.pluginClasspath.from {
-                    Configuration gradlePluginConfiguration = project.getConfigurations().detachedConfiguration(project.getDependencies().gradleApi())
-                    FileCollection gradleApi = gradlePluginConfiguration.getIncoming().getFiles()
+                    Configuration gradlePluginConfiguration = project.configurations.detachedConfiguration(project.dependencies.gradleApi())
+                    FileCollection gradleApi = gradlePluginConfiguration.incoming.files
 
                     JavaPluginConvention javaPluginConvention = project.convention.findPlugin(JavaPluginConvention)
                     def mainSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
@@ -342,43 +334,26 @@ class PluginDevPlugin implements Plugin<Project> {
                 }
             }
         })
-    }
 
-    private void establishTestKitAndPluginClasspathDependencies(Project project, TaskProvider<PluginUnderTestMetadata> pluginClasspathTask) {
-        project.afterEvaluate(new TestKitAndPluginClasspathDependenciesAction(pluginClasspathTask))
-    }
+        // establish TestKit and plugin classpath dependencies
+        project.afterEvaluate { Project project ->
+            project.normalization.runtimeClasspath.ignore(PluginUnderTestMetadata.METADATA_FILE_NAME)
 
-    class TestKitAndPluginClasspathDependenciesAction implements Action<Project> {
-
-        private final TaskProvider<PluginUnderTestMetadata> pluginClasspathTask
-
-        private TestKitAndPluginClasspathDependenciesAction(TaskProvider<PluginUnderTestMetadata> pluginClasspathTask) {
-            this.pluginClasspathTask = pluginClasspathTask
-        }
-
-        @Override
-        void execute(Project project) {
-            DependencyHandler dependencies = project.getDependencies()
-
-            JavaPluginConvention javaPluginConvention = project.convention.findPlugin(JavaPluginConvention)
-            def testSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
-
-            project.getNormalization().getRuntimeClasspath().ignore(PluginUnderTestMetadata.METADATA_FILE_NAME)
-
-            project.getTasks().withType(Test.class).configureEach(new Action<Test>() {
+            project.tasks.withType(Test.class).configureEach(new Action<Test>() {
 
                 @Override
                 void execute(Test test) {
-                    test.getInputs().files(pluginClasspathTask.get().getPluginClasspath())
+                    test.inputs.files(pluginUnderTestMetadataTask.get().pluginClasspath)
                             .withPropertyName("pluginClasspath")
                             .withNormalizer(ClasspathNormalizer.class)
                 }
             })
 
-            String compileConfigurationName = testSourceSet.getCompileConfigurationName()
-            dependencies.add(compileConfigurationName, dependencies.gradleTestKit())
-            String runtimeConfigurationName = testSourceSet.getRuntimeConfigurationName()
-            dependencies.add(runtimeConfigurationName, project.getLayout().files(pluginClasspathTask))
+            JavaPluginConvention javaPluginConvention = project.convention.findPlugin(JavaPluginConvention)
+            def testSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
+            DependencyHandler dependencies = project.dependencies
+            dependencies.add(testSourceSet.compileConfigurationName, dependencies.gradleTestKit())
+            dependencies.add(testSourceSet.runtimeConfigurationName, project.layout.files(pluginUnderTestMetadataTask))
         }
     }
 
