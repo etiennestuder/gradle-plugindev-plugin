@@ -107,13 +107,12 @@ class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Added dependency 'Gradle API'")
 
         // set the source/target compatibility of Java compile and optionally of Groovy compile to 1.6
-        JavaPluginConvention javaConvention = project.convention.getPlugin(JavaPluginConvention.class)
-        javaConvention.sourceCompatibility = MINIMUM_GRADLE_JAVA_VERSION
-        javaConvention.targetCompatibility = MINIMUM_GRADLE_JAVA_VERSION
+        JavaPluginConvention javaPluginConvention = project.convention.getPlugin(JavaPluginConvention.class)
+        javaPluginConvention.sourceCompatibility = MINIMUM_GRADLE_JAVA_VERSION
+        javaPluginConvention.targetCompatibility = MINIMUM_GRADLE_JAVA_VERSION
         LOGGER.debug("Set source and target compatibility for Java and Groovy to $MINIMUM_GRADLE_JAVA_VERSION")
 
         // get all the sources from the 'main' source set
-        JavaPluginConvention javaPluginConvention = project.convention.findPlugin(JavaPluginConvention)
         def mainSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
         SourceDirectorySet allMainSources = mainSourceSet.allSource
 
@@ -219,6 +218,51 @@ class PluginDevPlugin implements Plugin<Project> {
             }
             LOGGER.debug("Enhance .jar file of Jar task '$jar.name'")
         }
+
+        // add a task instance that uploads the complete plugin publication to Bintray
+        DefaultTask publishPluginTask = project.tasks.create(PUBLISH_PLUGIN_TASK_NAME, DefaultTask.class)
+        publishPluginTask.description = "Publishes the complete publication 'plugin' to Bintray."
+        publishPluginTask.group = PLUGIN_PUBLISHING_GROUP_NAME
+        publishPluginTask.dependsOn project.tasks[BintrayUploadTask.TASK_NAME]
+        LOGGER.debug("Registered task '$publishPluginTask.name'")
+
+        // add a task instance that generates the plugin under test metadata file for TesKit
+        TaskProvider<PluginUnderTestMetadata> pluginUnderTestMetadataTask = project.tasks.register(PLUGIN_UNDER_TEST_METADATA_TASK_NAME, PluginUnderTestMetadata.class, new Action<PluginUnderTestMetadata>() {
+
+            @Override
+            void execute(PluginUnderTestMetadata pluginUnderTestMetadataTask) {
+                pluginUnderTestMetadataTask.description = "Generates the plugin metadata file."
+                pluginUnderTestMetadataTask.group = PLUGIN_DEVELOPMENT_GROUP_NAME
+                pluginUnderTestMetadataTask.outputDirectory.set(project.layout.buildDirectory.dir(pluginUnderTestMetadataTask.name))
+                pluginUnderTestMetadataTask.pluginClasspath.from {
+                    Configuration gradlePluginConfiguration = project.configurations.detachedConfiguration(project.dependencies.gradleApi())
+                    FileCollection gradleApi = gradlePluginConfiguration.incoming.files
+
+                    def mainSrcSet = javaPluginConvention.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
+                    mainSrcSet.runtimeClasspath.minus(gradleApi)
+                }
+            }
+        })
+
+        // establish TestKit and plugin classpath dependencies
+        project.afterEvaluate { Project proj ->
+            proj.normalization.runtimeClasspath.ignore(PluginUnderTestMetadata.METADATA_FILE_NAME)
+
+            proj.tasks.withType(Test.class).configureEach(new Action<Test>() {
+
+                @Override
+                void execute(Test test) {
+                    test.inputs.files(pluginUnderTestMetadataTask.get().pluginClasspath)
+                            .withPropertyName("pluginClasspath")
+                            .withNormalizer(ClasspathNormalizer.class)
+                }
+            })
+
+            def testSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
+            DependencyHandler dependencies = proj.dependencies
+            dependencies.add(testSourceSet.compileConfigurationName, dependencies.gradleTestKit())
+            dependencies.add(testSourceSet.runtimeConfigurationName, proj.layout.files(pluginUnderTestMetadataTask))
+        }
     }
 
     def afterExtensionConfiguration(PluginDevExtension extension) {
@@ -306,53 +350,6 @@ class PluginDevPlugin implements Plugin<Project> {
                 vcsTag = publication.version
                 attributes = ['gradle-plugin': "$extension.pluginId:$publication.groupId:$publication.artifactId"]
             }
-        }
-
-        // add a task instance that uploads the complete plugin publication to Bintray
-        DefaultTask publishPluginTask = project.tasks.create(PUBLISH_PLUGIN_TASK_NAME, DefaultTask.class)
-        publishPluginTask.description = "Publishes the complete publication 'plugin' to Bintray."
-        publishPluginTask.group = PLUGIN_PUBLISHING_GROUP_NAME
-        publishPluginTask.dependsOn project.tasks[BintrayUploadTask.TASK_NAME]
-        LOGGER.debug("Registered task '$publishPluginTask.name'")
-
-        // add a task instance that generates the plugin under test metadata file for TesKit
-        TaskProvider<PluginUnderTestMetadata> pluginUnderTestMetadataTask = project.tasks.register(PLUGIN_UNDER_TEST_METADATA_TASK_NAME, PluginUnderTestMetadata.class, new Action<PluginUnderTestMetadata>() {
-
-            @Override
-            void execute(PluginUnderTestMetadata pluginUnderTestMetadataTask) {
-                pluginUnderTestMetadataTask.description = "Generates the plugin metadata file."
-                pluginUnderTestMetadataTask.group = PLUGIN_DEVELOPMENT_GROUP_NAME
-                pluginUnderTestMetadataTask.outputDirectory.set(project.layout.buildDirectory.dir(pluginUnderTestMetadataTask.name))
-                pluginUnderTestMetadataTask.pluginClasspath.from {
-                    Configuration gradlePluginConfiguration = project.configurations.detachedConfiguration(project.dependencies.gradleApi())
-                    FileCollection gradleApi = gradlePluginConfiguration.incoming.files
-
-                    JavaPluginConvention javaPluginConvention = project.convention.findPlugin(JavaPluginConvention)
-                    def mainSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
-                    mainSourceSet.runtimeClasspath.minus(gradleApi)
-                }
-            }
-        })
-
-        // establish TestKit and plugin classpath dependencies
-        project.afterEvaluate { Project project ->
-            project.normalization.runtimeClasspath.ignore(PluginUnderTestMetadata.METADATA_FILE_NAME)
-
-            project.tasks.withType(Test.class).configureEach(new Action<Test>() {
-
-                @Override
-                void execute(Test test) {
-                    test.inputs.files(pluginUnderTestMetadataTask.get().pluginClasspath)
-                            .withPropertyName("pluginClasspath")
-                            .withNormalizer(ClasspathNormalizer.class)
-                }
-            })
-
-            JavaPluginConvention javaPluginConvention = project.convention.findPlugin(JavaPluginConvention)
-            def testSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
-            DependencyHandler dependencies = project.dependencies
-            dependencies.add(testSourceSet.compileConfigurationName, dependencies.gradleTestKit())
-            dependencies.add(testSourceSet.runtimeConfigurationName, project.layout.files(pluginUnderTestMetadataTask))
         }
     }
 
