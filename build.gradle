@@ -14,8 +14,8 @@ buildScan {
 }
 
 dependencies {
-    compile "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayPluginVersion"
-    compile "nu.studer:java-ordered-properties:$orderedPropertiesVersion"
+    compile "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+    compile "nu.studer:java-ordered-properties:1.0.1"
 }
 
 plugindev {
