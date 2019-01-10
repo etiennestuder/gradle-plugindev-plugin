@@ -16,6 +16,9 @@ buildScan {
 dependencies {
     compile "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
     compile "nu.studer:java-ordered-properties:1.0.1"
+    testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+        exclude module: 'groovy-all'
+    }
 }
 
 plugindev {
@@ -37,3 +40,27 @@ bintray {
     pkg.repo = 'gradle-plugins'
     dryRun = false
 }
+
+test {
+    maxParallelForks = 2
+}
+
+def testAll = tasks.create('testAll') {
+    description = 'Runs the Gradle cross-version tests.'
+    group = 'Verification'
+}
+
+List<String> testedGradleVersions = []
+testedGradleVersions << "5.1"
+testedGradleVersions << "5.0"
+testedGradleVersions << "4.10.3"
+testedGradleVersions << "4.0.2"
+testedGradleVersions << "3.5.1"
+
+testedGradleVersions.each { version ->
+    project.tasks.create("test_" + version.replaceAll("[^a-zA-Z0-9]", "_"), Test).with {
+        systemProperty 'testContext.gradleVersion', version
+        testAll.dependsOn(it)
+    }
+}
+
