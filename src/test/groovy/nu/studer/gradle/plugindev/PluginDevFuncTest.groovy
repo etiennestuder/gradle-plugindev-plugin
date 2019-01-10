@@ -6,12 +6,6 @@ import spock.lang.Unroll
 @Unroll
 class PluginDevFuncTest extends BaseFuncTest {
 
-    void setup() {
-        def gradleBuildCacheDir = new File(testKitDir, "caches/build-cache-1")
-        gradleBuildCacheDir.deleteDir()
-        gradleBuildCacheDir.mkdir()
-    }
-
     void "can apply plugin"() {
         given:
         settingsFile()
@@ -19,10 +13,10 @@ class PluginDevFuncTest extends BaseFuncTest {
         examplePlugin()
 
         when:
-        def result = runWithArguments('publishPluginToBintray')
+        def result = runWithArguments('publishPluginToBintray', '-i')
 
         then:
-        fileExists('build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class')
+        fileExists('build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class') || fileExists('build/classes/main/nu/studer/gradle/example/ExamplePlugin.class')
         fileExists('build/plugindev/generated-resources/main/META-INF/gradle-plugins/nu.studer.example.properties')
         result.task(':pluginDescriptorFile').outcome == TaskOutcome.SUCCESS
         result.task(':compileJava').outcome == TaskOutcome.SUCCESS
@@ -34,6 +28,26 @@ class PluginDevFuncTest extends BaseFuncTest {
         result.output.contains('Uploading to https://api.bintray.com/content/someUser/gradle-plugins/gradle-example-plugin/0.1/nu/studer/gradle-example-plugin/0.1/gradle-example-plugin-0.1-javadoc.jar...')
         result.output.contains('Uploading to https://api.bintray.com/content/someUser/gradle-plugins/gradle-example-plugin/0.1/nu/studer/gradle-example-plugin/0.1/gradle-example-plugin-0.1.jar...')
         result.output.contains('Uploading to https://api.bintray.com/content/someUser/gradle-plugins/gradle-example-plugin/0.1/nu/studer/gradle-example-plugin/0.1/gradle-example-plugin-0.1.pom...')
+    }
+
+    void "can run tests"() {
+        given:
+        settingsFile()
+        buildFile()
+        examplePlugin()
+
+        when:
+        def result = runWithArguments('test', '-i')
+
+        then:
+        fileExists('build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class') || fileExists('build/classes/main/nu/studer/gradle/example/ExamplePlugin.class')
+        fileExists('build/plugindev/generated-resources/main/META-INF/gradle-plugins/nu.studer.example.properties')
+        fileExists('build/pluginUnderTestMetadata/plugin-under-test-metadata.properties')
+        result.task(':pluginDescriptorFile').outcome == TaskOutcome.SUCCESS
+        result.task(':pluginUnderTestMetadata').outcome == TaskOutcome.SUCCESS
+        result.task(':compileJava').outcome == TaskOutcome.SUCCESS
+        result.task(':compileTestJava').outcome == TaskOutcome.NO_SOURCE
+        result.task(':test').outcome == TaskOutcome.NO_SOURCE
     }
 
     private File settingsFile() {
