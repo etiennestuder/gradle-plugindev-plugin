@@ -25,7 +25,7 @@ The plugindev plugin is hosted at [Bintray's JCenter](https://bintray.com/etienn
 
 ## Build scan
 
-Recent build scan: https://scans.gradle.com/s/hqlh2q4uisqim
+Recent build scan: https://scans.gradle.com/s/cvhqpcyxungha
 
 Find out more about build scans for Gradle and Maven at https://scans.gradle.com.
 
