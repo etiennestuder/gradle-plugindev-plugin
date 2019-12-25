@@ -6,10 +6,10 @@ gradle-plugindev-plugin
 # Important
 
 There is now a [Plugin Publishing Plugin](https://plugins.gradle.org/docs/publish-plugin) provided by [Gradle Inc.](http://gradle.org) that
-allows you to upload 3rd-party Gradle plugins directly to the [Gradle Plugins Portal](https://plugins.gradle.org), without having to go 
+allows you to upload 3rd-party Gradle plugins directly to the [Gradle Plugins Portal](https://plugins.gradle.org), without having to go
 through hosting at Bintray. The process is described in detail [here](https://plugins.gradle.org/docs/submit).
 
-Hosting of Gradle plugins via Bintray is not offered anymore by Gradle for new plugins. Existing plugins already hosted on Bintray can be 
+Hosting of Gradle plugins via Bintray is not offered anymore by Gradle for new plugins. Existing plugins already hosted on Bintray can be
 updated on Bintray and these can still benefit from the gradle-plugindev-plugin offered here.
 
 # Overview
@@ -22,7 +22,6 @@ The plugin further ensures that all requirements for inclusion in the Gradle Plu
 Bintray, and MavenCentral are met.
 
 The plugindev plugin is hosted at [Bintray's JCenter](https://bintray.com/etienne/gradle-plugins/gradle-plugindev-plugin).
-
 
 # Goals
 
@@ -217,7 +216,7 @@ If the plugindev plugin finds the project properties `bintrayUser` and `bintrayA
 their values on the `bintray` extension respectively.
 
 Note that the specified Bintray repo is where your package will be added to. The repo must already
-exist at the time of the plugin publication. Given Gradle does not support hosting of new Gradle 
+exist at the time of the plugin publication. Given Gradle does not support hosting of new Gradle
 plugins via Bintray anymore, the package itself must already exist, too.
 
 If your package should be added to a Bintray repo which is owned not by you, but by a Bintray [organization]
@@ -405,9 +404,9 @@ At least the following customizations are possible:
 The documentation will be enhanced with more details regarding customization upon request.
 
 # Changelog
-+ 1.0.12 - Add compatibility all the way back to Gradle 3.5.1.          
-+ 1.0.11 - Register custom tasks at plugin application time.          
-+ 1.0.10 - Include plugin under test meta data file to run functional tests with TestKit.          
++ 1.0.12 - Add compatibility all the way back to Gradle 3.5.1.
++ 1.0.11 - Register custom tasks at plugin application time.
++ 1.0.10 - Include plugin under test meta data file to run functional tests with TestKit.
 + 1.0.9 - Set issueManagement.url and license.distribution in pom.xml.
 + 1.0.8 - Set source and target compatibility for Java and Groovy to 1.8.
 + 1.0.7 - Use version 1.8.4 of gradle-bintray-plugin. Build gradle-plugindev-plugin project with Gradle 4.10.3.
