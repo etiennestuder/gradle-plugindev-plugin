@@ -23,6 +23,12 @@ Bintray, and MavenCentral are met.
 
 The plugindev plugin is hosted at [Bintray's JCenter](https://bintray.com/etienne/gradle-plugins/gradle-plugindev-plugin).
 
+## Build scan
+
+Recent build scan: https://scans.gradle.com/s/hqlh2q4uisqim
+
+Find out more about build scans for Gradle and Maven at https://scans.gradle.com.
+
 # Goals
 
 The plugindev plugin takes care of creating the artifacts of a Gradle plugin and of publishing these to Bintray. The
