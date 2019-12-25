@@ -1,5 +1,16 @@
+:imagesdir: docs/images
+:toc:
+:toc-placement!:
+:figure-caption!:
+:caption!:
+
 gradle-plugindev-plugin
 =======================
+
+image:https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/org/gradle/test-retry/org.gradle.test-retry.gradle.plugin/maven-metadata.xml.svg?label=version["Version",link="https://plugins.gradle.org/plugin/org.gradle.test-retry"]
+image:https://img.shields.io/github/license/gradle/test-retry-gradle-plugin["GitHub license",link="https://github.com/gradle/test-retry-gradle-plugin/blob/master/LICENSE"]
+
+toc::[]
 
 > The work on this software project is in no way associated with my employer nor with the role I'm having at my employer. Any requests for changes will be decided upon exclusively by myself based on my personal preferences. I maintain this project as much or as little as my spare time permits.
 
