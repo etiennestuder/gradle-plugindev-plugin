@@ -257,8 +257,8 @@ class PluginDevPlugin implements Plugin<Project> {
 
             def testSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
             DependencyHandler dependencies = proj.dependencies
-            dependencies.add(testSourceSet.compileConfigurationName, dependencies.gradleTestKit())
-            dependencies.add(testSourceSet.runtimeConfigurationName, pluginUnderTestMetadataTask.outputs.files)
+            dependencies.add(testSourceSet.implementationConfigurationName, dependencies.gradleTestKit())
+            dependencies.add(testSourceSet.runtimeOnlyConfigurationName, pluginUnderTestMetadataTask.outputs.files)
         }
     }
 
