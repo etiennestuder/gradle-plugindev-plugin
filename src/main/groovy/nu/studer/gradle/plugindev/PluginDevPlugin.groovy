@@ -101,11 +101,11 @@ class PluginDevPlugin implements Plugin<Project> {
         project.repositories.add(project.repositories.jcenter())
         LOGGER.debug("Added repository 'JCenter'")
 
-        // add the Gradle API dependency to the 'compile' configuration
+        // add the Gradle API dependency to the 'compileOnly' configuration
         project.dependencies.add(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME, project.dependencies.gradleApi())
         LOGGER.debug("Added dependency 'Gradle API'")
 
-        // set the source/target compatibility of Java compile and optionally of Groovy compile to 1.6
+        // set the source/target compatibility of Java compile and optionally of Groovy compile
         JavaPluginConvention javaPluginConvention = project.convention.getPlugin(JavaPluginConvention.class)
         javaPluginConvention.sourceCompatibility = MINIMUM_GRADLE_JAVA_VERSION
         javaPluginConvention.targetCompatibility = MINIMUM_GRADLE_JAVA_VERSION
