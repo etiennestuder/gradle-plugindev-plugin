@@ -60,7 +60,6 @@ testedGradleVersions << "5.0"
 testedGradleVersions << "4.10.3"
 testedGradleVersions << "4.3"
 testedGradleVersions << "4.0.2"
-testedGradleVersions << "3.5.1"
 
 testedGradleVersions.each { version ->
     project.tasks.create("test_" + version.replaceAll("[^a-zA-Z0-9]", "_"), Test).with {
