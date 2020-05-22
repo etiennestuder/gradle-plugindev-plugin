@@ -28,6 +28,11 @@ dependencies {
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.6.2'
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 plugindev {
     pluginDescription 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.'
     pluginImplementationClass 'nu.studer.gradle.plugindev.PluginDevPlugin'
