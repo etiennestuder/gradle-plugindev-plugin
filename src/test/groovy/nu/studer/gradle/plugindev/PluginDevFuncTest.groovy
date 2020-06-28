@@ -1,7 +1,9 @@
 package nu.studer.gradle.plugindev
 
 import org.gradle.testkit.runner.TaskOutcome
+import spock.lang.Unroll
 
+@Unroll
 class PluginDevFuncTest extends BaseFuncTest {
 
     void "can apply plugin"() {
