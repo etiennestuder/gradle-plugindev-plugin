@@ -105,8 +105,7 @@ class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Added repository 'JCenter'")
 
         // add the Gradle API dependency to the 'compileOnly' configuration
-        dependencies.add(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
-            project.files(dependencies.gradleApi().resolve().findAll { !it.name.startsWith("groovy-") }))
+        dependencies.add(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME, dependencies.gradleApi());
         LOGGER.debug("Added dependency 'Gradle API'")
 
         // set the source/target compatibility of Java compile and optionally of Groovy compile
@@ -260,8 +259,7 @@ class PluginDevPlugin implements Plugin<Project> {
             })
 
             def testSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
-            dependencies.add(testSourceSet.implementationConfigurationName,
-                project.files(dependencies.gradleTestKit().resolve().findAll { !it.name.startsWith("groovy-") }))
+            dependencies.add(testSourceSet.implementationConfigurationName, dependencies.gradleTestKit());
             dependencies.add(testSourceSet.runtimeOnlyConfigurationName, pluginUnderTestMetadataTask.outputs.files)
         }
     }
