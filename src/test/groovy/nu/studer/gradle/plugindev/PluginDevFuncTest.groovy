@@ -1,6 +1,7 @@
 package nu.studer.gradle.plugindev
 
 import org.gradle.testkit.runner.TaskOutcome
+import org.gradle.util.GradleVersion
 import spock.lang.PendingFeature
 import spock.lang.Unroll
 
@@ -34,6 +35,7 @@ class PluginDevFuncTest extends BaseFuncTest {
     @PendingFeature
     void "can apply plugin with Gradle configuration cache enabled"() {
         given:
+        gradleVersion = GradleVersion.version('6.5')
         settingsFile()
         buildFile()
         examplePlugin()
