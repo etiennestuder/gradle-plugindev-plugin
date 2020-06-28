@@ -86,6 +86,9 @@ class PluginDevPlugin implements Plugin<Project> {
         // keep the project reference
         this.project = project
 
+        // keep a local variable given the many usages in this method
+        DependencyHandler dependencies = project.dependencies
+
         // add a new 'plugindev' extension
         def pluginDevExtension = project.extensions.create(PLUGINDEV_EXTENSION_NAME, PluginDevExtension, this, project)
         LOGGER.debug("Registered extension '$PLUGINDEV_EXTENSION_NAME'")
@@ -102,8 +105,8 @@ class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Added repository 'JCenter'")
 
         // add the Gradle API dependency to the 'compileOnly' configuration
-        project.dependencies.add(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
-            project.files(project.dependencies.gradleApi().resolve().findAll { !it.name.startsWith("groovy-") }))
+        dependencies.add(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
+            project.files(dependencies.gradleApi().resolve().findAll { !it.name.startsWith("groovy-") }))
         LOGGER.debug("Added dependency 'Gradle API'")
 
         // set the source/target compatibility of Java compile and optionally of Groovy compile
@@ -231,7 +234,7 @@ class PluginDevPlugin implements Plugin<Project> {
         pluginUnderTestMetadataTask.description = "Generates the plugin metadata file."
         pluginUnderTestMetadataTask.group = PLUGIN_DEVELOPMENT_GROUP_NAME
         pluginUnderTestMetadataTask.outputDirectory = project.file("$project.buildDir/$pluginUnderTestMetadataTask.name")
-        Configuration gradlePluginConfiguration = project.configurations.detachedConfiguration(project.dependencies.gradleApi())
+        Configuration gradlePluginConfiguration = project.configurations.detachedConfiguration(dependencies.gradleApi())
         FileCollection gradleApi = gradlePluginConfiguration.incoming.files
         pluginUnderTestMetadataTask.pluginClasspath = mainSourceSet.runtimeClasspath.minus(gradleApi)
 
@@ -257,9 +260,8 @@ class PluginDevPlugin implements Plugin<Project> {
             })
 
             def testSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
-            DependencyHandler dependencies = proj.dependencies
-            project.dependencies.add(testSourceSet.implementationConfigurationName,
-                project.files(project.dependencies.gradleTestKit().resolve().findAll { !it.name.startsWith("groovy-") }))
+            dependencies.add(testSourceSet.implementationConfigurationName,
+                project.files(dependencies.gradleTestKit().resolve().findAll { !it.name.startsWith("groovy-") }))
             dependencies.add(testSourceSet.runtimeOnlyConfigurationName, pluginUnderTestMetadataTask.outputs.files)
         }
     }
