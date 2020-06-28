@@ -102,7 +102,8 @@ class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Added repository 'JCenter'")
 
         // add the Gradle API dependency to the 'compileOnly' configuration
-        project.dependencies.add(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME, project.dependencies.gradleApi())
+        project.dependencies.add(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
+            project.files(project.dependencies.gradleApi().resolve().findAll { !it.name.startsWith("groovy-") }))
         LOGGER.debug("Added dependency 'Gradle API'")
 
         // set the source/target compatibility of Java compile and optionally of Groovy compile
@@ -160,56 +161,56 @@ class PluginDevPlugin implements Plugin<Project> {
         // add a MANIFEST file and optionally a LICENSE file to each jar file (lazily through toString() implementation)
         project.tasks.withType(Jar) { Jar jar ->
             jar.manifest.attributes(
-                    'Implementation-Title': new Object() {
+                'Implementation-Title': new Object() {
 
-                        @Override
-                        String toString() {
-                            pluginDevExtension.pluginName
-                        }
-                    },
-                    'Implementation-Version': new Object() {
+                    @Override
+                    String toString() {
+                        pluginDevExtension.pluginName
+                    }
+                },
+                'Implementation-Version': new Object() {
 
-                        @Override
-                        String toString() {
-                            project.version
-                        }
-                    },
-                    'Implementation-Vendor': new Object() {
+                    @Override
+                    String toString() {
+                        project.version
+                    }
+                },
+                'Implementation-Vendor': new Object() {
 
-                        @Override
-                        String toString() {
-                            pluginDevExtension.authorName
-                        }
-                    },
-                    'Implementation-Website': new Object() {
+                    @Override
+                    String toString() {
+                        pluginDevExtension.authorName
+                    }
+                },
+                'Implementation-Website': new Object() {
 
-                        @Override
-                        String toString() {
-                            pluginDevExtension.projectUrl
-                        }
-                    },
-                    'Build-Date': new SimpleDateFormat('yyyy-MM-dd').format(new Date()),
-                    'Build-JDK': System.getProperty('java.version'),
-                    'Build-Gradle': project.gradle.gradleVersion,
-                    'Build-PluginDevPlugin': new Object() {
+                    @Override
+                    String toString() {
+                        pluginDevExtension.projectUrl
+                    }
+                },
+                'Build-Date': new SimpleDateFormat('yyyy-MM-dd').format(new Date()),
+                'Build-JDK': System.getProperty('java.version'),
+                'Build-Gradle': project.gradle.gradleVersion,
+                'Build-PluginDevPlugin': new Object() {
 
-                        @Override
-                        String toString() {
+                    @Override
+                    String toString() {
 
-                            InputStream resourceAsStream
-                            try {
-                                resourceAsStream = PluginDevPlugin.getResourceAsStream("/$PLUGIN_DESCRIPTOR_LOCATION/nu.studer.plugindev.properties")
-                                def props = new Properties()
-                                props.load(resourceAsStream)
-                                def version = props.getProperty(GeneratePluginDescriptorTask.IMPLEMENTATION_VERSION_ATTRIBUTE)
-                                return version ?: 'unknown'
-                            } finally {
-                                if (resourceAsStream != null) {
-                                    resourceAsStream.close()
-                                }
+                        InputStream resourceAsStream
+                        try {
+                            resourceAsStream = PluginDevPlugin.getResourceAsStream("/$PLUGIN_DESCRIPTOR_LOCATION/nu.studer.plugindev.properties")
+                            def props = new Properties()
+                            props.load(resourceAsStream)
+                            def version = props.getProperty(GeneratePluginDescriptorTask.IMPLEMENTATION_VERSION_ATTRIBUTE)
+                            return version ?: 'unknown'
+                        } finally {
+                            if (resourceAsStream != null) {
+                                resourceAsStream.close()
                             }
                         }
                     }
+                }
             )
             File license = project.file('LICENSE')
             if (license.exists()) {
@@ -246,18 +247,19 @@ class PluginDevPlugin implements Plugin<Project> {
                 void execute(Test test) {
                     if (GradleVersion.current() >= GradleVersion.version('4.3')) {
                         test.inputs.files(pluginUnderTestMetadataTask.pluginClasspath)
-                                .withPropertyName("pluginClasspath")
-                                .withNormalizer(ClasspathNormalizer.class)
+                            .withPropertyName("pluginClasspath")
+                            .withNormalizer(ClasspathNormalizer.class)
                     } else {
                         test.inputs.files(pluginUnderTestMetadataTask.pluginClasspath)
-                                .withPropertyName("pluginClasspath")
+                            .withPropertyName("pluginClasspath")
                     }
                 }
             })
 
             def testSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
             DependencyHandler dependencies = proj.dependencies
-            dependencies.add(testSourceSet.implementationConfigurationName, dependencies.gradleTestKit())
+            project.dependencies.add(testSourceSet.implementationConfigurationName,
+                project.files(project.dependencies.gradleTestKit().resolve().findAll { !it.name.startsWith("groovy-") }))
             dependencies.add(testSourceSet.runtimeOnlyConfigurationName, pluginUnderTestMetadataTask.outputs.files)
         }
     }
