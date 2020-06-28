@@ -28,14 +28,11 @@ abstract class BaseFuncTest extends Specification {
     @Rule
     TemporaryFolder tempDir = new TemporaryFolder()
 
-    @Rule
-    TestName testName = new TestName()
-
     File workspaceDir
     GradleVersion gradleVersion
 
     void setup() {
-        workspaceDir = new File(tempDir.root, testName.methodName)
+        workspaceDir = new File(tempDir.root, specificationContext.currentIteration.name)
         gradleVersion = determineGradleVersion()
     }
 
