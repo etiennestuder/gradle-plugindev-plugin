@@ -32,8 +32,18 @@ abstract class BaseFuncTest extends Specification {
     GradleVersion gradleVersion
 
     void setup() {
-        workspaceDir = new File(tempDir.root, specificationContext.currentIteration.name)
+        def testFolder = specificationContext.currentIteration.name.replace(':', '.').replace('\'', '')
+        workspaceDir = new File(tempDir.root, testFolder)
         gradleVersion = determineGradleVersion()
+
+        def localBuildCacheDirectory = new File(workspaceDir, 'local-cache')
+        settingsFile << """
+buildCache {
+  local {
+    directory '${localBuildCacheDirectory.toURI()}'
+  }
+}
+        """
     }
 
     protected BuildResult runWithArguments(String... args) {
