@@ -19,4 +19,7 @@ jobs:
                 uses: eskatos/gradle-command-action@v1
                 with:
                     arguments: build testAll -Pgradle-plugindev-plugin.acceptGradleTOS=true
+                    wrapper-cache-enabled: true
+                    dependencies-cache-enabled: true
+                    configuration-cache-enabled: false
 
