@@ -1,3 +1,7 @@
+<p align="left">
+  <a href="https://github.com/etiennestuder/gradle-plugindev-plugin/actions?query=workflow%3A%22Build+Gradle+project%22"><img src="https://github.com/etiennestuder/gradle-plugindev-plugin/workflows/Build%20Gradle%20project/badge.svg"></a>
+</p>
+
 gradle-plugindev-plugin
 =======================
 
