@@ -15,11 +15,9 @@
  */
 package nu.studer.gradle.plugindev
 
-import nu.studer.gradle.util.Licenses
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.XmlProvider
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.file.FileCollection
@@ -28,10 +26,6 @@ import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.GroovyPlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginConvention
-import org.gradle.api.publish.PublishingExtension
-import org.gradle.api.publish.maven.MavenArtifact
-import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
 import org.gradle.api.tasks.ClasspathNormalizer
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.bundling.Jar
@@ -51,17 +45,12 @@ import java.text.SimpleDateFormat
 class PluginDevPlugin implements Plugin<Project> {
 
     // names
-    static final String PLUGINDEV_EXTENSION_NAME = 'plugindev'
-
     static final String PLUGIN_DEVELOPMENT_GROUP_NAME = 'Plugin development'
 
     static final String SOURCES_JAR_TASK_NAME = 'sourcesJar'
     static final String DOCS_JAR_TASK_NAME = 'docsJar'
     static final String PLUGIN_DESCRIPTOR_TASK_NAME = 'pluginDescriptorFile'
     static final String PLUGIN_UNDER_TEST_METADATA_TASK_NAME = 'pluginUnderTestMetadata'
-
-    static final String PUBLICATION_NAME = 'plugin'
-    static final String JAVA_COMPONENT_NAME = 'java'
 
     // locations
     static final String MAIN_GENERATED_RESOURCES_LOCATION = 'plugindev/generated-resources/main'
@@ -81,12 +70,8 @@ class PluginDevPlugin implements Plugin<Project> {
         // keep a local variable given the many usages in this method
         DependencyHandler dependencies = project.dependencies
 
-        // add a new 'plugindev' extension
-        def pluginDevExtension = project.extensions.create(PLUGINDEV_EXTENSION_NAME, PluginDevExtension, this, project)
-        LOGGER.debug("Registered extension '$PLUGINDEV_EXTENSION_NAME'")
-
-        // apply the JavaPlugin and MavenPublishPlugins
-        def pluginsToApply = [JavaPlugin, MavenPublishPlugin]
+        // apply the JavaPlugin
+        def pluginsToApply = [JavaPlugin]
         pluginsToApply.each { Class plugin ->
             project.plugins.apply plugin
             LOGGER.debug("Applied plugin '$plugin.simpleName'")
@@ -236,72 +221,6 @@ class PluginDevPlugin implements Plugin<Project> {
             dependencies.add(testSourceSet.implementationConfigurationName, dependencies.gradleTestKit())
             dependencies.add(testSourceSet.runtimeOnlyConfigurationName, pluginUnderTestMetadataTask.outputs.files)
         }
-    }
-
-    def afterExtensionConfiguration(PluginDevExtension extension) {
-        // configure the POM configuration closure
-        def pomConfig = extension.pomConfiguration ?: {
-            name extension.pluginName
-            description extension.pluginDescription
-            url extension.projectUrl
-            inceptionYear extension.projectInceptionYear
-            if (extension.pluginLicenses) {
-                licenses {
-                    extension.pluginLicenses.each { String licenseTypeKey ->
-                        def licenseType = Licenses.LICENSE_TYPES[licenseTypeKey]
-                        license {
-                            name licenseType[0]
-                            url licenseType[1]
-                            distribution 'repo'
-                        }
-                    }
-                }
-            }
-            scm {
-                url extension.projectVcsUrl
-            }
-            issueManagement {
-                url extension.projectIssuesUrl
-            }
-            developers {
-                developer {
-                    id extension.authorId
-                    name extension.authorName
-                    email extension.authorEmail
-                }
-            }
-        }
-
-        // register a publication that includes the generated artifact, the sources, and the docs
-        PublishingExtension publishing = project.extensions.findByType(PublishingExtension)
-        def publication = publishing.publications.create(PUBLICATION_NAME, MavenPublication, new Action<MavenPublication>() {
-
-            @Override
-            void execute(MavenPublication mavenPublication) {
-                mavenPublication.from(project.components.findByName(JAVA_COMPONENT_NAME))
-                mavenPublication.artifact(project.tasks[SOURCES_JAR_TASK_NAME], new Action<MavenArtifact>() {
-
-                    @Override
-                    void execute(MavenArtifact artifact) {
-                        artifact.classifier = "sources"
-                    }
-                })
-                mavenPublication.artifact(project.tasks[DOCS_JAR_TASK_NAME], new Action<MavenArtifact>() {
-
-                    @Override
-                    void execute(MavenArtifact artifact) {
-                        artifact.classifier = "javadoc"
-                    }
-                })
-                mavenPublication.pom.withXml(new Action<XmlProvider>() {
-
-                    @Override
-                    void execute(XmlProvider xmlProvider) {
-                        xmlProvider.asNode().children().last() + pomConfig
-                    }
-                })
-            }
-        })
     }
 
 }
