@@ -31,7 +31,7 @@ class PluginDevFuncTest extends BaseFuncTest {
     @PendingFeature
     void "can apply plugin with Gradle configuration cache enabled"() {
         given:
-        gradleVersion = GradleVersion.version('6.8.2')
+        gradleVersion = GradleVersion.version('6.9')
         settingsFile()
         buildFile()
         examplePlugin()
