@@ -2,7 +2,6 @@ package nu.studer.gradle.plugindev
 
 import org.gradle.testkit.runner.TaskOutcome
 import org.gradle.util.GradleVersion
-import spock.lang.PendingFeature
 import spock.lang.Unroll
 
 @Unroll
@@ -15,20 +14,19 @@ class PluginDevFuncTest extends BaseFuncTest {
         examplePlugin()
 
         when:
-        def result = runWithArguments('publishPluginPublicationToMavenLocal', '-i')
+        def result = runWithArguments('pluginUnderTestMetadata', 'pluginDescriptors', 'validatePlugins', '-i')
 
         then:
         fileExists('build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class')
-        fileExists('build/plugindev/generated-resources/main/META-INF/gradle-plugins/nu.studer.example.properties')
-        result.task(':pluginDescriptorFile').outcome == TaskOutcome.SUCCESS
+        fileExists('build/pluginDescriptors/nu.studer.example.properties')
+        fileExists('build/pluginUnderTestMetadata/plugin-under-test-metadata.properties')
+
         result.task(':compileJava').outcome == TaskOutcome.SUCCESS
-        result.task(':sourcesJar').outcome == TaskOutcome.SUCCESS
-        result.task(':docsJar').outcome == TaskOutcome.SUCCESS
-        result.task(':jar').outcome == TaskOutcome.SUCCESS
-        result.output.contains('Publishing to maven local repository')
+        result.task(':pluginUnderTestMetadata').outcome == TaskOutcome.SUCCESS
+        result.task(':pluginDescriptors').outcome == TaskOutcome.SUCCESS
+        result.task(':validatePlugins').outcome == TaskOutcome.SUCCESS
     }
 
-    @PendingFeature
     void "can apply plugin with Gradle configuration cache enabled"() {
         given:
         gradleVersion = GradleVersion.version('6.9')
@@ -37,24 +35,29 @@ class PluginDevFuncTest extends BaseFuncTest {
         examplePlugin()
 
         when:
-        def result = runWithArguments('publishPluginPublicationToMavenLocal', '--configuration-cache', '-i')
+        def result = runWithArguments('pluginUnderTestMetadata', 'pluginDescriptors', 'validatePlugins', 'jar', '--configuration-cache', '-i')
 
         then:
         fileExists('build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class')
-        fileExists('build/plugindev/generated-resources/main/META-INF/gradle-plugins/nu.studer.example.properties')
-        result.output.contains('Calculating task graph as no configuration cache is available for tasks: publishPluginPublicationToMavenLocal')
-        result.task(':pluginDescriptorFile').outcome == TaskOutcome.SUCCESS
+        fileExists('build/pluginDescriptors/nu.studer.example.properties')
+        fileExists('build/pluginUnderTestMetadata/plugin-under-test-metadata.properties')
+
+        result.output.contains('Calculating task graph as no configuration cache is available')
+        result.task(':validatePlugins').outcome == TaskOutcome.SUCCESS
 
         when:
         new File(workspaceDir, 'build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class').delete()
-        new File(workspaceDir, 'build/plugindev/generated-resources/main/META-INF/gradle-plugins/nu.studer.example.properties').delete()
-        result = runWithArguments('publishPluginPublicationToMavenLocal', '--configuration-cache', '-i')
+        new File(workspaceDir, 'build/pluginDescriptors/nu.studer.example.properties').delete()
+        new File(workspaceDir, 'build/pluginUnderTestMetadata/plugin-under-test-metadata.properties').delete()
+        result = runWithArguments('pluginUnderTestMetadata', 'pluginDescriptors', 'validatePlugins', 'jar','--configuration-cache', '-i')
 
         then:
         fileExists('build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class')
-        fileExists('build/plugindev/generated-resources/main/META-INF/gradle-plugins/nu.studer.example.properties')
+        fileExists('build/pluginDescriptors/nu.studer.example.properties')
+        fileExists('build/pluginUnderTestMetadata/plugin-under-test-metadata.properties')
+
         result.output.contains('Reusing configuration cache.')
-        result.task(':compileFooRocker').outcome == TaskOutcome.SUCCESS
+        result.task(':validatePlugins').outcome == TaskOutcome.UP_TO_DATE
     }
 
     void "can run tests"() {
@@ -68,12 +71,13 @@ class PluginDevFuncTest extends BaseFuncTest {
 
         then:
         fileExists('build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class')
-        fileExists('build/plugindev/generated-resources/main/META-INF/gradle-plugins/nu.studer.example.properties')
+        fileExists('build/pluginDescriptors/nu.studer.example.properties')
         fileExists('build/pluginUnderTestMetadata/plugin-under-test-metadata.properties')
-        result.task(':pluginDescriptorFile').outcome == TaskOutcome.SUCCESS
-        result.task(':pluginUnderTestMetadata').outcome == TaskOutcome.SUCCESS
+
         result.task(':compileJava').outcome == TaskOutcome.SUCCESS
         result.task(':compileTestJava').outcome == TaskOutcome.NO_SOURCE
+        result.task(':pluginUnderTestMetadata').outcome == TaskOutcome.SUCCESS
+        result.task(':pluginDescriptors').outcome == TaskOutcome.SUCCESS
         result.task(':test').outcome == TaskOutcome.NO_SOURCE
     }
 
@@ -94,18 +98,13 @@ plugins {
 group = 'nu.studer'
 version = '0.1'
 
-plugindev {
-    pluginId 'nu.studer.example'
-    pluginDescription 'Some description'
-    pluginImplementationClass 'nu.studer.gradle.example.ExamplePlugin'
-    pluginLicenses 'Apache-2.0'
-    pluginTags 'gradle', 'plugin', 'example'
-    authorId 'etiennestuder'
-    authorName 'Etienne Studer'
-    authorEmail 'etienne@studer.nu'
-    projectUrl 'https://github.com/etiennestuder/gradle-example-plugin'
-    projectInceptionYear '2019'
-    done()
+gradlePlugin {
+    plugins {
+        pluginDevPlugin {
+            id = 'nu.studer.example'
+            implementationClass = 'nu.studer.gradle.example.ExamplePlugin'
+        }
+    }
 }
 
 """
