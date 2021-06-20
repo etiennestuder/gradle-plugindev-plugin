@@ -37,23 +37,23 @@ class PluginDevFuncTest extends BaseFuncTest {
         examplePlugin()
 
         when:
-        def result = runWithArguments('publishPluginPublicationToMavenLocal', '--configuration-cache=on', '-i')
+        def result = runWithArguments('publishPluginPublicationToMavenLocal', '--configuration-cache', '-i')
 
         then:
         fileExists('build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class')
         fileExists('build/plugindev/generated-resources/main/META-INF/gradle-plugins/nu.studer.example.properties')
-        result.output.contains("Calculating task graph as no configuration cache is available for tasks: publishPluginToBintray")
+        result.output.contains('Calculating task graph as no configuration cache is available for tasks: publishPluginPublicationToMavenLocal')
         result.task(':pluginDescriptorFile').outcome == TaskOutcome.SUCCESS
 
         when:
         new File(workspaceDir, 'build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class').delete()
         new File(workspaceDir, 'build/plugindev/generated-resources/main/META-INF/gradle-plugins/nu.studer.example.properties').delete()
-        result = runWithArguments('publishPluginPublicationToMavenLocal', '--configuration-cache=on', '-i')
+        result = runWithArguments('publishPluginPublicationToMavenLocal', '--configuration-cache', '-i')
 
         then:
         fileExists('build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class')
         fileExists('build/plugindev/generated-resources/main/META-INF/gradle-plugins/nu.studer.example.properties')
-        result.output.contains("Reusing configuration cache.")
+        result.output.contains('Reusing configuration cache.')
         result.task(':compileFooRocker').outcome == TaskOutcome.SUCCESS
     }
 
