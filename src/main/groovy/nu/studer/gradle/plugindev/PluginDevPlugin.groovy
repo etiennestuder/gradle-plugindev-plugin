@@ -88,44 +88,12 @@ class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Registered task '$docsJarTask.name'")
 
         // add a MANIFEST file and optionally a LICENSE file to each jar file (lazily through toString() implementation)
-        project.tasks.withType(Jar) { Jar jar ->
+        project.tasks.withType(Jar).configureEach { Jar jar ->
             jar.manifest.attributes(
-                'Implementation-Title': new Object() {
-
-                    @Override
-                    String toString() {
-                        pluginDevExtension.pluginName
-                    }
-                },
-                'Implementation-Version': new Object() {
-
-                    @Override
-                    String toString() {
-                        project.version
-                    }
-                },
-                'Implementation-Vendor': new Object() {
-
-                    @Override
-                    String toString() {
-                        pluginDevExtension.authorName
-                    }
-                },
-                'Implementation-Website': new Object() {
-
-                    @Override
-                    String toString() {
-                        pluginDevExtension.projectUrl
-                    }
-                },
                 'Build-Date': new SimpleDateFormat('yyyy-MM-dd').format(new Date()),
                 'Build-JDK': System.getProperty('java.version'),
-                'Build-Gradle': project.gradle.gradleVersion,
+                'Build-Gradle': project.gradle.gradleVersion
             )
-            File license = project.file('LICENSE')
-            if (license.exists()) {
-                jar.from(license)
-            }
             LOGGER.debug("Enhance .jar file of Jar task '$jar.name'")
         }
     }
