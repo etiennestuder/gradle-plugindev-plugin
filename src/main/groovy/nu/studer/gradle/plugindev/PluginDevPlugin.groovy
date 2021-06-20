@@ -30,6 +30,7 @@ import org.gradle.api.tasks.ClasspathNormalizer
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.testing.Test
+import org.gradle.plugin.devel.plugins.JavaGradlePluginPlugin
 import org.gradle.plugin.devel.tasks.PluginUnderTestMetadata
 import org.gradle.util.GradleVersion
 import org.slf4j.Logger
@@ -70,8 +71,8 @@ class PluginDevPlugin implements Plugin<Project> {
         // keep a local variable given the many usages in this method
         DependencyHandler dependencies = project.dependencies
 
-        // apply the JavaPlugin
-        def pluginsToApply = [JavaPlugin]
+        // apply the JavaGradlePluginPlugin
+        def pluginsToApply = [JavaGradlePluginPlugin]
         pluginsToApply.each { Class plugin ->
             project.plugins.apply plugin
             LOGGER.debug("Applied plugin '$plugin.simpleName'")
