@@ -1,7 +1,6 @@
 /*
  * Complete Gradle build file with the minimal configuration to bundle and
- * upload a Gradle plugin using Gradle 2.1 or newer, assuming the project
- * is hosted on GitHub.
+ * upload a Gradle plugin, assuming the project is hosted on GitHub.
  */
 
 plugins {
@@ -22,10 +21,4 @@ plugindev {
     projectUrl 'https://github.com/etiennestuder/gradle-foo-plugin'
     projectInceptionYear '2014'
     done()
-}
-
-bintray {
-    user = "$BINTRAY_USER"
-    key = "$BINTRAY_API_KEY"
-    pkg.repo = 'gradle-plugins'
 }

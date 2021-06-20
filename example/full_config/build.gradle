@@ -3,16 +3,9 @@
  * configured explicitly to bundle and upload a Gradle plugin.
  */
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'nu.studer:gradle-plugindev-plugin:1.0.12'
-    }
+plugins {
+    id 'nu.studer.plugindev' version '1.0.12'
 }
-
-apply plugin: 'nu.studer.plugindev'
 
 group = 'org.example'
 version = '0.0.1.DEV'
@@ -54,10 +47,4 @@ plugindev {
         }
     }
     done()
-}
-
-bintray {
-    user = "$BINTRAY_USER"
-    key = "$BINTRAY_API_KEY"
-    pkg.repo = 'gradle-plugins'
 }
