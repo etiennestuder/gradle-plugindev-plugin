@@ -17,7 +17,6 @@ package nu.studer.gradle.plugindev
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.GroovyPlugin
@@ -38,31 +37,16 @@ import java.text.SimpleDateFormat
  */
 class PluginDevPlugin implements Plugin<Project> {
 
-    // names
-    static final String PLUGIN_DEVELOPMENT_GROUP_NAME = 'Plugin development'
-
+    // task names
     static final String SOURCES_JAR_TASK_NAME = 'sourcesJar'
     static final String DOCS_JAR_TASK_NAME = 'docsJar'
-    static final String PLUGIN_DESCRIPTOR_TASK_NAME = 'pluginDescriptorFile'
-
-    // locations
-    static final String MAIN_GENERATED_RESOURCES_LOCATION = 'plugindev/generated-resources/main'
-    static final String PLUGIN_DESCRIPTOR_LOCATION = 'META-INF/gradle-plugins'
 
     // miscellaneous
     private static final String MINIMUM_GRADLE_JAVA_VERSION = '1.8'
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class)
 
-    private Project project
-
     void apply(Project project) {
-        // keep the project reference
-        this.project = project
-
-        // keep a local variable given the many usages in this method
-        DependencyHandler dependencies = project.dependencies
-
         // apply the JavaGradlePluginPlugin
         def pluginsToApply = [JavaGradlePluginPlugin]
         pluginsToApply.each { Class plugin ->
@@ -103,18 +87,6 @@ class PluginDevPlugin implements Plugin<Project> {
         }
         LOGGER.debug("Registered task '$docsJarTask.name'")
 
-        // add a task instance that generates the plugin descriptor file
-        GeneratePluginDescriptorTask pluginDescriptorTask = project.tasks.create(PLUGIN_DESCRIPTOR_TASK_NAME, GeneratePluginDescriptorTask.class)
-        pluginDescriptorTask.description = "Generates the plugin descriptor file."
-        pluginDescriptorTask.group = PLUGIN_DEVELOPMENT_GROUP_NAME
-        pluginDescriptorTask.pluginId = { pluginDevExtension.pluginId }
-        pluginDescriptorTask.pluginImplementationClass = { pluginDevExtension.pluginImplementationClass }
-        pluginDescriptorTask.pluginVersion = { project.version }
-        LOGGER.debug("Registered task '$pluginDescriptorTask.name'")
-
-        // include the plugin descriptor in the main source set
-        mainSourceSet.output.dir("$project.buildDir/$MAIN_GENERATED_RESOURCES_LOCATION", builtBy: PLUGIN_DESCRIPTOR_TASK_NAME)
-
         // add a MANIFEST file and optionally a LICENSE file to each jar file (lazily through toString() implementation)
         project.tasks.withType(Jar) { Jar jar ->
             jar.manifest.attributes(
@@ -149,25 +121,6 @@ class PluginDevPlugin implements Plugin<Project> {
                 'Build-Date': new SimpleDateFormat('yyyy-MM-dd').format(new Date()),
                 'Build-JDK': System.getProperty('java.version'),
                 'Build-Gradle': project.gradle.gradleVersion,
-                'Build-PluginDevPlugin': new Object() {
-
-                    @Override
-                    String toString() {
-
-                        InputStream resourceAsStream
-                        try {
-                            resourceAsStream = PluginDevPlugin.getResourceAsStream("/$PLUGIN_DESCRIPTOR_LOCATION/nu.studer.plugindev.properties")
-                            def props = new Properties()
-                            props.load(resourceAsStream)
-                            def version = props.getProperty(GeneratePluginDescriptorTask.IMPLEMENTATION_VERSION_ATTRIBUTE)
-                            return version ?: 'unknown'
-                        } finally {
-                            if (resourceAsStream != null) {
-                                resourceAsStream.close()
-                            }
-                        }
-                    }
-                }
             )
             File license = project.file('LICENSE')
             if (license.exists()) {
