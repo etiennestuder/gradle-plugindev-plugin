@@ -15,7 +15,7 @@ class PluginDevFuncTest extends BaseFuncTest {
         examplePlugin()
 
         when:
-        def result = runWithArguments('publishPluginToBintray', '-i')
+        def result = runWithArguments('publishPluginPublicationToMavenLocal', '-i')
 
         then:
         fileExists('build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class')
@@ -25,11 +25,7 @@ class PluginDevFuncTest extends BaseFuncTest {
         result.task(':sourcesJar').outcome == TaskOutcome.SUCCESS
         result.task(':docsJar').outcome == TaskOutcome.SUCCESS
         result.task(':jar').outcome == TaskOutcome.SUCCESS
-        result.task(':bintrayUpload').outcome == TaskOutcome.SUCCESS
-        result.output.contains('Uploading to https://api.bintray.com/content/someUser/gradle-plugins/gradle-example-plugin/0.1/nu/studer/gradle-example-plugin/0.1/gradle-example-plugin-0.1-sources.jar...')
-        result.output.contains('Uploading to https://api.bintray.com/content/someUser/gradle-plugins/gradle-example-plugin/0.1/nu/studer/gradle-example-plugin/0.1/gradle-example-plugin-0.1-javadoc.jar...')
-        result.output.contains('Uploading to https://api.bintray.com/content/someUser/gradle-plugins/gradle-example-plugin/0.1/nu/studer/gradle-example-plugin/0.1/gradle-example-plugin-0.1.jar...')
-        result.output.contains('Uploading to https://api.bintray.com/content/someUser/gradle-plugins/gradle-example-plugin/0.1/nu/studer/gradle-example-plugin/0.1/gradle-example-plugin-0.1.pom...')
+        result.output.contains('Publishing to maven local repository')
     }
 
     @PendingFeature
@@ -41,7 +37,7 @@ class PluginDevFuncTest extends BaseFuncTest {
         examplePlugin()
 
         when:
-        def result = runWithArguments('publishPluginToBintray', '--configuration-cache=on', '-i')
+        def result = runWithArguments('publishPluginPublicationToMavenLocal', '--configuration-cache=on', '-i')
 
         then:
         fileExists('build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class')
@@ -52,7 +48,7 @@ class PluginDevFuncTest extends BaseFuncTest {
         when:
         new File(workspaceDir, 'build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class').delete()
         new File(workspaceDir, 'build/plugindev/generated-resources/main/META-INF/gradle-plugins/nu.studer.example.properties').delete()
-        result = runWithArguments('publishPluginToBintray', '--configuration-cache=on', '-i')
+        result = runWithArguments('publishPluginPublicationToMavenLocal', '--configuration-cache=on', '-i')
 
         then:
         fileExists('build/classes/java/main/nu/studer/gradle/example/ExamplePlugin.class')
@@ -110,13 +106,6 @@ plugindev {
     projectUrl 'https://github.com/etiennestuder/gradle-example-plugin'
     projectInceptionYear '2019'
     done()
-}
-
-bintray {
-    user = 'someUser'
-    key = 'someKey'
-    pkg.repo = 'gradle-plugins'
-    dryRun = true
 }
 
 """

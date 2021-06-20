@@ -9,8 +9,8 @@ group = 'nu.studer'
 version = '2.0'
 
 dependencies {
-    implementation 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
     implementation 'nu.studer:java-ordered-properties:1.0.4'
+
     testImplementation 'org.spockframework:spock-core:2.0-groovy-2.5'
     testImplementation 'org.spockframework:spock-junit4:2.0-groovy-2.5'
 }

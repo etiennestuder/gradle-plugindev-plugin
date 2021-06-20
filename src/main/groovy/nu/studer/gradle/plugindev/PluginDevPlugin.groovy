@@ -15,12 +15,8 @@
  */
 package nu.studer.gradle.plugindev
 
-import com.jfrog.bintray.gradle.BintrayExtension
-import com.jfrog.bintray.gradle.BintrayPlugin
-import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
 import nu.studer.gradle.util.Licenses
 import org.gradle.api.Action
-import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.XmlProvider
@@ -48,9 +44,9 @@ import org.slf4j.LoggerFactory
 import java.text.SimpleDateFormat
 
 /**
- * Plugin for Gradle plugin development. The PluginDevPlugin creates a MavenPublication of the Gradle plugin project that the plugin is applied to
- * and uploads the publication to Bintray. Almost all configuration can happen in one central location through the 'plugindev' extension. The
- * PluginDevPlugin ensures that the uploaded publication matches all requirements given by Bintray, JCenter, and the Gradle Plugin Portal.
+ * Plugin for Gradle plugin development. The PluginDevPlugin creates a MavenPublication of the Gradle plugin project that the plugin is applied to.
+ * Almost all configuration can happen in one central location through the 'plugindev' extension. The PluginDevPlugin ensures that the publication
+ * matches all requirements given by MavenCentral and the Gradle Plugin Portal.
  */
 class PluginDevPlugin implements Plugin<Project> {
 
@@ -58,13 +54,11 @@ class PluginDevPlugin implements Plugin<Project> {
     static final String PLUGINDEV_EXTENSION_NAME = 'plugindev'
 
     static final String PLUGIN_DEVELOPMENT_GROUP_NAME = 'Plugin development'
-    static final String PLUGIN_PUBLISHING_GROUP_NAME = 'Plugin publishing'
 
     static final String SOURCES_JAR_TASK_NAME = 'sourcesJar'
     static final String DOCS_JAR_TASK_NAME = 'docsJar'
     static final String PLUGIN_DESCRIPTOR_TASK_NAME = 'pluginDescriptorFile'
     static final String PLUGIN_UNDER_TEST_METADATA_TASK_NAME = 'pluginUnderTestMetadata'
-    static final String PUBLISH_PLUGIN_TASK_NAME = 'publishPluginToBintray'
 
     static final String PUBLICATION_NAME = 'plugin'
     static final String JAVA_COMPONENT_NAME = 'java'
@@ -75,8 +69,6 @@ class PluginDevPlugin implements Plugin<Project> {
 
     // miscellaneous
     private static final String MINIMUM_GRADLE_JAVA_VERSION = '1.8'
-    private static final String BINTRAY_USER_DEFAULT_PROPERTY_NAME = 'bintrayUser'
-    private static final String BINTRAY_API_KEY_DEFAULT_PROPERTY_NAME = 'bintrayApiKey'
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class)
 
@@ -93,19 +85,19 @@ class PluginDevPlugin implements Plugin<Project> {
         def pluginDevExtension = project.extensions.create(PLUGINDEV_EXTENSION_NAME, PluginDevExtension, this, project)
         LOGGER.debug("Registered extension '$PLUGINDEV_EXTENSION_NAME'")
 
-        // apply the JavaPlugin, MavenPublishPlugin, and BintrayPlugin plugin
-        def pluginsToApply = [JavaPlugin, MavenPublishPlugin, BintrayPlugin]
+        // apply the JavaPlugin and MavenPublishPlugins
+        def pluginsToApply = [JavaPlugin, MavenPublishPlugin]
         pluginsToApply.each { Class plugin ->
             project.plugins.apply plugin
             LOGGER.debug("Applied plugin '$plugin.simpleName'")
         }
 
-        // add the JCenter repository
-        project.repositories.add(project.repositories.jcenter())
-        LOGGER.debug("Added repository 'JCenter'")
+        // add the MavenCentral repository
+        project.repositories.add(project.repositories.mavenCentral())
+        LOGGER.debug("Added repository 'MavenCentral'")
 
         // add the Gradle API dependency to the 'compileOnly' configuration
-        dependencies.add(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME, dependencies.gradleApi());
+        dependencies.add(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME, dependencies.gradleApi())
         LOGGER.debug("Added dependency 'Gradle API'")
 
         // set the source/target compatibility of Java compile and optionally of Groovy compile
@@ -221,14 +213,7 @@ class PluginDevPlugin implements Plugin<Project> {
             LOGGER.debug("Enhance .jar file of Jar task '$jar.name'")
         }
 
-        // add a task instance that uploads the complete plugin publication to Bintray
-        DefaultTask publishPluginTask = project.tasks.create(PUBLISH_PLUGIN_TASK_NAME, DefaultTask.class)
-        publishPluginTask.description = "Publishes the complete publication 'plugin' to Bintray."
-        publishPluginTask.group = PLUGIN_PUBLISHING_GROUP_NAME
-        publishPluginTask.dependsOn project.tasks[BintrayUploadTask.TASK_NAME]
-        LOGGER.debug("Registered task '$publishPluginTask.name'")
-
-        // add a task instance that generates the plugin under test metadata file for TesKit
+        // add a task instance that generates the plugin under test metadata file for TestKit
         BackwardCompatiblePluginUnderTestMetadata pluginUnderTestMetadataTask = project.tasks.create(PLUGIN_UNDER_TEST_METADATA_TASK_NAME, BackwardCompatiblePluginUnderTestMetadata.class)
         pluginUnderTestMetadataTask.description = "Generates the plugin metadata file."
         pluginUnderTestMetadataTask.group = PLUGIN_DEVELOPMENT_GROUP_NAME
@@ -259,7 +244,7 @@ class PluginDevPlugin implements Plugin<Project> {
             })
 
             def testSourceSet = javaPluginConvention.sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME)
-            dependencies.add(testSourceSet.implementationConfigurationName, dependencies.gradleTestKit());
+            dependencies.add(testSourceSet.implementationConfigurationName, dependencies.gradleTestKit())
             dependencies.add(testSourceSet.runtimeOnlyConfigurationName, pluginUnderTestMetadataTask.outputs.files)
         }
     }
@@ -328,28 +313,6 @@ class PluginDevPlugin implements Plugin<Project> {
                 })
             }
         })
-
-        // configure bintray extension
-        def bintray = project.extensions.findByType(BintrayExtension)
-        bintray.user = project.properties[BINTRAY_USER_DEFAULT_PROPERTY_NAME]
-        bintray.key = project.properties[BINTRAY_API_KEY_DEFAULT_PROPERTY_NAME]
-        bintray.publications = [publication.name]
-        bintray.publish = true
-        bintray.dryRun = false
-        bintray.pkg {
-            name = extension.pluginName
-            desc = extension.pluginDescription
-            websiteUrl = extension.projectUrl
-            issueTrackerUrl = extension.projectIssuesUrl
-            vcsUrl = extension.projectVcsUrl
-            licenses = extension.pluginLicenses
-            labels = extension.pluginTags
-            publicDownloadNumbers = true
-            version {
-                vcsTag = publication.version
-                attributes = ['gradle-plugin': "$extension.pluginId:$publication.groupId:$publication.artifactId"]
-            }
-        }
     }
 
 }
