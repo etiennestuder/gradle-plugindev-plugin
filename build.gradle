@@ -62,7 +62,7 @@ pluginBundle {
     website = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
     vcsUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
     description = 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin Portal.'
-    tags = ['gradle', 'plugin', 'plugin development']
+    tags = ['plugin development']
 
     plugins {
         pluginDevPlugin {
