@@ -1,12 +1,18 @@
 plugins {
-    id 'nu.studer.plugindev' version '2.0'
+//    id 'nu.studer.plugindev' version '2.0'
+    id 'com.gradle.plugin-publish' version '0.15.0'
+    id 'java-gradle-plugin'
+    id 'groovy'
     id 'nu.studer.credentials' version '2.1'
     id 'org.nosphere.gradle.github.actions' version '1.2.0'
-    id 'groovy'
 }
 
 group = 'nu.studer'
-version = '2.0'
+version = '3.0-RC-1'
+
+repositories {
+    mavenCentral()
+}
 
 dependencies {
     implementation 'nu.studer:java-ordered-properties:1.0.4'
@@ -18,19 +24,6 @@ dependencies {
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
-}
-
-plugindev {
-    pluginDescription 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.'
-    pluginImplementationClass 'nu.studer.gradle.plugindev.PluginDevPlugin'
-    pluginLicenses 'Apache-2.0'
-    pluginTags 'gradle', 'plugin', 'plugindevelopment'
-    authorId 'etiennestuder'
-    authorName 'Etienne Studer'
-    authorEmail 'etienne@studer.nu'
-    projectUrl 'https://github.com/etiennestuder/gradle-plugindev-plugin'
-    projectInceptionYear '2014'
-    done()
 }
 
 def testAll = tasks.create('testAll') {
@@ -55,3 +48,44 @@ tasks.withType(Test).configureEach {
     maxParallelForks = 2
     useJUnitPlatform()
 }
+
+gradlePlugin {
+    plugins {
+        pluginDevPlugin {
+            id = 'nu.studer.plugindev'
+            implementationClass = 'nu.studer.gradle.plugindev.PluginDevPlugin'
+        }
+    }
+}
+
+pluginBundle {
+    website = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
+    vcsUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
+    description = 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin Portal.'
+    tags = ['gradle', 'plugin', 'plugin development']
+
+    plugins {
+        pluginDevPlugin {
+            displayName = 'gradle-plugindev-plugin'
+        }
+    }
+
+    mavenCoordinates {
+        groupId = 'nu.studer'
+        artifactId = 'gradle-plugindev-plugin'
+    }
+}
+
+
+//plugindev {
+//    pluginDescription 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.'
+//    pluginImplementationClass 'nu.studer.gradle.plugindev.PluginDevPlugin'
+//    pluginLicenses 'Apache-2.0'
+//    pluginTags 'gradle', 'plugin', 'plugindevelopment'
+//    authorId 'etiennestuder'
+//    authorName 'Etienne Studer'
+//    authorEmail 'etienne@studer.nu'
+//    projectUrl 'https://github.com/etiennestuder/gradle-plugindev-plugin'
+//    projectInceptionYear '2014'
+//    done()
+//}
