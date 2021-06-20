@@ -23,6 +23,11 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+tasks.withType(Test).configureEach {
+    maxParallelForks = 2
+    useJUnitPlatform()
+}
+
 def testAll = tasks.create('testAll') {
     description = 'Runs the Gradle cross-version tests.'
     group = 'Verification'
@@ -39,11 +44,6 @@ testedGradleVersions.each { version ->
         systemProperty 'testContext.gradleVersion', version
         testAll.dependsOn(it)
     }
-}
-
-tasks.withType(Test).configureEach {
-    maxParallelForks = 2
-    useJUnitPlatform()
 }
 
 gradlePlugin {
