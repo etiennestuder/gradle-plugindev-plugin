@@ -26,7 +26,7 @@ The plugindev plugin is hosted at the [Gradle Plugin Portal](https://plugins.gra
 
 ## Build scan
 
-Recent build scan: https://scans.gradle.com/s/cvhqpcyxungha
+Recent build scan: https://gradle.com/s/bzxoqt2io4epw
 
 Find out more about build scans for Gradle and Maven at https://scans.gradle.com.
 
