@@ -16,7 +16,6 @@ repositories {
 
 dependencies {
     testImplementation 'org.spockframework:spock-core:2.0-groovy-2.5'
-    testImplementation 'org.spockframework:spock-junit4:2.0-groovy-2.5'
 }
 
 java {
@@ -73,7 +72,6 @@ pluginBundle {
         artifactId = 'gradle-plugindev-plugin'
     }
 }
-
 
 //plugindev {
 //    pluginDescription 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.'

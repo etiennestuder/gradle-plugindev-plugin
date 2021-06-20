@@ -3,11 +3,9 @@ package nu.studer.gradle.plugindev
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.util.GradleVersion
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
-import org.junit.rules.TestName
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.TempDir
 
 import java.lang.management.ManagementFactory
 
@@ -25,15 +23,15 @@ abstract class BaseFuncTest extends Specification {
         }
     }
 
-    @Rule
-    TemporaryFolder tempDir = new TemporaryFolder()
+    @TempDir
+    File tempDir
 
     File workspaceDir
     GradleVersion gradleVersion
 
     void setup() {
         def testFolder = specificationContext.currentIteration.name.replace(':', '.').replace('\'', '')
-        workspaceDir = new File(tempDir.root, testFolder)
+        workspaceDir = new File(tempDir, testFolder)
         gradleVersion = determineGradleVersion()
 
         def localBuildCacheDirectory = new File(workspaceDir, 'local-cache')
@@ -48,14 +46,14 @@ buildCache {
 
     protected BuildResult runWithArguments(String... args) {
         GradleRunner.create()
-                .withPluginClasspath()
-                .withTestKitDir(testKitDir)
-                .withProjectDir(workspaceDir)
-                .withArguments(args)
-                .withGradleVersion(gradleVersion.version)
-                .withDebug(isDebuggerAttached())
-                .forwardOutput()
-                .build()
+            .withPluginClasspath()
+            .withTestKitDir(testKitDir)
+            .withProjectDir(workspaceDir)
+            .withArguments(args)
+            .withGradleVersion(gradleVersion.version)
+            .withDebug(isDebuggerAttached())
+            .forwardOutput()
+            .build()
     }
 
     protected File getBuildFile() {
