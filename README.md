@@ -342,7 +342,7 @@ At least the following customizations are possible:
 The documentation will be enhanced with more details regarding customization upon request.
 
 # Changelog
-+ 3.0 - Change from publishing to Bintray to publishing to the Plugin Portal directly
++ 3.0 - Change from publishing to Bintray to publishing to the Plugin Portal directly.
 + 2.0 - Add compatibility with Gradle 7.0
 + 1.0.12 - Add compatibility all the way back to Gradle 3.5.1.
 + 1.0.11 - Register custom tasks at plugin application time.
