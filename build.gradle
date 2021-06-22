@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'nu.studer'
-version = '3.0-RC-1'
+version = '3.0'
 
 repositories {
     mavenCentral()
@@ -58,7 +58,7 @@ gradlePlugin {
 pluginBundle {
     website = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
     vcsUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
-    description = 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin Portal.'
+    description = 'Gradle plugin that facilitates the bundling of Gradle plugins as expected by the Gradle Plugin Portal.'
     tags = ['plugin development']
 
     plugins {
@@ -72,16 +72,3 @@ pluginBundle {
         artifactId = 'gradle-plugindev-plugin'
     }
 }
-
-//plugindev {
-//    pluginDescription 'Gradle plugin that facilitates the bundling and uploading of Gradle plugins as expected by the Gradle Plugin Portal, JCenter, and MavenCentral.'
-//    pluginImplementationClass 'nu.studer.gradle.plugindev.PluginDevPlugin'
-//    pluginLicenses 'Apache-2.0'
-//    pluginTags 'gradle', 'plugin', 'plugindevelopment'
-//    authorId 'etiennestuder'
-//    authorName 'Etienne Studer'
-//    authorEmail 'etienne@studer.nu'
-//    projectUrl 'https://github.com/etiennestuder/gradle-plugindev-plugin'
-//    projectInceptionYear '2014'
-//    done()
-//}
