@@ -1,7 +1,6 @@
 plugins {
-//    id 'nu.studer.plugindev' version '2.0'
+    id 'nu.studer.plugindev' version '3.0'
     id 'com.gradle.plugin-publish' version '0.15.0'
-    id 'java-gradle-plugin'
     id 'nu.studer.credentials' version '2.1'
     id 'org.nosphere.gradle.github.actions' version '1.2.0'
     id 'groovy'
@@ -10,17 +9,8 @@ plugins {
 group = 'nu.studer'
 version = '3.0'
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     testImplementation 'org.spockframework:spock-core:2.0-groovy-2.5'
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 tasks.withType(Test).configureEach {
