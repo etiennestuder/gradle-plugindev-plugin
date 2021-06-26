@@ -9,8 +9,7 @@ gradle-plugindev-plugin
 
 # Overview
 
-[Gradle](http://www.gradle.org) plugin that facilitates the bundling
-of Gradle plugins as expected by the [Gradle Plugin Portal](http://plugins.gradle.org/).
+[Gradle](http://www.gradle.org) plugin that facilitates the build configuration of a Gradle plugin project.
 
 Hosting of 3rd-party Gradle plugins via Bintray is no longer supported by JFrog. As a consequence, the value the
 plugindev plugin once used to provide is now highly diminished.
