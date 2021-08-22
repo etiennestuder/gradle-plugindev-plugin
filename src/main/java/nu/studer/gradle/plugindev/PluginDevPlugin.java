@@ -51,15 +51,15 @@ public class PluginDevPlugin implements Plugin<Project> {
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class);
 
     public void apply(Project project) {
-        // apply the JavaGradlePluginPlugin
-        Class<JavaGradlePluginPlugin> pluginClass = JavaGradlePluginPlugin.class;
-        project.getPlugins().apply(pluginClass);
-        LOGGER.debug("Applied plugin '" + pluginClass.getSimpleName() + "'");
-
         // add the MavenCentral repository
         RepositoryHandler repositories = project.getRepositories();
         repositories.add(repositories.mavenCentral());
         LOGGER.debug("Added repository 'MavenCentral'");
+
+        // apply the JavaGradlePluginPlugin
+        Class<JavaGradlePluginPlugin> pluginClass = JavaGradlePluginPlugin.class;
+        project.getPlugins().apply(pluginClass);
+        LOGGER.debug("Applied plugin '" + pluginClass.getSimpleName() + "'");
 
         // set the source/target compatibility of Java compile and optionally of Groovy compile
         JavaPluginExtension javaExtension = project.getExtensions().getByType(JavaPluginExtension.class);
