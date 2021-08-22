@@ -74,7 +74,7 @@ public class PluginDevPlugin implements Plugin<Project> {
         project.getTasks().register(SOURCES_JAR_TASK_NAME, Jar.class, jar -> {
             jar.setDescription("Assembles a jar archive containing the main source code.");
             jar.setGroup(BasePlugin.BUILD_GROUP);
-            jar.setClassifier("sources");
+            jar.getArchiveClassifier().set("sources");
             jar.from(allMainSources);
         });
         LOGGER.debug("Registered task '" + SOURCES_JAR_TASK_NAME + "'");
@@ -83,7 +83,7 @@ public class PluginDevPlugin implements Plugin<Project> {
         project.getTasks().register(DOCS_JAR_TASK_NAME, Jar.class, jar -> {
             jar.setDescription("Assembles a jar archive containing the documentation for the main source code.");
             jar.setGroup(BasePlugin.BUILD_GROUP);
-            jar.setClassifier("javadoc");
+            jar.getArchiveClassifier().set("javadoc");
             jar.into("javadoc").from(project.getTasks().findByName(JavaPlugin.JAVADOC_TASK_NAME));
         });
         LOGGER.debug("Registered task '" + DOCS_JAR_TASK_NAME + "'");
