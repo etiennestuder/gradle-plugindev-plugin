@@ -19,11 +19,7 @@ import org.gradle.api.JavaVersion;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.dsl.RepositoryHandler;
-import org.gradle.api.file.SourceDirectorySet;
-import org.gradle.api.plugins.BasePlugin;
-import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginExtension;
-import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.bundling.Jar;
 import org.gradle.plugin.devel.plugins.JavaGradlePluginPlugin;
 import org.slf4j.Logger;
@@ -66,28 +62,6 @@ public class PluginDevPlugin implements Plugin<Project> {
         javaExtension.setSourceCompatibility(MINIMUM_GRADLE_JAVA_VERSION);
         javaExtension.setTargetCompatibility(MINIMUM_GRADLE_JAVA_VERSION);
         LOGGER.debug("Set Java source and target compatibility to " + MINIMUM_GRADLE_JAVA_VERSION);
-
-        // get all the sources from the 'main' source set
-        SourceSet mainSourceSet = javaExtension.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
-        SourceDirectorySet allMainSources = mainSourceSet.getAllSource();
-
-        // add a task instance that generates a jar with the main sources
-        project.getTasks().register(SOURCES_JAR_TASK_NAME, Jar.class, jar -> {
-            jar.setDescription("Assembles a jar archive containing the main source code.");
-            jar.setGroup(BasePlugin.BUILD_GROUP);
-            jar.getArchiveClassifier().set("sources");
-            jar.from(allMainSources);
-        });
-        LOGGER.debug("Registered task '" + SOURCES_JAR_TASK_NAME + "'");
-
-        // add a task instance that generates a jar with the javadoc
-        project.getTasks().register(DOCS_JAR_TASK_NAME, Jar.class, jar -> {
-            jar.setDescription("Assembles a jar archive containing the documentation for the main source code.");
-            jar.setGroup(BasePlugin.BUILD_GROUP);
-            jar.getArchiveClassifier().set("javadoc");
-            jar.into("javadoc").from(project.getTasks().findByName(JavaPlugin.JAVADOC_TASK_NAME));
-        });
-        LOGGER.debug("Registered task '" + DOCS_JAR_TASK_NAME + "'");
 
         // add a MANIFEST file with basic build implementation
         HashMap<String, String> attrs = new HashMap<>();
