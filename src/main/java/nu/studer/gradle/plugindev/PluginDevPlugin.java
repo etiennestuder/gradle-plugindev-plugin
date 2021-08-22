@@ -15,13 +15,14 @@
  */
 package nu.studer.gradle.plugindev;
 
+import org.gradle.api.JavaVersion;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.dsl.RepositoryHandler;
 import org.gradle.api.file.SourceDirectorySet;
 import org.gradle.api.plugins.BasePlugin;
 import org.gradle.api.plugins.JavaPlugin;
-import org.gradle.api.plugins.JavaPluginConvention;
+import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.bundling.Jar;
 import org.gradle.plugin.devel.plugins.JavaGradlePluginPlugin;
@@ -45,7 +46,7 @@ public class PluginDevPlugin implements Plugin<Project> {
     public static final String DOCS_JAR_TASK_NAME = "docsJar";
 
     // miscellaneous
-    private static final String MINIMUM_GRADLE_JAVA_VERSION = "1.8";
+    private static final JavaVersion MINIMUM_GRADLE_JAVA_VERSION = JavaVersion.VERSION_1_8;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class);
 
@@ -61,13 +62,13 @@ public class PluginDevPlugin implements Plugin<Project> {
         LOGGER.debug("Added repository 'MavenCentral'");
 
         // set the source/target compatibility of Java compile and optionally of Groovy compile
-        JavaPluginConvention javaPluginConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
-        javaPluginConvention.setSourceCompatibility(MINIMUM_GRADLE_JAVA_VERSION);
-        javaPluginConvention.setTargetCompatibility(MINIMUM_GRADLE_JAVA_VERSION);
+        JavaPluginExtension javaExtension = project.getExtensions().getByType(JavaPluginExtension.class);
+        javaExtension.setSourceCompatibility(MINIMUM_GRADLE_JAVA_VERSION);
+        javaExtension.setTargetCompatibility(MINIMUM_GRADLE_JAVA_VERSION);
         LOGGER.debug("Set Java source and target compatibility to " + MINIMUM_GRADLE_JAVA_VERSION);
 
         // get all the sources from the 'main' source set
-        SourceSet mainSourceSet = javaPluginConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
+        SourceSet mainSourceSet = javaExtension.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
         SourceDirectorySet allMainSources = mainSourceSet.getAllSource();
 
         // add a task instance that generates a jar with the main sources

@@ -12,6 +12,12 @@ dependencies {
     testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
 }
 
+tasks.withType(AbstractCompile).configureEach {
+    options.compilerArgs <<
+        "-Werror" <<
+        "-Xlint:all"
+}
+
 tasks.withType(Test).configureEach {
     maxParallelForks = 2
     useJUnitPlatform()
@@ -24,9 +30,7 @@ def testAll = tasks.create('testAll') {
 
 List<String> testedGradleVersions = []
 testedGradleVersions << '7.2'
-testedGradleVersions << '7.0.2'
-testedGradleVersions << '6.9'
-testedGradleVersions << '6.0.1'
+testedGradleVersions << '7.1.1'
 
 testedGradleVersions.each { version ->
     project.tasks.create("test_" + version.replaceAll("[^a-zA-Z0-9]", "_"), Test).with {
