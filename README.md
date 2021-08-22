@@ -29,8 +29,6 @@ The following functionality is provided by the plugindev plugin:
  * Applies the JavaGradlePluginPlugin plugin to the project
  * Includes MavenCentral as a repository for dependency resolution
  * Sets the compiler source and target compatibility to 1.8
- * Adds a task that puts all main sources into a Jar file
- * Adds a task that puts all Javadoc into a Jar file
  * Adds some build metadata to the jar files' manifest file
 
 # Prerequisites
