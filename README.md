@@ -47,7 +47,7 @@ apply the `groovy` plugin if you intend to write your plugin in Groovy.
 
 ```groovy
 plugins {
-  id 'nu.studer.plugindev' version '3.0'
+  id 'nu.studer.plugindev' version '4.0'
 }
 ```
 
@@ -67,7 +67,7 @@ Declare the external dependencies of your Gradle plugin project, if any.
 ```groovy
 dependencies {
   implementation 'nu.studer:java-ordered-properties:1.0.4'
-  testImplementation 'org.spockframework:spock-core:2.0-groovy-2.5'
+  testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
 }
 ```
 
