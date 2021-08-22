@@ -74,6 +74,7 @@ dependencies {
 ```
 
 # Changelog
++ 4.0 - Fix deprecated API usages and make Gradle 7.1 the minimum required version.
 + 3.0 - Change from publishing to Bintray to publishing to the Plugin Portal directly.
 + 2.0 - Add compatibility with Gradle 7.0
 + 1.0.12 - Add compatibility all the way back to Gradle 3.5.1.
