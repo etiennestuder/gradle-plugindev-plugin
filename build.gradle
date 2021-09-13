@@ -27,13 +27,20 @@ tasks.withType(AbstractCompile).configureEach {
         "-Xlint:all"
 }
 
+tasks.withType(JavaCompile).configureEach {
+    javaCompiler.set(javaToolchains.compilerFor { spec ->
+        spec.languageVersion.set(JavaLanguageVersion.of(8))
+        buildScan.tag 'COMPILE_JVM_' + spec.languageVersion.get().asInt()
+    } as Provider<? extends JavaCompiler>)
+}
+
 tasks.withType(Test).configureEach {
     maxParallelForks = 2
     useJUnitPlatform()
-    javaLauncher.set(javaToolchains.launcherFor {
+    javaLauncher.set(javaToolchains.launcherFor { spec ->
         String testJavaRuntimeVersion = findProperty('testJavaRuntimeVersion') ?: '8'
-        languageVersion = JavaLanguageVersion.of(testJavaRuntimeVersion)
-        buildScan.tag 'TEST_JVM_' + testJavaRuntimeVersion
+        spec.languageVersion.set(JavaLanguageVersion.of(testJavaRuntimeVersion))
+        buildScan.tag 'TEST_JVM_' + spec.languageVersion.get().asInt()
     } as Provider<? extends JavaLauncher>)
 }
 
