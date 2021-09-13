@@ -12,6 +12,15 @@ dependencies {
     testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+
+    sourceCompatibility = null
+    targetCompatibility = null
+}
+
 tasks.withType(AbstractCompile).configureEach {
     options.compilerArgs <<
         "-Werror" <<
@@ -21,6 +30,10 @@ tasks.withType(AbstractCompile).configureEach {
 tasks.withType(Test).configureEach {
     maxParallelForks = 2
     useJUnitPlatform()
+    javaLauncher.set(javaToolchains.launcherFor {
+        String testJavaRuntimeVersion = findProperty('testJavaRuntimeVersion') ?: '8'
+        languageVersion = JavaLanguageVersion.of(testJavaRuntimeVersion)
+    } as Provider<? extends JavaLauncher>)
 }
 
 def testAll = tasks.create('testAll') {
