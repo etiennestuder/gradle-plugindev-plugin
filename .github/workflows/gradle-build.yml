@@ -6,8 +6,9 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                java: [ 8, 11, 16 ]
-        name: Test on Java ${{ matrix.java }}
+                java-version: [ 8, 11, 16 ]
+                gradle-version: [ 7.1.1, 7.2 ]
+        name: Test Java/Gradle ${{ matrix.java-version }} ${{ matrix.gradle-version }}
         steps:
             -   name: Check out project
                 uses: actions/checkout@v2
@@ -18,7 +19,7 @@ jobs:
             -   name: Build with Gradle
                 uses: gradle/gradle-build-action@v1
                 with:
-                    arguments: build testAll -PtestJavaRuntimeVersion=${{ matrix.java }} -Pgradle-plugindev-plugin.acceptGradleTOS=true
+                    arguments: build -PtestJavaRuntimeVersion=${{ matrix.java-version }} -PtestGradleVersion=${{ matrix.gradle-version }} -Pgradle-plugindev-plugin.acceptGradleTOS=true
                     distributions-cache-enabled: true
                     dependencies-cache-enabled: true
                     configuration-cache-enabled: false

@@ -1,3 +1,5 @@
+import org.gradle.util.GradleVersion
+
 plugins {
     id 'nu.studer.plugindev' version '4.0'
     id 'com.gradle.plugin-publish' version '0.15.0'
@@ -42,32 +44,9 @@ tasks.withType(Test).configureEach {
         spec.languageVersion.set(JavaLanguageVersion.of(testJavaRuntimeVersion))
         buildScan.tag 'TEST_JVM_' + spec.languageVersion.get().asInt()
     } as Provider<? extends JavaLauncher>)
-}
-
-List<String> testedGradleVersions = []
-testedGradleVersions << '7.2'
-testedGradleVersions << '7.1.1'
-
-def testTasks = testedGradleVersions.collect { version ->
-    def tp = project.tasks.register('test_' + version.replaceAll("[^a-zA-Z0-9]", "_"), Test)
-    tp.configure { t ->
-        t.systemProperty 'testContext.gradleVersion', version
-    }
-    tp
-}
-
-def testAll = tasks.register('testAll') { all ->
-    all.description = 'Runs the Gradle cross-version tests.'
-    all.group = 'Verification'
-    testTasks.each { t ->
-        all.dependsOn t
-    }
-}
-
-tasks.named('check').configure {
-    if (System.getenv('GITHUB_ACTIONS')) {
-        dependsOn testAll
-    }
+    String testGradleVersion = findProperty('testGradleVersion') ?: GradleVersion.current().version
+    systemProperty 'testContext.gradleVersion', testGradleVersion
+    buildScan.tag 'TEST_GRADLE_' + testGradleVersion
 }
 
 gradlePlugin {
