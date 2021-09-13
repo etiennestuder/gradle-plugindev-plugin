@@ -37,19 +37,23 @@ tasks.withType(Test).configureEach {
     } as Provider<? extends JavaLauncher>)
 }
 
-def testAll = tasks.create('testAll') {
-    description = 'Runs the Gradle cross-version tests.'
-    group = 'Verification'
-}
-
 List<String> testedGradleVersions = []
 testedGradleVersions << '7.2'
 testedGradleVersions << '7.1.1'
 
-testedGradleVersions.each { version ->
-    project.tasks.create("test_" + version.replaceAll("[^a-zA-Z0-9]", "_"), Test).with {
-        systemProperty 'testContext.gradleVersion', version
-        testAll.dependsOn(it)
+def testTasks = testedGradleVersions.collect { version ->
+    def tp = project.tasks.register('test_' + version.replaceAll("[^a-zA-Z0-9]", "_"), Test)
+    tp.configure { t ->
+        t.systemProperty 'testContext.gradleVersion', version
+    }
+    tp
+}
+
+def testAll = tasks.register('testAll') { all ->
+    all.description = 'Runs the Gradle cross-version tests.'
+    all.group = 'Verification'
+    testTasks.each { t ->
+        all.dependsOn t
     }
 }
 
