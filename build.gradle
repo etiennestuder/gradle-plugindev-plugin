@@ -39,11 +39,13 @@ tasks.withType(JavaCompile).configureEach {
 tasks.withType(Test).configureEach {
     maxParallelForks = 1 // there is currently only a single test class
     useJUnitPlatform()
+
     javaLauncher.set(javaToolchains.launcherFor { spec ->
         String testJavaRuntimeVersion = findProperty('testJavaRuntimeVersion') ?: '8'
         spec.languageVersion.set(JavaLanguageVersion.of(testJavaRuntimeVersion))
         buildScan.value(identityPath.path + "#jvmVersion", spec.languageVersion.get().asInt() as String)
     } as Provider<? extends JavaLauncher>)
+
     String testGradleVersion = findProperty('testGradleVersion') ?: GradleVersion.current().version
     systemProperty 'testContext.gradleVersion', testGradleVersion
     buildScan.value(identityPath.path + "#gradleVersion", testGradleVersion)
