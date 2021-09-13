@@ -32,7 +32,7 @@ tasks.withType(AbstractCompile).configureEach {
 tasks.withType(JavaCompile).configureEach {
     javaCompiler.set(javaToolchains.compilerFor { spec ->
         spec.languageVersion.set(JavaLanguageVersion.of(8))
-        buildScan.tag 'COMPILE_JVM_' + spec.languageVersion.get().asInt()
+        buildScan.value(identityPath + "#jvmVersion", spec.languageVersion.get().asInt())
     } as Provider<? extends JavaCompiler>)
 }
 
@@ -42,11 +42,11 @@ tasks.withType(Test).configureEach {
     javaLauncher.set(javaToolchains.launcherFor { spec ->
         String testJavaRuntimeVersion = findProperty('testJavaRuntimeVersion') ?: '8'
         spec.languageVersion.set(JavaLanguageVersion.of(testJavaRuntimeVersion))
-        buildScan.tag 'TEST_JVM_' + spec.languageVersion.get().asInt()
+        buildScan.value(identityPath + "#jvmVersion", spec.languageVersion.get().asInt())
     } as Provider<? extends JavaLauncher>)
     String testGradleVersion = findProperty('testGradleVersion') ?: GradleVersion.current().version
     systemProperty 'testContext.gradleVersion', testGradleVersion
-    buildScan.tag 'TEST_GRADLE_' + testGradleVersion
+    buildScan.value(identityPath + "#gradleVersion", testGradleVersion)
 }
 
 gradlePlugin {
