@@ -33,6 +33,7 @@ tasks.withType(Test).configureEach {
     javaLauncher.set(javaToolchains.launcherFor {
         String testJavaRuntimeVersion = findProperty('testJavaRuntimeVersion') ?: '8'
         languageVersion = JavaLanguageVersion.of(testJavaRuntimeVersion)
+        buildScan.tag 'TEST_JVM_'+ testJavaRuntimeVersion
     } as Provider<? extends JavaLauncher>)
 }
 
