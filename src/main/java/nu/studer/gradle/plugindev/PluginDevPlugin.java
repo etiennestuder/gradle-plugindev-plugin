@@ -22,6 +22,7 @@ import org.gradle.api.artifacts.dsl.RepositoryHandler;
 import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.tasks.bundling.Jar;
 import org.gradle.plugin.devel.plugins.JavaGradlePluginPlugin;
+import org.gradle.plugin.devel.tasks.ValidatePlugins;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +71,13 @@ public class PluginDevPlugin implements Plugin<Project> {
         attrs.put("Build-Gradle", project.getGradle().getGradleVersion());
         project.getTasks().withType(Jar.class).configureEach(jar -> jar.getManifest().attributes(attrs));
         LOGGER.debug("Configured jar files with manifest attributes");
+
+        // enable strict validation
+        project.getTasks().withType(ValidatePlugins.class).configureEach(t -> {
+                t.getFailOnWarning().set(true);
+                t.getEnableStricterValidation().set(true);
+            }
+        );
     }
 
 }
