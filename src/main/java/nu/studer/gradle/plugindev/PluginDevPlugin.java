@@ -38,10 +38,6 @@ import java.util.HashMap;
 @SuppressWarnings("unused")
 public class PluginDevPlugin implements Plugin<Project> {
 
-    // task names
-    public static final String SOURCES_JAR_TASK_NAME = "sourcesJar";
-    public static final String DOCS_JAR_TASK_NAME = "docsJar";
-
     // miscellaneous
     private static final JavaVersion MINIMUM_GRADLE_JAVA_VERSION = JavaVersion.VERSION_1_8;
 
