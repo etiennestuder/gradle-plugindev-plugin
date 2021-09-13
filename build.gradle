@@ -33,7 +33,7 @@ tasks.withType(Test).configureEach {
     javaLauncher.set(javaToolchains.launcherFor {
         String testJavaRuntimeVersion = findProperty('testJavaRuntimeVersion') ?: '8'
         languageVersion = JavaLanguageVersion.of(testJavaRuntimeVersion)
-        buildScan.tag 'TEST_JVM_'+ testJavaRuntimeVersion
+        buildScan.tag 'TEST_JVM_' + testJavaRuntimeVersion
     } as Provider<? extends JavaLauncher>)
 }
 
@@ -50,6 +50,12 @@ testedGradleVersions.each { version ->
     project.tasks.create("test_" + version.replaceAll("[^a-zA-Z0-9]", "_"), Test).with {
         systemProperty 'testContext.gradleVersion', version
         testAll.dependsOn(it)
+    }
+}
+
+tasks.named('check').configure {
+    if (System.getenv('GITHUB_ACTIONS')) {
+        dependsOn testAll
     }
 }
 
