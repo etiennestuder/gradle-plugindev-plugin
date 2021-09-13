@@ -15,12 +15,12 @@
  */
 package nu.studer.gradle.plugindev;
 
-import org.gradle.api.JavaVersion;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.dsl.RepositoryHandler;
 import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.tasks.bundling.Jar;
+import org.gradle.jvm.toolchain.JavaLanguageVersion;
 import org.gradle.plugin.devel.plugins.JavaGradlePluginPlugin;
 import org.gradle.plugin.devel.tasks.ValidatePlugins;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ import java.util.HashMap;
 public class PluginDevPlugin implements Plugin<Project> {
 
     // miscellaneous
-    private static final JavaVersion MINIMUM_GRADLE_JAVA_VERSION = JavaVersion.VERSION_1_8;
+    private static final JavaLanguageVersion TOOLCHAIN_LANGUAGE_VERSION = JavaLanguageVersion.of(8);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginDevPlugin.class);
 
@@ -54,11 +54,8 @@ public class PluginDevPlugin implements Plugin<Project> {
         project.getPlugins().apply(pluginClass);
         LOGGER.debug("Applied plugin '" + pluginClass.getSimpleName() + "'");
 
-        // set the source/target compatibility of Java compile and optionally of Groovy compile
-        JavaPluginExtension javaExtension = project.getExtensions().getByType(JavaPluginExtension.class);
-        javaExtension.setSourceCompatibility(MINIMUM_GRADLE_JAVA_VERSION);
-        javaExtension.setTargetCompatibility(MINIMUM_GRADLE_JAVA_VERSION);
-        LOGGER.debug("Set Java source and target compatibility to " + MINIMUM_GRADLE_JAVA_VERSION);
+        // set default toolchain for compilation and running tests
+        project.getExtensions().getByType(JavaPluginExtension.class).getToolchain().getLanguageVersion().set(TOOLCHAIN_LANGUAGE_VERSION);
 
         // add a MANIFEST file with basic build implementation
         HashMap<String, String> attrs = new HashMap<>();
