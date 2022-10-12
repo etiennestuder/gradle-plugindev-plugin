@@ -4,7 +4,7 @@ import static java.lang.Integer.parseInt
 
 plugins {
     id 'nu.studer.plugindev' version '4.1'
-    id 'com.gradle.plugin-publish' version '0.21.0'
+    id 'com.gradle.plugin-publish' version '1.0.0'
     id 'org.nosphere.gradle.github.actions' version '1.3.2'
     id 'groovy'
 }
@@ -54,6 +54,8 @@ gradlePlugin {
     plugins {
         pluginDevPlugin {
             id = 'nu.studer.plugindev'
+            displayName = 'gradle-plugindev-plugin'
+            description = 'Gradle plugin that facilitates the bundling of Gradle plugins as expected by the Gradle Plugin Portal.'
             implementationClass = 'nu.studer.gradle.plugindev.PluginDevPlugin'
         }
     }
@@ -62,17 +64,5 @@ gradlePlugin {
 pluginBundle {
     website = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
     vcsUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
-    description = 'Gradle plugin that facilitates the bundling of Gradle plugins as expected by the Gradle Plugin Portal.'
     tags = ['plugin development']
-
-    plugins {
-        pluginDevPlugin {
-            displayName = 'gradle-plugindev-plugin'
-        }
-    }
-
-    mavenCoordinates {
-        groupId = 'nu.studer'
-        artifactId = 'gradle-plugindev-plugin'
-    }
 }
