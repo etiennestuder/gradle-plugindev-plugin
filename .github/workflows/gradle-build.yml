@@ -3,13 +3,12 @@ on: [ push, workflow_dispatch ]
 
 jobs:
     build:
+        name: Test JVM/Gradle (${{ matrix.java-version }}, ${{ matrix.gradle-version }})
         runs-on: ubuntu-latest
-        continue-on-error: true
         strategy:
             matrix:
                 java-version: [ 8, 11, 16, 17 ]
                 gradle-version: [ 7.0.2, 7.2, 7.3.3, 7.6-20221024231219+0000 ]
-        name: Test JVM/Gradle (${{ matrix.java-version }}, ${{ matrix.gradle-version }})
         steps:
             - name: Check out project
               uses: actions/checkout@v2
