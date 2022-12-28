@@ -51,18 +51,15 @@ tasks.withType(Test).configureEach {
 }
 
 gradlePlugin {
+    website = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
+    vcsUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
     plugins {
         pluginDevPlugin {
             id = 'nu.studer.plugindev'
             displayName = 'gradle-plugindev-plugin'
             description = 'Gradle plugin that facilitates the bundling of Gradle plugins as expected by the Gradle Plugin Portal.'
+            tags.set(['plugin development'])
             implementationClass = 'nu.studer.gradle.plugindev.PluginDevPlugin'
         }
     }
-}
-
-pluginBundle {
-    website = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
-    vcsUrl = 'https://github.com/etiennestuder/gradle-plugindev-plugin'
-    tags = ['plugin development']
 }
